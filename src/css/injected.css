@@ -1,0 +1,37 @@
+/**
+ * Copyright 2017-present, Facebook, Inc.
+ * All rights reserved.
+ *
+ * This source code is licensed under the license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+.facebook-instant-articles-sdk-rules-editor-highlight-mode * {
+  cursor: pointer !important;
+}
+
+.facebook-instant-articles-sdk-rules-editor-highlight-multiple {
+  box-shadow: 0px 0px 0px 1px #e76e63, 0px 0px 4px 4px #ccc;
+}
+
+.facebook-instant-articles-sdk-rules-editor-highlight-single {
+  box-shadow: 0px 0px 0px 1px #9aaf28, 0px 0px 4px 4px #ccc;
+}
+
+.facebook-instant-articles-sdk-rules-editor-highlight {
+  box-shadow: 0px 0px 0px 1px #9aaf28, 0px 0px 4px 4px #ccc;
+}
+
+.facebook-instant-articles-sdk-rules-editor-hover {
+  box-shadow: 0px 0px 0px 1px #4a90e2, 0px 0px 4px 4px #ccc;
+  opacity: 1 !important;
+  filter: brightness(0.9);
+}
+
+.facebook-instant-articles-sdk-rules-editor-hover-parent {
+  opacity: 1 !important;
+}
+
+.facebook-instant-articles-sdk-rules-editor-highlight-mode * {
+  opacity: 0.75;
+}

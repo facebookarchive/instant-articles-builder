@@ -1,0 +1,14 @@
+{
+  "parser": "babel-eslint",
+  "plugins": ["babel", "react"],
+  "extends": "fbjs",
+  "env": {
+    "browser": true,
+    "es6": true
+  },
+  "rules": {
+    "comma-dangle": [1, "always-multiline"],
+    "react/jsx-uses-react": 1,
+    "react/jsx-uses-vars": 1
+  }
+}
