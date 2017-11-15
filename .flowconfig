@@ -1,0 +1,16 @@
+[ignore]
+.*/react/node_modules/.*
+
+[include]
+node_modules/react
+node_modules/react-dom
+node_modules/classnames
+node_modules/moment
+
+[libs]
+
+[lints]
+
+[options]
+
+[strict]
