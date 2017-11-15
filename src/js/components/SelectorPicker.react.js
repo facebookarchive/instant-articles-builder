@@ -4,12 +4,38 @@
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
  */
 
 const React = require('react');
 
-class SelectorPicker extends React.Component {
-  constructor(props) {
+import type { SelectorChangedArgsType } from '../types/SelectorChangedArgsType';
+import type { SelectorFindArgsType } from '../types/SelectorFindArgsType';
+
+type PropsType = {
+  finding: boolean,
+  name: string,
+  multiple: boolean,
+  onBlur?: SelectorChangedArgsType => void,
+  onFind: SelectorFindArgsType => void,
+  onFocus: SelectorChangedArgsType => void,
+  onSelectorChanged: SelectorChangedArgsType => void,
+  placeholder: string,
+  selector: string
+};
+
+type StateType = {
+  findButtonCenterX: number,
+  findButtonCenterY: number,
+  findLineLocationAttributes: Object,
+  findSvgStyle: Object
+};
+
+class SelectorPicker extends React.Component<PropsType, StateType> {
+  handleMouseMove: Event => void;
+
+  constructor(props: PropsType) {
     super(props);
     this.handleMouseMove = this.handleMouseMove.bind(this);
   }
@@ -28,7 +54,7 @@ class SelectorPicker extends React.Component {
     }
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: PropsType) {
     if (nextProps.finding && !this.props.finding) {
       this.enableMouseMoveTracking();
     } else if (!nextProps.finding && this.props.finding) {
@@ -36,7 +62,7 @@ class SelectorPicker extends React.Component {
     }
   }
 
-  handleMouseMove(event) {
+  handleMouseMove(event: MouseEvent) {
     if (this.props.finding) {
       const findSvgStyle = {
         top: Math.min(event.pageY, this.state.findButtonCenterY),
@@ -59,9 +85,9 @@ class SelectorPicker extends React.Component {
     }
   }
 
-  handleSelectorChanged = event => {
+  handleSelectorChanged = (event: Event) => {
     if (this.props.onSelectorChanged) {
-      const selector = event.target.value;
+      const selector = ((event.target: any): HTMLInputElement).value;
       this.props.onSelectorChanged({
         selector: selector,
         name: this.props.name,
@@ -70,9 +96,9 @@ class SelectorPicker extends React.Component {
     }
   };
 
-  handleFocus = event => {
+  handleFocus = (event: Event) => {
     if (this.props.onFocus) {
-      const selector = event.target.value;
+      const selector = ((event.target: any): HTMLInputElement).value;
       this.props.onFocus({
         selector: selector,
         name: this.props.name,
@@ -81,9 +107,9 @@ class SelectorPicker extends React.Component {
     }
   };
 
-  handleBlur = event => {
+  handleBlur = (event: Event) => {
     if (this.props.onBlur) {
-      const selector = event.target.value;
+      const selector = ((event.target: any): HTMLInputElement).value;
       this.props.onBlur({
         selector: selector,
         name: this.props.name,
@@ -92,7 +118,7 @@ class SelectorPicker extends React.Component {
     }
   };
 
-  handleFindButtonClick = event => {
+  handleFindButtonClick = (event: Event) => {
     const clientRect = this.refs.targetButton.getBoundingClientRect();
     this.setState({
       findButtonCenterX: clientRect.left + clientRect.width / 2,
