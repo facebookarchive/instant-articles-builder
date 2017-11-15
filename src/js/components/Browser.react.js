@@ -110,15 +110,14 @@ class Browser extends React.Component {
     return (
       <div className="browser">
         <div className="loader">
-          <div className="address">
-            <input
-              type="text"
-              name="url"
-              placeholder="http://..."
-              value={this.state.displayURL}
-              onChange={this.urlTyped}
-            />
-          </div>
+          <input
+            className="address"
+            type="text"
+            name="url"
+            placeholder="http://..."
+            value={this.state.displayURL}
+            onChange={this.urlTyped}
+          />
           <button className="button load" onClick={this.go}>
             Go!
           </button>
@@ -132,7 +131,6 @@ class Browser extends React.Component {
           }}
           id="foo"
           src={this.state.url}
-          style={{ width: '100%', height: '100%' }}
           preload="../js/injected.js"
         />
       </div>

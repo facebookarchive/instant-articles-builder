@@ -316,7 +316,7 @@ class RuleList extends React.Component {
 
   render() {
     return (
-      <div className="left-scollable">
+      <div>
         {Object.entries(this.state.rulesSettings).map(
           ([ruleKey, ruleSettings]) => (
             <RulePicker
