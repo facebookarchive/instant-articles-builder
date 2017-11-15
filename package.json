@@ -1,8 +1,7 @@
 {
   "name": "facebook-instant-articles-sdk-rules-editor",
   "version": "0.0.1",
-  "description":
-    "App to help creating transformer rules for the Facebook Instant Articles SDK.",
+  "description": "App to help creating transformer rules for the Facebook Instant Articles SDK.",
   "license": "SEE LICENSE IN ./LICENSE",
   "main": "src/js/background.js",
   "devDependencies": {
@@ -38,17 +37,21 @@
     "precommit": "lint-staged"
   },
   "lint-staged": {
-    "*.{js,json,css}": [
+    "src/*.{js,json,css}": [
       "prettier-eslint --eslint-config-path=.eslintrc --write \"src/**/*.{js,json,css}\"",
       "git add"
     ]
   },
   "repository": {
     "type": "git",
-    "url":
-      "git://github.com/diegoquinteiro/facebook-instant-articles-sdk-rules-editor"
+    "url": "git://github.com/diegoquinteiro/facebook-instant-articles-sdk-rules-editor"
   },
-  "keywords": ["electron", "facebook", "instant articles", "react"],
+  "keywords": [
+    "electron",
+    "facebook",
+    "instant articles",
+    "react"
+  ],
   "dependencies": {
     "electron-debug": "^1.4.0"
   }
