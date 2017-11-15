@@ -88,29 +88,35 @@ class App extends React.Component {
     });
   }
 
-  render() {
+  render(){
     return (
-      <div className="body">
-        <div className="column-left">
-          <RuleList
-            rules={this.props.rules}
-            resolvedCssSelector={this.state.resolvedCssSelector}
-            selectedElementAttributes={this.state.selectedElementAttributes}
-            selectedElementCount={this.state.selectedElementCount}
-            onSelectorChanged={this.handleRuleListSelectorChanged}
-            onFind={this.handleRuleListFind}
-            findAttributeName={this.state.findAttributeName}
-            finding={this.state.findAttributeName !== null}
-          />
-        </div>
-        <div className="column-right">
-          <Browser
-            selector={this.state.selector}
-            findAttribute={this.state.findAttributeName !== null}
-            findMultipleElements={this.state.findMultipleElements}
-            onAttributesReceived={this.receiveAttributes}
-            onCssSelectorResolved={this.handleBrowserCssSelectorResolved}
-          />
+      <div id="wrapper">
+        <header>
+          <img src="../img/logo-48.png"/>
+          <h1>Rules Editor</h1>
+        </header>
+        <div id="content-wrapper">
+          <main id="content">
+            <Browser
+              selector={this.state.selector}
+              findAttribute={this.state.findAttributeName !== null}
+              findMultipleElements={this.state.findMultipleElements}
+              onAttributesReceived={this.receiveAttributes}
+              onCssSelectorResolved={this.handleBrowserCssSelectorResolved}
+            />
+          </main>
+          <nav id="nav">
+            <RuleList
+              rules={this.props.rules}
+              resolvedCssSelector={this.state.resolvedCssSelector}
+              selectedElementAttributes={this.state.selectedElementAttributes}
+              selectedElementCount={this.state.selectedElementCount}
+              onSelectorChanged={this.handleRuleListSelectorChanged}
+              onFind={this.handleRuleListFind}
+              findAttributeName={this.state.findAttributeName}
+              finding={this.state.findAttributeName !== null}
+            />
+          </nav>
         </div>
       </div>
     );
