@@ -4,6 +4,8 @@
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
  */
 
 const React = require('react');
@@ -13,21 +15,58 @@ const SelectorPicker = require('./SelectorPicker.react.js');
 
 const DATE_TIME_TYPE = 'DateTime';
 
-class PropertyPicker extends React.Component {
-  handleSelectedAttributeChanged = event => {
-    const selectElement = event.target;
-    const selectedOptionElement = selectElement[selectElement.selectedIndex];
+import type { AttributeType } from '../types/AttributeType';
+import type { SelectorChangedArgsType } from '../types/SelectorChangedArgsType';
+import type { SelectorFindArgsType } from '../types/SelectorFindArgsType';
+
+type AttributeChangedArgsType = {
+  attribute: AttributeType,
+  propertyName: string,
+  propertySelector: string
+};
+
+type DateTimeFormatChangedArgs = {
+  format: string,
+  propertyName: string
+};
+
+type PropsType = {
+  active: boolean,
+  attributes: Array<AttributeType>,
+  className: string,
+  count: number,
+  dateTimeFormat: string,
+  defaultAttribute: string,
+  finding: boolean,
+  label: string,
+  multiple: boolean,
+  name: string,
+  onAttributeChanged: AttributeChangedArgsType => void,
+  onDateTimeFormatChanged: DateTimeFormatChangedArgs => void,
+  onFind: SelectorFindArgsType => void,
+  onFocus: SelectorChangedArgsType => void,
+  onSelectorChanged: SelectorChangedArgsType => void,
+  placeholder: string,
+  selector: string,
+  selectedAttribute: AttributeType
+};
+
+class PropertyPicker extends React.Component<PropsType> {
+  handleSelectedAttributeChanged = (event: Event) => {
+    const selectElement = ((event.target: any): HTMLSelectElement);
+    const selectedOptionElement =
+      selectElement.children[selectElement.selectedIndex];
     this.props.onAttributeChanged({
       propertyName: this.props.name,
       propertySelector: this.props.selector,
       attribute: {
         name: selectElement.value,
-        value: selectedOptionElement.getAttribute('data-attribute-value'),
+        value: selectedOptionElement.getAttribute('data-attribute-value') || '',
       },
     });
   };
 
-  handleDateTimeFormatChanged = format => {
+  handleDateTimeFormatChanged = (format: string) => {
     if (this.props.onDateTimeFormatChanged) {
       this.props.onDateTimeFormatChanged({
         propertyName: this.props.name,
@@ -36,7 +75,7 @@ class PropertyPicker extends React.Component {
     }
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: PropsType) {
     let defaultAttribute = this.props.defaultAttribute;
     if (nextProps.attributes.length > 0 && this.props.attributes.length === 0) {
       this.props.onAttributeChanged({
