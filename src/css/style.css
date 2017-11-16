@@ -13,59 +13,56 @@ html {
   font-size: 0.9em;
 }
 
-body {
+body, #root, #wrapper {
   margin: 0;
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
 }
 
-.top {
-  border-bottom: solid 1px #3b5998;
-  margin: 0 -10px;
-  clear: both;
-  background-color: #3b5998;
-  color: #ffffff;
-  height: 78px;
-  overflow: hidden;
+header {
+  background: #3b5998;
+  color: white;
+  display: flex;
+  align-items: center;
+  padding-left: 10px;
 }
 
-.body {
-  clear: both;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
+header > img {
+  margin-right: 10px;
 }
 
-.logo {
-  float: left;
-  width: 48px;
-  height: 48px;
+#content-wrapper {
+  display: flex;
+  flex: 1;
+  padding-top: 10px;
+  padding-bottom: 10px;
 }
 
-.header {
-  margin: 0 5px;
+#content {
+  display: flex;
+  flex: 1;
 }
 
-.header h1 {
-  line-height: 48px;
-  text-align: center;
+#nav {
+  flex-shrink: 0;
+  order: -1;
+  padding-left: 10px;
+  padding-right: 10px;
+  overflow-y: auto;
 }
 
-.column-left {
-  width: 281px;
-  float: left;
-  padding: 0 10px;
-  height: 100%;
+#nav button {
+  margin-right: 5px;
 }
 
-.left-scollable {
-  position: inherit;
-  width: auto;
-  height: 85%;
-  padding: 10px 0px;
-  overflow-y: scroll;
+.loader {
+  display: flex;
+  margin-bottom: 20px;
 }
 
-.column-right {
-  overflow: hidden;
+.field-line > div {
+  display: flex;
 }
 
 .field-line label,
@@ -79,7 +76,6 @@ body {
 .field-line input,
 .field-line input:active {
   width: 232px;
-  float: left;
   border-radius: 5px;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
@@ -98,7 +94,6 @@ body {
   width: 265px;
   border-radius: 5px;
   border: 1px solid #ccc;
-  float: none;
   position: relative;
   z-index: 1;
 }
@@ -116,7 +111,6 @@ body {
   width: 266px;
   padding: 5px;
   padding-bottom: 1px;
-  float: left;
   border-left: none !important;
   border-right: none !important;
 }
@@ -146,73 +140,30 @@ body {
   border: none;
   border-radius: 4px;
   font-size: 1.1em;
-  margin: 2px 8px 10px 0;
-}
-
-.top .button {
-  color: rgb(75, 79, 86);
-  background-color: #f6f7f9;
-}
-
-.button-fifty {
-  width: 49%;
-  padding: 0;
-  margin: 0;
-}
-
-.loader {
-  width: 100%;
-  height: 50px;
-  line-height: 100%;
-  text-align: center;
-  padding-top: 10px;
-  margin-bottom: -17px;
 }
 
 .address {
-  margin-right: 75px;
-}
-
-.address input {
+  flex-grow: 1;
+  border-width: 0px;
+  font-size: 1.1em;
+  padding: 3px;
+  height: 32px;
+  border: 1px solid #ccc;
   border-radius: 5px;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
   border-bottom-left-radius: 0px;
-  border-width: 0px;
-  line-height: 25px;
-  font-size: 1.1em;
-  float: left;
-  width: 100%;
-  padding: 3px;
-  line-height: 25px;
-  box-sizing: border-box;
-  border: 1px solid #ccc;
 }
 
 .load {
   width: 75px;
-  height: 33px;
-  float: right;
-  margin-right: 0px;
-  margin-left: -20px;
-  border-top-left-radius: 0;
-  border-bottom-left-radius: 0;
+  height: 32px;
   border: 1px solid #ccc;
   border-left: none;
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
   border-bottom-right-radius: 0px;
   border-bottom-left-radius: 0px;
-}
-
-.form-load {
-  margin: 0;
-}
-
-.address button {
-  width: 100px;
-}
-
-.column-right top {
-  margin: 0;
 }
 
 .field-line select {
@@ -314,13 +265,15 @@ body {
   max-height: 0px;
   overflow-y: hidden;
   transition: all 0.5s linear;
+  display: flex;
+  flex-direction: column;
 }
 .field-line.active .attributes {
   max-height: 300px;
 }
 .field-line .warning,
 .field-line .notice {
-  width: 253px;
+  width: 249px;
   padding: 6px;
   margin-top: -9px;
   padding-top: 9px !important;
@@ -417,6 +370,13 @@ webview {
 
 .browser {
   margin-right: 10px;
+  display: flex;
+  flex-basis: 100%;
+  flex-direction: column;
+}
+
+.browser > webview {
+  flex-basis: 100%;
 }
 
 ::placeholder {
@@ -424,8 +384,7 @@ webview {
 }
 
 .selectors-form {
-  margin-top: 5px;
-  margin: 5px 0;
+  margin-bottom: 10px;
   position: relative;
   background: rgba(255, 255, 255, 0.6);
   border: 1px solid #3b5998;
@@ -434,7 +393,6 @@ webview {
   padding: 5px;
   padding-bottom: 1px;
   box-shadow: 1px 1px 2px #ccc;
-  float: left;
 }
 
 .btn-close {
@@ -483,16 +441,4 @@ webview {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   padding: 5px;
-}
-
-.rule-settings > hr {
-  margin: 7px -5px;
-  border-style: dashed;
-  border-color: #ddd;
-  border-width: 1px;
-  border-collapse: collapse;
-  border-top: none;
-  clear: both;
-  float: left;
-  width: 366px;
 }
