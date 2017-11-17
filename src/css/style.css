@@ -403,8 +403,8 @@ webview {
   font-size: 1.5em;
   color: #fff;
   position: absolute;
-  right: -1px;
-  top: 1px;
+  right: -7px;
+  top: -1px;
 }
 
 .btn-close:hover {
@@ -427,12 +427,12 @@ webview {
   cursor: pointer;
 }
 
-.rule-selector:disabled {
+.rule-header {
   border: none;
-  width: 278px;
+  width: 268px;
   overflow: hidden;
   text-overflow: ellipsis;
-  height: 29px;
+  height: 19px;
   font-size: 13.2px;
   margin: -6px 0px 5px -6px;
   color: #fff;
@@ -441,4 +441,22 @@ webview {
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   padding: 5px;
+  line-height: 19px;
+  cursor: pointer;
+}
+
+.rule-settings {
+  max-height: 600px;
+  transition: all 0.5s linear;
+}
+.collapsed {
+  overflow: hidden;
+}
+.collapsed .rule-header {
+  margin-bottom: -1px;
+  transition: all 0.6s linear;
+}
+.collapsed .rule-settings {
+  max-height: 0px;
+  overflow-y: hidden;
 }

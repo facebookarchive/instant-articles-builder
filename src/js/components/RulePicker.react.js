@@ -11,8 +11,16 @@ const PropertyPicker = require('./PropertyPicker.react.js');
 const SelectorPicker = require('./SelectorPicker.react.js');
 const FindSelectorTypes = require('../find-selector-types.js');
 const update = require('immutability-helper');
+const classNames = require('classnames');
 
 class RulePicker extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      collapsed: false
+    };
+  }
+
   handleRuleChanged = event => {
     this.props.onRuleChanged({
       ruleKey: this.props.ruleKey,
@@ -73,6 +81,12 @@ class RulePicker extends React.Component {
     });
   };
 
+  handleToggle = event => {
+    this.setState((prevState, props) => ({
+      collapsed: ! prevState.collapsed
+    }));
+  }
+
   render() {
     const firstRuleOption = this.props.showEmptyRuleOption ? (
       <option value={null}>Select a Rule...</option>
@@ -121,21 +135,37 @@ class RulePicker extends React.Component {
       </div>
     ) : null;
 
+    const toggler = this.state.collapsed
+      ? '\u25B6'  // right triangle
+      : '\u25BC'; // down triangle
+
+    const ruleSelector = this.props.showEmptyRuleOption ? (
+      <select
+        className="rule-selector"
+        defaultValue={this.props.ruleKey}
+        onChange={this.handleRuleChanged}
+      >
+        {firstRuleOption}
+        {this.props.availableRules.map(availableRule => (
+          <option key={availableRule.index} value={availableRule.index}>
+            {availableRule.displayName}
+          </option>
+        ))}
+      </select>
+    ) : (
+      <h2 className="rule-header" onClick={this.handleToggle}>
+        {toggler} {this.props.displayName}
+      </h2>
+    );
+
+    const classes = classNames({
+      "selectors-form": true,
+      "collapsed": !! this.state.collapsed,
+    });
+
     return (
-      <form className="selectors-form">
-        <select
-          className="rule-selector"
-          defaultValue={this.props.ruleKey}
-          onChange={this.handleRuleChanged}
-          disabled={disabled}
-        >
-          {firstRuleOption}
-          {this.props.availableRules.map(availableRule => (
-            <option key={availableRule.index} value={availableRule.index}>
-              {availableRule.displayName}
-            </option>
-          ))}
-        </select>
+      <form className={classes}>
+        {ruleSelector}
         <button className="btn-close" onClick={this.handleRemove}>
           &#10006;
         </button>
