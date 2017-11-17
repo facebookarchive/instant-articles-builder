@@ -45,7 +45,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/diegoquinteiro/facebook-instant-articles-sdk-rules-editor"
+    "url": "git://github.com/facebook/facebook-instant-articles-rules-editor"
   },
   "keywords": [
     "electron",
