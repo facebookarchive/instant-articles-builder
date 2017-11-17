@@ -15,8 +15,8 @@ class Browser extends React.Component {
     this.selectElement = this.selectElement.bind(this);
     this.receiveMessage = this.receiveMessage.bind(this);
     this.state = {
-      url: 'http://www.diegoquinteiro.com/nascido-em-4-de-julho/',
-      displayURL: 'http://www.diegoquinteiro.com/nascido-em-4-de-julho/',
+      url: 'about:blank',
+      displayURL: 'about:blank',
     };
   }
 
