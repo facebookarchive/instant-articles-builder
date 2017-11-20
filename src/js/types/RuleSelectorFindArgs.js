@@ -10,9 +10,10 @@
 
 import type { SelectorFindArgsType } from './SelectorFindArgsType';
 
-export type SelectorChangedArgsType = {
+export type RuleSelectorFindArgs = {
   // See: https://github.com/facebook/flow/issues/4878
   // ...SelectorFindArgsType,
   ...$Exact<SelectorFindArgsType>,
-  selector: string
+  findType: number,
+  ruleKey: string
 };
