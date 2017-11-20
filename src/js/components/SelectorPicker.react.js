@@ -19,9 +19,9 @@ type PropsType = {
   multiple: boolean,
   onBlur?: SelectorChangedArgsType => void,
   onFind: SelectorFindArgsType => void,
-  onFocus: SelectorChangedArgsType => void,
+  onFocus?: SelectorChangedArgsType => void,
   onSelectorChanged: SelectorChangedArgsType => void,
-  placeholder: string,
+  placeholder?: string,
   selector: string
 };
 

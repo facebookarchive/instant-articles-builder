@@ -16,25 +16,16 @@ const SelectorPicker = require('./SelectorPicker.react.js');
 const DATE_TIME_TYPE = 'DateTime';
 
 import type { AttributeType } from '../types/AttributeType';
+import type { AttributeChangedArgsType } from '../types/AttributeChangedArgsType';
+import type { DateTimeFormatChangedArgs } from '../types/DateTimeFormatChangedArgs';
 import type { SelectorChangedArgsType } from '../types/SelectorChangedArgsType';
 import type { SelectorFindArgsType } from '../types/SelectorFindArgsType';
-
-type AttributeChangedArgsType = {
-  attribute: AttributeType,
-  propertyName: string,
-  propertySelector: string
-};
-
-type DateTimeFormatChangedArgs = {
-  format: string,
-  propertyName: string
-};
 
 type PropsType = {
   active: boolean,
   attributes: Array<AttributeType>,
-  className: string,
-  count: number,
+  className?: string,
+  count?: number,
   dateTimeFormat: string,
   defaultAttribute: string,
   finding: boolean,
@@ -97,13 +88,13 @@ class PropertyPicker extends React.Component<PropsType> {
       active: !!this.props.active,
       finding: !!this.props.finding,
       'single-element-found': this.props.count === 1,
-      'multiple-elements-found': this.props.count > 1,
+      'multiple-elements-found': this.props.count && this.props.count > 1,
       multiple: this.props.multiple,
     });
 
     let warning = null;
 
-    if (this.props.count > 1) {
+    if (this.props.count && this.props.count > 1) {
       warning = this.props.multiple ? (
         <div className="notice">
           The current selector matches {this.props.count} elements.
