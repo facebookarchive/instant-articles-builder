@@ -8,11 +8,11 @@
  * @flow
  */
 
-import type { SelectorFindArgsType } from './SelectorFindArgsType';
+import type { DateTimeFormatChangedArgs } from './DateTimeFormatChangedArgs';
 
-export type SelectorChangedArgsType = {
+export type RuleDateTimeFormatChangedArgs = {
   // See: https://github.com/facebook/flow/issues/4878
-  // ...SelectorFindArgsType,
-  ...$Exact<SelectorFindArgsType>,
-  selector: string
+  // ...DateTimeFormatChangedArgs,
+  ...$Exact<DateTimeFormatChangedArgs>,
+  ruleKey: string
 };
