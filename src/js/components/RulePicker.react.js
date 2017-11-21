@@ -4,60 +4,101 @@
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
  */
 
 const React = require('react');
 const PropertyPicker = require('./PropertyPicker.react.js');
 const SelectorPicker = require('./SelectorPicker.react.js');
-const FindSelectorTypes = require('../find-selector-types.js');
-const update = require('immutability-helper');
+const FindSelectorTypes = require('../types/FindSelectorTypes.js');
 const classNames = require('classnames');
 
-class RulePicker extends React.Component {
-  constructor(props) {
+import type { AvailableRule } from '../types/AvailableRule';
+import type { AttributeChangedArgs } from '../types/AttributeChangedArgs';
+import type { DateTimeFormatChangedArgs } from '../types/DateTimeFormatChangedArgs';
+import type { PropertySettings } from '../types/PropertySettings';
+import type { RemoveRuleArgs } from '../types/RemoveRuleArgs';
+import type { RuleAttributeChangedArgs } from '../types/RuleAttributeChangedArgs';
+import type { RuleChangedArgs } from '../types/RuleChangedArgs';
+import type { RuleDateTimeFormatChangedArgs } from '../types/RuleDateTimeFormatChangedArgs';
+import type { RuleSelectorChangedArgs } from '../types/RuleSelectorChangedArgs';
+import type { RuleSelectorFindArgs } from '../types/RuleSelectorFindArgs';
+import type { SelectorChangedArgs } from '../types/SelectorChangedArgs';
+import type { SelectorFindArgs } from '../types/SelectorFindArgs';
+
+type Props = {
+  active: boolean,
+  activePropertyName?: string,
+  availableRules: Array<AvailableRule>,
+  class: string,
+  displayName: string,
+  finding: boolean,
+  findAttributeName: ?string,
+  findType: ?number,
+  onAttributeChanged: RuleAttributeChangedArgs => void,
+  onDateTimeFormatChanged: RuleDateTimeFormatChangedArgs => void,
+  onFind: RuleSelectorFindArgs => void,
+  onPropertySelectorChanged: RuleSelectorChangedArgs => void,
+  onRemove: RemoveRuleArgs => void,
+  onRuleChanged: RuleChangedArgs => void,
+  onSelectorChanged: RuleSelectorChangedArgs => void,
+  properties: Map<string, PropertySettings>,
+  ruleKey: string,
+  selector: ?string
+};
+
+type State = {
+  collapsed: boolean
+};
+
+class RulePicker extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: false
+      collapsed: false,
     };
   }
 
-  handleRuleChanged = event => {
+  handleRuleChanged = (event: Event) => {
     this.props.onRuleChanged({
       ruleKey: this.props.ruleKey,
-      selectedInputRuleIndex: event.target.value,
+      selectedInputRuleIndex: Number(
+        ((event.target: any): HTMLSelectElement).value
+      ),
     });
   };
 
-  handleSelectorChanged = event => {
+  handleSelectorChanged = (event: SelectorChangedArgs) => {
     this.props.onSelectorChanged({
       ruleKey: this.props.ruleKey,
       ...event,
     });
   };
 
-  handleRuleSelectorPickerFind = event => {
+  handleRuleSelectorPickerFind = (event: SelectorFindArgs) => {
     this.handleFind(FindSelectorTypes.RULE, event);
   };
 
-  handlePropertyPickerSelectorChanged = event => {
+  handlePropertyPickerSelectorChanged = (event: SelectorChangedArgs) => {
     this.props.onPropertySelectorChanged({
       ruleKey: this.props.ruleKey,
       ...event,
     });
   };
 
-  handleAttributeChanged = event => {
+  handleAttributeChanged = (event: AttributeChangedArgs) => {
     this.props.onAttributeChanged({
       ruleKey: this.props.ruleKey,
       ...event,
     });
   };
 
-  handlePropertyPickerFind = event => {
+  handlePropertyPickerFind = (event: SelectorFindArgs) => {
     this.handleFind(FindSelectorTypes.PROPERTY, event);
   };
 
-  handleFind = (findType, event) => {
+  handleFind = (findType: number, event: SelectorFindArgs) => {
     this.props.onFind({
       ruleKey: this.props.ruleKey,
       findType: findType,
@@ -65,33 +106,31 @@ class RulePicker extends React.Component {
     });
   };
 
-  handleDateTimeFormatChanged = event => {
+  handleDateTimeFormatChanged = (event: DateTimeFormatChangedArgs) => {
     this.props.onDateTimeFormatChanged({
       ruleKey: this.props.ruleKey,
       ...event,
     });
   };
 
-  handleRemove = event => {
+  handleRemove = (event: Event) => {
     event.preventDefault();
 
     this.props.onRemove({
       ruleKey: this.props.ruleKey,
-      ...event,
     });
   };
 
-  handleToggle = event => {
+  handleToggle = () => {
     this.setState((prevState, props) => ({
-      collapsed: ! prevState.collapsed
+      collapsed: !prevState.collapsed,
     }));
-  }
+  };
 
   render() {
     const firstRuleOption = this.props.showEmptyRuleOption ? (
       <option value={null}>Select a Rule...</option>
     ) : null;
-    const disabled = !this.props.showEmptyRuleOption;
 
     const ruleSettings = !this.props.showEmptyRuleOption ? (
       <div className="rule-settings">
@@ -100,7 +139,7 @@ class RulePicker extends React.Component {
           <SelectorPicker
             name={this.props.class}
             selector={this.props.selector}
-            multiple="true"
+            multiple={true}
             finding={
               this.props.finding &&
               this.props.findType === FindSelectorTypes.RULE
@@ -109,34 +148,32 @@ class RulePicker extends React.Component {
             onFind={this.handleRuleSelectorPickerFind}
           />
         </div>
-        {Object.entries(this.props.properties).map(
-          ([propertyName, property]) => (
-            <PropertyPicker
-              name={propertyName}
-              key={propertyName}
-              {...property}
-              onSelectorChanged={this.handlePropertyPickerSelectorChanged}
-              onFocus={this.handlePropertyPickerSelectorChanged}
-              onAttributeChanged={this.handleAttributeChanged}
-              onDateTimeFormatChanged={this.handleDateTimeFormatChanged}
-              onFind={this.handlePropertyPickerFind}
-              active={
-                this.props.active &&
-                this.props.activePropertyName === propertyName
-              }
-              finding={
-                this.props.finding &&
-                this.props.findType === FindSelectorTypes.PROPERTY &&
-                this.props.findAttributeName === propertyName
-              }
-            />
-          )
-        )}
+        {[...this.props.properties].map(([propertyName, property]) => (
+          <PropertyPicker
+            name={propertyName}
+            key={propertyName}
+            {...property}
+            onSelectorChanged={this.handlePropertyPickerSelectorChanged}
+            onFocus={this.handlePropertyPickerSelectorChanged}
+            onAttributeChanged={this.handleAttributeChanged}
+            onDateTimeFormatChanged={this.handleDateTimeFormatChanged}
+            onFind={this.handlePropertyPickerFind}
+            active={
+              this.props.active &&
+              this.props.activePropertyName === propertyName
+            }
+            finding={
+              this.props.finding &&
+              this.props.findType === FindSelectorTypes.PROPERTY &&
+              this.props.findAttributeName === propertyName
+            }
+          />
+        ))}
       </div>
     ) : null;
 
     const toggler = this.state.collapsed
-      ? '\u25B6'  // right triangle
+      ? '\u25B6' // right triangle
       : '\u25BC'; // down triangle
 
     const ruleSelector = this.props.showEmptyRuleOption ? (
@@ -153,14 +190,15 @@ class RulePicker extends React.Component {
         ))}
       </select>
     ) : (
+      // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
       <h2 className="rule-header" onClick={this.handleToggle}>
         {toggler} {this.props.displayName}
       </h2>
     );
 
     const classes = classNames({
-      "selectors-form": true,
-      "collapsed": !! this.state.collapsed,
+      'selectors-form': true,
+      collapsed: !!this.state.collapsed,
     });
 
     return (

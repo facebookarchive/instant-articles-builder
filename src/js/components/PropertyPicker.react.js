@@ -4,6 +4,8 @@
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
  */
 
 const React = require('react');
@@ -13,21 +15,49 @@ const SelectorPicker = require('./SelectorPicker.react.js');
 
 const DATE_TIME_TYPE = 'DateTime';
 
-class PropertyPicker extends React.Component {
-  handleSelectedAttributeChanged = event => {
-    const selectElement = event.target;
-    const selectedOptionElement = selectElement[selectElement.selectedIndex];
+import type { Attribute } from '../types/Attribute';
+import type { AttributeChangedArgs } from '../types/AttributeChangedArgs';
+import type { DateTimeFormatChangedArgs } from '../types/DateTimeFormatChangedArgs';
+import type { SelectorChangedArgs } from '../types/SelectorChangedArgs';
+import type { SelectorFindArgs } from '../types/SelectorFindArgs';
+
+type Props = {
+  active: boolean,
+  attributes: Array<Attribute>,
+  className?: string,
+  count?: ?number,
+  dateTimeFormat: string,
+  defaultAttribute: string,
+  finding: boolean,
+  label: string,
+  multiple: boolean,
+  name: string,
+  onAttributeChanged: AttributeChangedArgs => void,
+  onDateTimeFormatChanged: DateTimeFormatChangedArgs => void,
+  onFind: SelectorFindArgs => void,
+  onFocus: SelectorChangedArgs => void,
+  onSelectorChanged: SelectorChangedArgs => void,
+  placeholder: string,
+  selector: ?string,
+  selectedAttribute: Attribute
+};
+
+class PropertyPicker extends React.Component<Props> {
+  handleSelectedAttributeChanged = (event: Event) => {
+    const selectElement = ((event.target: any): HTMLSelectElement);
+    const selectedOptionElement =
+      selectElement.children[selectElement.selectedIndex];
     this.props.onAttributeChanged({
       propertyName: this.props.name,
       propertySelector: this.props.selector,
       attribute: {
         name: selectElement.value,
-        value: selectedOptionElement.getAttribute('data-attribute-value'),
+        value: selectedOptionElement.getAttribute('data-attribute-value') || '',
       },
     });
   };
 
-  handleDateTimeFormatChanged = format => {
+  handleDateTimeFormatChanged = (format: string) => {
     if (this.props.onDateTimeFormatChanged) {
       this.props.onDateTimeFormatChanged({
         propertyName: this.props.name,
@@ -36,7 +66,7 @@ class PropertyPicker extends React.Component {
     }
   };
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     let defaultAttribute = this.props.defaultAttribute;
     if (nextProps.attributes.length > 0 && this.props.attributes.length === 0) {
       this.props.onAttributeChanged({
@@ -58,13 +88,13 @@ class PropertyPicker extends React.Component {
       active: !!this.props.active,
       finding: !!this.props.finding,
       'single-element-found': this.props.count === 1,
-      'multiple-elements-found': this.props.count > 1,
+      'multiple-elements-found': this.props.count && this.props.count > 1,
       multiple: this.props.multiple,
     });
 
     let warning = null;
 
-    if (this.props.count > 1) {
+    if (this.props.count && this.props.count > 1) {
       warning = this.props.multiple ? (
         <div className="notice">
           The current selector matches {this.props.count} elements.

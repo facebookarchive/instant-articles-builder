@@ -4,23 +4,37 @@
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
  */
 
-let React = require('react');
-let Browser = require('./Browser.react.js');
-let RuleList = require('./RuleList.react.js');
+const React = require('react');
+const Browser = require('./Browser.react.js');
+const RuleList = require('./RuleList.react.js');
 
-class App extends React.Component {
-  constructor(props) {
+import type { Attribute } from '../types/Attribute';
+import type { InputRule } from '../types/InputRule';
+
+type Props = {
+  rules: Array<InputRule>
+};
+
+type State = {
+  findAttributeName?: ?string,
+  findMultipleElements?: ?boolean,
+  resolvedCssSelector: ?string,
+  selectedElementAttributes: Array<Attribute>,
+  selectedElementCount?: number,
+  selector?: ?string
+};
+
+class App extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
-    this.ruleListFindCancel = this.ruleListFindCancel.bind(this);
-
     this.state = {
       resolvedCssSelector: null,
       selectedElementAttributes: [],
     };
-
-    this.cancelOnEscape = this.cancelOnEscape.bind(this);
   }
 
   componentDidMount() {
@@ -31,16 +45,16 @@ class App extends React.Component {
     document.removeEventListener('keyup', this.cancelOnEscape);
   }
 
-  cancelOnEscape(e) {
+  cancelOnEscape = (e: Event) => {
     // Handle element selection cancelation on 'esc' press
     if (e.keyCode == 27 && !!this.state.findAttributeName) {
       // escape key maps to keycode `27`
       this.ruleListFindCancel();
     }
-  }
+  };
 
-  toNameValueAttributes(attributes) {
-    return Object.entries(attributes).map(([name, value]) => {
+  toNameValueAttributes(attributes: Map<string, string>): Array<Attribute> {
+    return [...attributes].map(([name, value]) => {
       return {
         name,
         value,
@@ -48,14 +62,18 @@ class App extends React.Component {
     });
   }
 
-  receiveAttributes = (selector, attributes, count) => {
+  receiveAttributes = (
+    selector: string,
+    attributes: Map<string, string>,
+    count: number
+  ) => {
     this.setState({
       selectedElementAttributes: this.toNameValueAttributes(attributes),
       selectedElementCount: count,
     });
   };
 
-  handleBrowserCssSelectorResolved = resolvedCssSelector => {
+  handleBrowserCssSelectorResolved = (resolvedCssSelector: ?string) => {
     this.setState({
       resolvedCssSelector: resolvedCssSelector,
       selectedElementAttributes: [],
@@ -64,7 +82,7 @@ class App extends React.Component {
     });
   };
 
-  handleRuleListSelectorChanged = (selector, multiple) => {
+  handleRuleListSelectorChanged = (selector: ?string, multiple: ?boolean) => {
     this.setState({
       selector: selector,
       findAttributeName: null,
@@ -72,7 +90,7 @@ class App extends React.Component {
     });
   };
 
-  handleRuleListFind = (attributeName, multiple) => {
+  handleRuleListFind = (attributeName: string, multiple: boolean) => {
     this.setState({
       selector: null,
       findAttributeName: attributeName,
@@ -88,11 +106,11 @@ class App extends React.Component {
     });
   }
 
-  render(){
+  render() {
     return (
       <div id="wrapper">
         <header>
-          <img src="../img/logo-48.png"/>
+          <img src="../img/logo-48.png" />
           <h1>Rules Editor</h1>
         </header>
         <div id="content-wrapper">

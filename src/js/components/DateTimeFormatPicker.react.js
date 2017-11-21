@@ -4,6 +4,8 @@
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
  */
 
 const React = require('react');
@@ -12,8 +14,21 @@ const moment = require('moment');
 
 const DEFAULT_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
 
-class DateTimeFormatPicker extends React.Component {
-  constructor(props) {
+type Props = {
+  expectedDateTime: ?string,
+  format: string,
+  name: string,
+  onFocus?: Event => void,
+  onFormatChanged: string => void
+};
+
+type State = {
+  displayedDateTime?: ?string,
+  moment: ?Object
+};
+
+class DateTimeFormatPicker extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -21,9 +36,10 @@ class DateTimeFormatPicker extends React.Component {
     };
   }
 
-  componentWillReceiveProps(nextProps) {
+  componentWillReceiveProps(nextProps: Props) {
     if (nextProps.expectedDateTime !== this.props.expectedDateTime) {
-      let format, m;
+      let format = '';
+      let m = {};
       if (nextProps.expectedDateTime != null) {
         m = moment.parseZone(nextProps.expectedDateTime);
         if (m.isValid()) {
@@ -36,7 +52,7 @@ class DateTimeFormatPicker extends React.Component {
         displayedDateTime:
           m && this.props.format ? m.format(this.props.format) : null,
       });
-      this.onFormatChanged(m, format);
+      this.onFormatChanged(format);
     }
 
     if (nextProps.format !== this.props.format) {
@@ -49,11 +65,12 @@ class DateTimeFormatPicker extends React.Component {
     }
   }
 
-  handleFormatChange = event => {
-    this.onFormatChanged(this.state.moment, event.target.value);
+  handleFormatChange = (event: Event) => {
+    const newFormat = ((event.target: any): HTMLInputElement).value;
+    this.onFormatChanged(newFormat);
   };
 
-  onFormatChanged(moment, newFormat) {
+  onFormatChanged(newFormat: string) {
     if (this.props.onFormatChanged) {
       this.props.onFormatChanged(newFormat);
     }
@@ -64,6 +81,7 @@ class DateTimeFormatPicker extends React.Component {
       !!this.state.displayedDateTime &&
       this.state.displayedDateTime === this.props.expectedDateTime;
     let classes = classNames({
+      'datetime-picker': true,
       match: valid,
       mismatch: !valid,
     });
@@ -75,7 +93,7 @@ class DateTimeFormatPicker extends React.Component {
     );
 
     return (
-      <div className="datetime-picker" className={classes}>
+      <div className={classes}>
         <label htmlFor={this.props.name} className="sub-label">
           DateTime Format String (RFC2822 or ISO)
         </label>
