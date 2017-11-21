@@ -8,13 +8,18 @@
  * @flow
  */
 
-export type InputPropertyType = {
+import type { Attribute } from './Attribute';
+
+export type PropertySettings = {
+  attributes: Array<Attribute>,
+  count?: ?number,
   dateTimeFormat?: string,
   defaultAttribute: string,
   label: string,
   multiple?: boolean,
   name: string,
   placeholder: string,
-  // selector?: string,
+  selectedAttribute?: Attribute,
+  selector?: ?string,
   type?: string
 };

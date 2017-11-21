@@ -18,10 +18,10 @@ const RuleUtils = require('../utils/rule-utils.js');
 const { dialog: Dialog } = require('electron').remote;
 const Fs = require('fs');
 
-import type { AvailableRuleType } from '../types/AvailableRuleType';
-import type { AttributeType } from '../types/AttributeType';
-import type { InputRuleType } from '../types/InputRuleType';
-import type { PropertySettingsType } from '../types/PropertySettingsType';
+import type { AvailableRule } from '../types/AvailableRule';
+import type { Attribute } from '../types/Attribute';
+import type { InputRule } from '../types/InputRule';
+import type { PropertySettings } from '../types/PropertySettings';
 import type { RemoveRuleArgs } from '../types/RemoveRuleArgs';
 import type { RuleAttributeChangedArgs } from '../types/RuleAttributeChangedArgs';
 import type { RuleChangedArgs } from '../types/RuleChangedArgs';
@@ -34,8 +34,8 @@ type Props = {
   onFind: (name: string, multiple: boolean) => void,
   onSelectorChanged: (selector: ?string, multiple: ?boolean) => void,
   resolvedCssSelector: ?string,
-  rules: Array<InputRuleType>,
-  selectedElementAttributes: Array<AttributeType>,
+  rules: Array<InputRule>,
+  selectedElementAttributes: Array<Attribute>,
   selectedElementCount: ?number
 };
 
@@ -43,7 +43,7 @@ type State = {
   activeFindType?: number,
   activePropertyName?: string,
   activeRuleKey?: string,
-  allAvailableRules: Array<AvailableRuleType>,
+  allAvailableRules: Array<AvailableRule>,
   maxRuleKey: number,
   rulesSettings: Map<string, RuleSettingsType>
 };
@@ -51,7 +51,7 @@ type State = {
 type RuleSettingsType = {
   class: string,
   displayName?: string,
-  properties: Map<string, PropertySettingsType>,
+  properties: Map<string, PropertySettings>,
   selector: ?string
 };
 
@@ -113,7 +113,7 @@ class RuleList extends React.Component<Props, State> {
       : null;
   }
 
-  getActivePropertySettings(): ?PropertySettingsType {
+  getActivePropertySettings(): ?PropertySettings {
     return this.state.activeRuleKey && this.state.activePropertyName
       ? this.getPropertySettings(
         this.state.activeRuleKey,
@@ -125,12 +125,12 @@ class RuleList extends React.Component<Props, State> {
   getPropertySettings(
     ruleKey: string,
     propertyName: string
-  ): ?PropertySettingsType {
+  ): ?PropertySettings {
     const ruleSettings = this.getRuleSettings(ruleKey);
     return ruleSettings ? ruleSettings.properties.get(propertyName) : null;
   }
 
-  getRuleSettingsFromInputRule(inputRule: InputRuleType): RuleSettingsType {
+  getRuleSettingsFromInputRule(inputRule: InputRule): RuleSettingsType {
     const {
       defaultSelector: selector,
       properties: inputRuleProperties,

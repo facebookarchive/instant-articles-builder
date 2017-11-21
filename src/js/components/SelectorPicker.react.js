@@ -10,32 +10,32 @@
 
 const React = require('react');
 
-import type { SelectorChangedArgsType } from '../types/SelectorChangedArgsType';
-import type { SelectorFindArgsType } from '../types/SelectorFindArgsType';
+import type { SelectorChangedArgs } from '../types/SelectorChangedArgs';
+import type { SelectorFindArgs } from '../types/SelectorFindArgs';
 
-type PropsType = {
+type Props = {
   finding: boolean,
   name: string,
   multiple: boolean,
-  onBlur?: SelectorChangedArgsType => void,
-  onFind: SelectorFindArgsType => void,
-  onFocus?: SelectorChangedArgsType => void,
-  onSelectorChanged: SelectorChangedArgsType => void,
+  onBlur?: SelectorChangedArgs => void,
+  onFind: SelectorFindArgs => void,
+  onFocus?: SelectorChangedArgs => void,
+  onSelectorChanged: SelectorChangedArgs => void,
   placeholder?: string,
   selector: ?string
 };
 
-type StateType = {
+type State = {
   findButtonCenterX: number,
   findButtonCenterY: number,
   findLineLocationAttributes: Object,
   findSvgStyle: Object
 };
 
-class SelectorPicker extends React.Component<PropsType, StateType> {
+class SelectorPicker extends React.Component<Props, State> {
   handleMouseMove: Event => void;
 
-  constructor(props: PropsType) {
+  constructor(props: Props) {
     super(props);
     this.handleMouseMove = this.handleMouseMove.bind(this);
   }
@@ -54,7 +54,7 @@ class SelectorPicker extends React.Component<PropsType, StateType> {
     }
   }
 
-  componentWillReceiveProps(nextProps: PropsType) {
+  componentWillReceiveProps(nextProps: Props) {
     if (nextProps.finding && !this.props.finding) {
       this.enableMouseMoveTracking();
     } else if (!nextProps.finding && this.props.finding) {

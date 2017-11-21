@@ -8,11 +8,11 @@
  * @flow
  */
 
-import type { SelectorChangedArgsType } from './SelectorChangedArgsType';
+import type { SelectorChangedArgs } from './SelectorChangedArgs';
 
 export type RuleSelectorChangedArgs = {
   // See: https://github.com/facebook/flow/issues/4878
-  // ...SelectorChangedArgsType,
-  ...$Exact<SelectorChangedArgsType>,
+  // ...SelectorChangedArgs,
+  ...$Exact<SelectorChangedArgs>,
   ruleKey: string
 };
