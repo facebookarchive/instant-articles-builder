@@ -34,8 +34,8 @@ type Props = {
   class: string,
   displayName: string,
   finding: boolean,
-  findAttributeName: string,
-  findType: string,
+  findAttributeName: ?string,
+  findType: ?number,
   onAttributeChanged: RuleAttributeChangedArgs => void,
   onDateTimeFormatChanged: RuleDateTimeFormatChangedArgs => void,
   onFind: RuleSelectorFindArgs => void,
@@ -148,7 +148,7 @@ class RulePicker extends React.Component<Props, State> {
             onFind={this.handleRuleSelectorPickerFind}
           />
         </div>
-        {this.props.properties.forEach(([propertyName, property]) => (
+        {[...this.props.properties].map(([propertyName, property]) => (
           <PropertyPicker
             name={propertyName}
             key={propertyName}
