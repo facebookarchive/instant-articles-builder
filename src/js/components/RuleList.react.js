@@ -20,6 +20,7 @@ const Fs = require('fs');
 
 import type { AvailableRuleType } from '../types/AvailableRuleType';
 import type { AttributeType } from '../types/AttributeType';
+import type { InputRuleType } from '../types/InputRuleType';
 import type { PropertySettingsType } from '../types/PropertySettingsType';
 import type { RemoveRuleArgs } from '../types/RemoveRuleArgs';
 import type { RuleAttributeChangedArgs } from '../types/RuleAttributeChangedArgs';
@@ -29,13 +30,13 @@ import type { RuleSelectorChangedArgs } from '../types/RuleSelectorChangedArgs';
 import type { RuleSelectorFindArgs } from '../types/RuleSelectorFindArgs';
 
 type Props = {
-  findAttributeName: string,
+  findAttributeName: ?string,
   onFind: (name: string, multiple: boolean) => void,
   onSelectorChanged: (selector: ?string, multiple: ?boolean) => void,
-  resolvedCssSelector: string,
+  resolvedCssSelector: ?string,
   rules: Array<InputRuleType>,
   selectedElementAttributes: Array<AttributeType>,
-  selectedElementCount: number
+  selectedElementCount: ?number
 };
 
 type State = {
@@ -51,30 +52,12 @@ type RuleSettingsType = {
   class: string,
   displayName?: string,
   properties: Map<string, PropertySettingsType>,
-  selector: string
-};
-
-type InputRuleType = {
-  class: string,
-  defaultSelector: string,
-  properties: Map<string, InputPropertyType>,
-  showByDefault: boolean
-};
-
-type InputPropertyType = {
-  dateTimeFormat?: string,
-  defaultAttribute: string,
-  label: string,
-  multiple?: boolean,
-  name: string,
-  placeholder: string,
-  // selector?: string,
-  type?: string
+  selector: ?string
 };
 
 type OutputRuleType = {
   class: string,
-  selector: string,
+  selector: ?string,
   properties: Object
 };
 
@@ -240,7 +223,7 @@ class RuleList extends React.Component<Props, State> {
   };
 
   onSelectorChanged(
-    ruleSelector: string,
+    ruleSelector: ?string,
     propertySelector: string,
     multiple: boolean
   ) {

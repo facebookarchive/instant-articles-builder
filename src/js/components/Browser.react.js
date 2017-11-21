@@ -22,9 +22,10 @@ class Browser extends React.Component {
 
   receiveMessage(event) {
     if (event.message == 'attributes') {
+      const attributes = new Map(Object.entries(event.value.attributes));
       this.props.onAttributesReceived(
         event.value.selector,
-        event.value.attributes,
+        attributes,
         event.value.count
       );
     } else if (event.message == 'DOM') {
@@ -97,6 +98,7 @@ class Browser extends React.Component {
       });
       this.webview.addEventListener('did-finish-load', this.highlightElements);
       this.webview.addEventListener('did-start-loading', this.loadStart);
+      // eslint-disable-next-line no-console
       this.webview.addEventListener('error', console.log.bind(console));
       this.webview.addEventListener(
         'ipc-message',

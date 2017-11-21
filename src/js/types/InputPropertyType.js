@@ -8,10 +8,13 @@
  * @flow
  */
 
-import type { AttributeType } from './AttributeType';
-
-export type AttributeChangedArgsType = {
-  attribute: AttributeType,
-  propertyName: string,
-  propertySelector: ?string
+export type InputPropertyType = {
+  dateTimeFormat?: string,
+  defaultAttribute: string,
+  label: string,
+  multiple?: boolean,
+  name: string,
+  placeholder: string,
+  // selector?: string,
+  type?: string
 };
