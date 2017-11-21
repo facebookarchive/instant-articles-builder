@@ -22,7 +22,7 @@ type PropsType = {
   onFocus?: SelectorChangedArgsType => void,
   onSelectorChanged: SelectorChangedArgsType => void,
   placeholder?: string,
-  selector: string
+  selector: ?string
 };
 
 type StateType = {

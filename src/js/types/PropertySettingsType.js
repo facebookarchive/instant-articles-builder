@@ -12,7 +12,7 @@ import type { AttributeType } from './AttributeType';
 
 export type PropertySettingsType = {
   attributes: Array<AttributeType>,
-  count?: number,
+  count?: ?number,
   dateTimeFormat?: string,
   defaultAttribute: string,
   label: string,
@@ -20,6 +20,6 @@ export type PropertySettingsType = {
   name: string,
   placeholder: string,
   selectedAttribute?: AttributeType,
-  selector?: string,
+  selector?: ?string,
   type?: string
 };

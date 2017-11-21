@@ -8,10 +8,11 @@
  * @flow
  */
 
-import type { AttributeType } from './AttributeType';
+import type { InputPropertyType } from './InputPropertyType';
 
-export type AttributeChangedArgsType = {
-  attribute: AttributeType,
-  propertyName: string,
-  propertySelector: ?string
+export type InputRuleType = {
+  class: string,
+  defaultSelector: string,
+  properties: Map<string, InputPropertyType>,
+  showByDefault: boolean
 };

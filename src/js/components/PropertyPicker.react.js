@@ -25,7 +25,7 @@ type PropsType = {
   active: boolean,
   attributes: Array<AttributeType>,
   className?: string,
-  count?: number,
+  count?: ?number,
   dateTimeFormat: string,
   defaultAttribute: string,
   finding: boolean,
@@ -38,7 +38,7 @@ type PropsType = {
   onFocus: SelectorChangedArgsType => void,
   onSelectorChanged: SelectorChangedArgsType => void,
   placeholder: string,
-  selector: string,
+  selector: ?string,
   selectedAttribute: AttributeType
 };
 
