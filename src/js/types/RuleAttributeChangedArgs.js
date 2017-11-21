@@ -8,11 +8,11 @@
  * @flow
  */
 
-import type { AttributeChangedArgsType } from './AttributeChangedArgsType';
+import type { AttributeChangedArgs } from './AttributeChangedArgs';
 
 export type RuleAttributeChangedArgs = {
   // See: https://github.com/facebook/flow/issues/4878
-  // ...AttributeChangedArgsType,
-  ...$Exact<AttributeChangedArgsType>,
+  // ...AttributeChangedArgs,
+  ...$Exact<AttributeChangedArgs>,
   ruleKey: string
 };

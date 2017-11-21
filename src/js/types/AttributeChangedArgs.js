@@ -8,10 +8,10 @@
  * @flow
  */
 
-import type { AttributeType } from './AttributeType';
+import type { Attribute } from './Attribute';
 
-export type AttributeChangedArgsType = {
-  attribute: AttributeType,
+export type AttributeChangedArgs = {
+  attribute: Attribute,
   propertyName: string,
   propertySelector: ?string
 };

@@ -14,7 +14,7 @@ const moment = require('moment');
 
 const DEFAULT_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
 
-type PropsType = {
+type Props = {
   expectedDateTime: ?string,
   format: string,
   name: string,
@@ -22,13 +22,13 @@ type PropsType = {
   onFormatChanged: string => void
 };
 
-type StateType = {
+type State = {
   displayedDateTime?: ?string,
   moment: ?Object
 };
 
-class DateTimeFormatPicker extends React.Component<PropsType, StateType> {
-  constructor(props: PropsType) {
+class DateTimeFormatPicker extends React.Component<Props, State> {
+  constructor(props: Props) {
     super(props);
 
     this.state = {
@@ -36,7 +36,7 @@ class DateTimeFormatPicker extends React.Component<PropsType, StateType> {
     };
   }
 
-  componentWillReceiveProps(nextProps: PropsType) {
+  componentWillReceiveProps(nextProps: Props) {
     if (nextProps.expectedDateTime !== this.props.expectedDateTime) {
       let format = '';
       let m = {};

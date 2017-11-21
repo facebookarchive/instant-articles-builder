@@ -12,18 +12,18 @@ const React = require('react');
 const Browser = require('./Browser.react.js');
 const RuleList = require('./RuleList.react.js');
 
-import type { AttributeType } from '../types/AttributeType';
-import type { InputRuleType } from '../types/InputRuleType';
+import type { Attribute } from '../types/Attribute';
+import type { InputRule } from '../types/InputRule';
 
 type Props = {
-  rules: Array<InputRuleType>
+  rules: Array<InputRule>
 };
 
 type State = {
   findAttributeName?: ?string,
   findMultipleElements?: ?boolean,
   resolvedCssSelector: ?string,
-  selectedElementAttributes: Array<AttributeType>,
+  selectedElementAttributes: Array<Attribute>,
   selectedElementCount?: number,
   selector?: ?string
 };
@@ -53,7 +53,7 @@ class App extends React.Component<Props, State> {
     }
   };
 
-  toNameValueAttributes(attributes: Map<string, string>): Array<AttributeType> {
+  toNameValueAttributes(attributes: Map<string, string>): Array<Attribute> {
     return [...attributes].map(([name, value]) => {
       return {
         name,

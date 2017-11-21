@@ -8,7 +8,7 @@
  * @flow
  */
 
-export type AttributeType = {
+export type Attribute = {
   name: string,
   value: string
 };

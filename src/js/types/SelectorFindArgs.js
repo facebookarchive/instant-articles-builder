@@ -8,7 +8,7 @@
  * @flow
  */
 
-export type AvailableRuleType = {
-  displayName: string,
-  index: number
+export type SelectorFindArgs = {
+  multiple: boolean,
+  name: string
 };

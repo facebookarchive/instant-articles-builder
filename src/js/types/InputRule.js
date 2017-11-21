@@ -8,11 +8,11 @@
  * @flow
  */
 
-import type { InputPropertyType } from './InputPropertyType';
+import type { InputProperty } from './InputProperty';
 
-export type InputRuleType = {
+export type InputRule = {
   class: string,
   defaultSelector: string,
-  properties: Map<string, InputPropertyType>,
+  properties: Map<string, InputProperty>,
   showByDefault: boolean
 };

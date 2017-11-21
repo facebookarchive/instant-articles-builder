@@ -15,15 +15,15 @@ const SelectorPicker = require('./SelectorPicker.react.js');
 
 const DATE_TIME_TYPE = 'DateTime';
 
-import type { AttributeType } from '../types/AttributeType';
-import type { AttributeChangedArgsType } from '../types/AttributeChangedArgsType';
+import type { Attribute } from '../types/Attribute';
+import type { AttributeChangedArgs } from '../types/AttributeChangedArgs';
 import type { DateTimeFormatChangedArgs } from '../types/DateTimeFormatChangedArgs';
-import type { SelectorChangedArgsType } from '../types/SelectorChangedArgsType';
-import type { SelectorFindArgsType } from '../types/SelectorFindArgsType';
+import type { SelectorChangedArgs } from '../types/SelectorChangedArgs';
+import type { SelectorFindArgs } from '../types/SelectorFindArgs';
 
-type PropsType = {
+type Props = {
   active: boolean,
-  attributes: Array<AttributeType>,
+  attributes: Array<Attribute>,
   className?: string,
   count?: ?number,
   dateTimeFormat: string,
@@ -32,17 +32,17 @@ type PropsType = {
   label: string,
   multiple: boolean,
   name: string,
-  onAttributeChanged: AttributeChangedArgsType => void,
+  onAttributeChanged: AttributeChangedArgs => void,
   onDateTimeFormatChanged: DateTimeFormatChangedArgs => void,
-  onFind: SelectorFindArgsType => void,
-  onFocus: SelectorChangedArgsType => void,
-  onSelectorChanged: SelectorChangedArgsType => void,
+  onFind: SelectorFindArgs => void,
+  onFocus: SelectorChangedArgs => void,
+  onSelectorChanged: SelectorChangedArgs => void,
   placeholder: string,
   selector: ?string,
-  selectedAttribute: AttributeType
+  selectedAttribute: Attribute
 };
 
-class PropertyPicker extends React.Component<PropsType> {
+class PropertyPicker extends React.Component<Props> {
   handleSelectedAttributeChanged = (event: Event) => {
     const selectElement = ((event.target: any): HTMLSelectElement);
     const selectedOptionElement =
@@ -66,7 +66,7 @@ class PropertyPicker extends React.Component<PropsType> {
     }
   };
 
-  componentWillReceiveProps(nextProps: PropsType) {
+  componentWillReceiveProps(nextProps: Props) {
     let defaultAttribute = this.props.defaultAttribute;
     if (nextProps.attributes.length > 0 && this.props.attributes.length === 0) {
       this.props.onAttributeChanged({
