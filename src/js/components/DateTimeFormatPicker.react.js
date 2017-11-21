@@ -66,8 +66,11 @@ class DateTimeFormatPicker extends React.Component<Props, State> {
   }
 
   handleFormatChange = (event: Event) => {
-    const newFormat = ((event.target: any): HTMLInputElement).value;
-    this.onFormatChanged(newFormat);
+    const inputElement = event.target;
+    if (inputElement instanceof HTMLInputElement) {
+      const newFormat = inputElement.value;
+      this.onFormatChanged(newFormat);
+    }
   };
 
   onFormatChanged(newFormat: string) {

@@ -87,34 +87,43 @@ class SelectorPicker extends React.Component<Props, State> {
 
   handleSelectorChanged = (event: Event) => {
     if (this.props.onSelectorChanged) {
-      const selector = ((event.target: any): HTMLInputElement).value;
-      this.props.onSelectorChanged({
-        selector: selector,
-        name: this.props.name,
-        multiple: this.props.multiple,
-      });
+      const inputElement = event.target;
+      if (inputElement instanceof HTMLInputElement) {
+        const selector = inputElement.value;
+        this.props.onSelectorChanged({
+          selector: selector,
+          name: this.props.name,
+          multiple: this.props.multiple,
+        });
+      }
     }
   };
 
   handleFocus = (event: Event) => {
     if (this.props.onFocus) {
-      const selector = ((event.target: any): HTMLInputElement).value;
-      this.props.onFocus({
-        selector: selector,
-        name: this.props.name,
-        multiple: this.props.multiple,
-      });
+      const inputElement = event.target;
+      if (inputElement instanceof HTMLInputElement) {
+        const selector = inputElement.value;
+        this.props.onFocus({
+          selector: selector,
+          name: this.props.name,
+          multiple: this.props.multiple,
+        });
+      }
     }
   };
 
   handleBlur = (event: Event) => {
     if (this.props.onBlur) {
-      const selector = ((event.target: any): HTMLInputElement).value;
-      this.props.onBlur({
-        selector: selector,
-        name: this.props.name,
-        multiple: this.props.multiple,
-      });
+      const inputElement = event.target;
+      if (inputElement instanceof HTMLInputElement) {
+        const selector = inputElement.value;
+        this.props.onBlur({
+          selector: selector,
+          name: this.props.name,
+          multiple: this.props.multiple,
+        });
+      }
     }
   };
 
