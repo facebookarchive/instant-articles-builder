@@ -23,3 +23,11 @@ Just run (on the root of the project):
 ```
 npm start
 ```
+
+## Testing
+
+Run the following command (on the root of the project):
+
+```
+npm test
+```
