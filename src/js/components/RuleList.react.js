@@ -368,14 +368,14 @@ class RuleList extends React.Component<Props, State> {
 
   handleExport = (e: Event) => {
     const exportedRules: Array<OutputRuleType> = [];
-    this.state.rulesSettings.forEach(([ruleKey, ruleSettings]) => {
+    [...this.state.rulesSettings].forEach(([ruleKey, ruleSettings]) => {
       const exportedRuleSettings: OutputRuleType = {
         ...ruleSettings,
         properties: {},
       };
       exportedRules.push(exportedRuleSettings);
 
-      ruleSettings.properties.forEach(([propertyName, property]) => {
+      [...ruleSettings.properties].forEach(([propertyName, property]) => {
         if (property.selector && property.selectedAttribute) {
           const exportedProperty: OutputPropertyType = {
             selector: property.selector,
@@ -422,7 +422,7 @@ class RuleList extends React.Component<Props, State> {
   render() {
     return (
       <div>
-        {this.state.rulesSettings.forEach(([ruleKey, ruleSettings]) => (
+        {[...this.state.rulesSettings].map(([ruleKey, ruleSettings]) => (
           <RulePicker
             // This field is required by React
             key={ruleKey}
