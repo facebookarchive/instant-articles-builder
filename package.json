@@ -33,7 +33,7 @@
   },
   "scripts": {
     "start": "electron .",
-    "precommit": "lint-staged"
+    "precommit": "flow && lint-staged"
   },
   "lint-staged": {
     "src/**/*.{js,json,css}": [
