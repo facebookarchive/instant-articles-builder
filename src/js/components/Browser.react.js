@@ -9,14 +9,16 @@
 let React = require('react');
 let fs = require('fs');
 
+const homeURL = `file:///${__dirname}/../../html/home.html`;
+
 class Browser extends React.Component {
   constructor(props) {
     super(props);
     this.selectElement = this.selectElement.bind(this);
     this.receiveMessage = this.receiveMessage.bind(this);
     this.state = {
-      url: 'http://www.diegoquinteiro.com/nascido-em-4-de-julho/',
-      displayURL: 'http://www.diegoquinteiro.com/nascido-em-4-de-julho/',
+      url: homeURL,
+      displayURL: '',
     };
   }
 
@@ -33,16 +35,77 @@ class Browser extends React.Component {
     }
   }
 
-  loadStart = e => {
-    this.setState({ displayURL: e.target.src });
+  displayURL = url => {
+    if (this.state.displayURL.startsWith('file:///')) {
+      return '';
+    }
+    else {
+      return this.state.displayURL;
+    }
+  };
+
+  syncURL = e => {
+    this.setState({ displayURL: e.url });
+  };
+
+  startProgress = e => {
+    this.setState({ progress: 0.15 });
+  };
+
+  resetProgress = e => {
+    this.setState({ progress: 0 });
+  };
+
+  getResponseDetails = e => {
+    // this faux progress bar calculation will ensure progress is registered
+    // but the progress bar will never be completely full
+    this.setState((prevState) => ({
+      progress: prevState.progress > 0 ? prevState.progress + (1 - prevState.progress)/10 : 0
+    }));
   };
 
   urlTyped = e => {
     this.setState({ displayURL: e.target.value });
   };
 
-  go = () => {
-    this.setState({ url: this.state.displayURL });
+  go = e => {
+    let url = this.state.displayURL;
+    if (url === 'about:home') {
+      url = homeURL;
+    }
+    else if (!/^https?:\/\//i.test(url)) {
+      url = 'http://' + url;
+    }
+    this.setState({ url: url });
+    this.webview.focus();
+    e.preventDefault();
+    return false;
+  };
+
+  goBack = () => {
+    if (this.webview) {
+      this.webview.goBack();
+    }
+  };
+
+  goForward = () => {
+    if (this.webview) {
+      this.webview.goForward();
+    }
+  };
+
+  canGoBack = () => {
+    if (this.webview) {
+      return this.webview.canGoBack();
+    }
+    return false;
+  };
+
+  canGoForward = () => {
+    if (this.webview) {
+      return this.webview.canGoForward();
+    }
+    return false;
   };
 
   highlightElements = e => {
@@ -96,9 +159,13 @@ class Browser extends React.Component {
           webview.insertCSS(formatedData);
         });
       });
-      this.webview.addEventListener('did-finish-load', this.highlightElements);
-      this.webview.addEventListener('did-start-loading', this.loadStart);
-      // eslint-disable-next-line no-console
+      this.webview.addEventListener('did-start-loading', this.startProgress);
+      this.webview.addEventListener('did-stop-loading', this.resetProgress);
+      this.webview.addEventListener('did-navigate', this.startProgress);
+      this.webview.addEventListener('did-get-response-details', this.getResponseDetails);
+      this.webview.addEventListener('dom-ready', this.highlightElements);
+      this.webview.addEventListener('dom-ready', this.resetProgress);
+      this.webview.addEventListener('did-navigate', this.syncURL);
       this.webview.addEventListener('error', console.log.bind(console));
       this.webview.addEventListener(
         'ipc-message',
@@ -111,19 +178,26 @@ class Browser extends React.Component {
   render() {
     return (
       <div className="browser">
-        <div className="loader">
+        <form className="loader" onSubmit={this.go}>
+          <button className="button navigation" onClick={this.goBack}>
+            &lt;
+          </button>
+          <button className="button navigation" onClick={this.goForward}>
+            &gt;
+          </button>
           <input
             className="address"
             type="text"
             name="url"
-            placeholder="http://..."
-            value={this.state.displayURL}
+            placeholder="about:home"
+            value={this.displayURL()}
             onChange={this.urlTyped}
           />
           <button className="button load" onClick={this.go}>
             Go!
           </button>
-        </div>
+        </form>
+        <progress value={this.state.progress}></progress>
         <webview
           ref={webview => {
             if (webview) {
