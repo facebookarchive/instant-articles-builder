@@ -38,8 +38,8 @@
     "test": "jest"
   },
   "lint-staged": {
-    "{src,__test__}/**/*.{js,json,css}": [
-      "prettier-eslint --eslint-config-path=.eslintrc --write \"{src,__test__}/**/*.{js,json,css}\"",
+    "src/**/*.{js,json,css}": [
+      "prettier-eslint --eslint-config-path=.eslintrc --write \"src/**/*.{js,json,css}\"",
       "git add"
     ]
   },
