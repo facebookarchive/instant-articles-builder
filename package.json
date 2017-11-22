@@ -25,6 +25,7 @@
     "eslint-plugin-react": "^7.4.0",
     "eslint-plugin-relay": "0.0.19",
     "husky": "^0.14.3",
+    "jest-cli": "^21.2.1",
     "lint-staged": "^4.3.0",
     "moment": "^2.18.1",
     "prettier-eslint-cli": "^4.4.0",
@@ -33,7 +34,8 @@
   },
   "scripts": {
     "start": "electron .",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "test": "jest"
   },
   "lint-staged": {
     "src/**/*.{js,json,css}": [
