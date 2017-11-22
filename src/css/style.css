@@ -149,10 +149,6 @@ header > img {
   padding: 3px;
   height: 32px;
   border: 1px solid #ccc;
-  border-radius: 5px;
-  border-top-right-radius: 0px;
-  border-bottom-right-radius: 0px;
-  border-bottom-left-radius: 0px;
 }
 
 .load {
@@ -162,8 +158,6 @@ header > img {
   border-left: none;
   border-top-left-radius: 0;
   border-bottom-left-radius: 0;
-  border-bottom-right-radius: 0px;
-  border-bottom-left-radius: 0px;
 }
 
 .field-line select {
@@ -363,8 +357,7 @@ header > img {
 
 webview {
   background: #ffffff;
-  border: 1px solid #ccc;
-  border-top: none;
+  border: none;
   box-sizing: border-box;
 }
 
@@ -377,6 +370,18 @@ webview {
 
 .browser > webview {
   flex-basis: 100%;
+}
+
+.browser > progress {
+  width: 100%;
+  height: 3px;
+  -webkit-appearance: none;
+}
+.browser > progress::-webkit-progress-bar {
+  background: none;
+}
+.browser > progress::-webkit-progress-value {
+  background: #3b5998;
 }
 
 ::placeholder {
@@ -459,4 +464,29 @@ webview {
 .collapsed .rule-settings {
   max-height: 0px;
   overflow-y: hidden;
+}
+.button.navigation {
+  background: none;
+  color: #999;
+  border: none;
+}
+.button.navigation:hover {
+  color: #666;
+}
+.button.navigation:active {
+  color: #3b5998;
+}
+.button.navigation:active,
+.button.navigation:focus {
+  outline: none;
+  box-shadow: none;
+}
+
+form input:active,
+form input:focus {
+  outline: none;
+  box-shadow: none;
+}
+form button {
+  cursor: pointer;
 }
