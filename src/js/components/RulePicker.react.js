@@ -61,12 +61,13 @@ class RulePicker extends React.Component<Props, State> {
   }
 
   handleRuleChanged = (event: Event) => {
-    this.props.onRuleChanged({
-      ruleKey: this.props.ruleKey,
-      selectedInputRuleIndex: Number(
-        ((event.target: any): HTMLSelectElement).value
-      ),
-    });
+    const selectElement = event.target;
+    if (selectElement instanceof HTMLSelectElement) {
+      this.props.onRuleChanged({
+        ruleKey: this.props.ruleKey,
+        selectedInputRuleIndex: Number(selectElement.value),
+      });
+    }
   };
 
   handleSelectorChanged = (event: SelectorChangedArgs) => {

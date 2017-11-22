@@ -44,17 +44,20 @@ type Props = {
 
 class PropertyPicker extends React.Component<Props> {
   handleSelectedAttributeChanged = (event: Event) => {
-    const selectElement = ((event.target: any): HTMLSelectElement);
-    const selectedOptionElement =
-      selectElement.children[selectElement.selectedIndex];
-    this.props.onAttributeChanged({
-      propertyName: this.props.name,
-      propertySelector: this.props.selector,
-      attribute: {
-        name: selectElement.value,
-        value: selectedOptionElement.getAttribute('data-attribute-value') || '',
-      },
-    });
+    const selectElement = event.target;
+    if (selectElement instanceof HTMLSelectElement) {
+      const selectedOptionElement =
+        selectElement.children[selectElement.selectedIndex];
+      this.props.onAttributeChanged({
+        propertyName: this.props.name,
+        propertySelector: this.props.selector,
+        attribute: {
+          name: selectElement.value,
+          value:
+            selectedOptionElement.getAttribute('data-attribute-value') || '',
+        },
+      });
+    }
   };
 
   handleDateTimeFormatChanged = (format: string) => {
