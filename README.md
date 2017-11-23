@@ -16,6 +16,18 @@ Then run (on the root of the project):
 npm install
 ```
 
+For enabling the preview, navigate to the `webserver` directory:
+
+```
+cd webserver
+```
+
+And install the composer dependencies:
+
+```
+composer install
+```
+
 ## Launch the App
 
 Just run (on the root of the project):
