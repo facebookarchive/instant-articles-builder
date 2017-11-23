@@ -25,7 +25,8 @@ type State = {
   resolvedCssSelector: ?string,
   selectedElementAttributes: Array<Attribute>,
   selectedElementCount?: number,
-  selector?: ?string
+  selector?: ?string,
+  rulesJSON: ?string
 };
 
 class App extends React.Component<Props, State> {
@@ -34,6 +35,7 @@ class App extends React.Component<Props, State> {
     this.state = {
       resolvedCssSelector: null,
       selectedElementAttributes: [],
+      rulesJSON: '{rules:[]}',
     };
   }
 
@@ -98,6 +100,12 @@ class App extends React.Component<Props, State> {
     });
   };
 
+  handleRulesJSONChanged = (rulesJSON: string) => {
+    this.setState({
+      rulesJSON: rulesJSON,
+    });
+  };
+
   ruleListFindCancel() {
     this.setState({
       selector: null,
@@ -117,6 +125,7 @@ class App extends React.Component<Props, State> {
           <main id="content">
             <Browser
               selector={this.state.selector}
+              rulesJSON={this.state.rulesJSON}
               findAttribute={this.state.findAttributeName !== null}
               findMultipleElements={this.state.findMultipleElements}
               onAttributesReceived={this.receiveAttributes}
@@ -130,6 +139,7 @@ class App extends React.Component<Props, State> {
               selectedElementAttributes={this.state.selectedElementAttributes}
               selectedElementCount={this.state.selectedElementCount}
               onSelectorChanged={this.handleRuleListSelectorChanged}
+              onRulesJSONChanged={this.handleRulesJSONChanged}
               onFind={this.handleRuleListFind}
               findAttributeName={this.state.findAttributeName}
               finding={this.state.findAttributeName !== null}

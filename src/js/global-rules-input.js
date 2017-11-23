@@ -10,7 +10,7 @@ module.exports = {
   rules: [
     {
       class: 'GlobalRule',
-      showByDefault: true,
+      showByDefault: false,
       defaultSelector: 'html',
       properties: {
         'article.title': {
@@ -44,7 +44,7 @@ module.exports = {
     {
       class: 'CaptionRule',
       defaultSelector: 'article',
-      showByDefault: true,
+      showByDefault: false,
       properties: {
         'caption.default': {
           label: 'Default',
@@ -85,6 +85,7 @@ module.exports = {
     {
       class: 'ParagraphRule',
       defaultSelector: 'p',
+      showByDefault: true,
     },
     {
       class: 'ParagraphFooterRule',

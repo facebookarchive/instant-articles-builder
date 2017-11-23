@@ -15,7 +15,11 @@ function buildRule(payload) {
   Object.entries(payload.properties).forEach(([propertyName, item]) => {
     const type = item.attribute === 'content' ? 'element' : 'string';
     const property = new RuleProperty(propertyName, type, item.selector);
-    if (item.attribute) {
+    if (
+      item.attribute &&
+      item.attribute != 'content' &&
+      item.attribute != 'contentString'
+    ) {
       property.withAttribute(item.attribute);
     }
 
@@ -27,7 +31,11 @@ function buildRule(payload) {
 
 function getUpdatedRules(payload) {
   return {
-    rules: payload.map(rule => buildRule(rule).toJSON()),
+    rules: [
+      { class: 'TextNodeRule' },
+      { class: 'PassThroughRule', selector: '*' },
+      ...payload.map(rule => buildRule(rule).toJSON()),
+    ],
   };
 }
 

@@ -21,6 +21,7 @@ window.addEventListener('load', () => {
         {}
       );
     attributes.content = element.textContent;
+    attributes.contentString = element.textContent;
     return attributes;
   }
 

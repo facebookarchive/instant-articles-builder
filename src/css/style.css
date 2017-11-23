@@ -13,7 +13,9 @@ html {
   font-size: 0.9em;
 }
 
-body, #root, #wrapper {
+body,
+#root,
+#wrapper {
   margin: 0;
   display: flex;
   min-height: 100vh;
@@ -368,10 +370,6 @@ webview {
   flex-direction: column;
 }
 
-.browser > webview {
-  flex-basis: 100%;
-}
-
 .browser > progress {
   width: 100%;
   height: 3px;
@@ -489,4 +487,49 @@ form input:focus {
 }
 form button {
   cursor: pointer;
+}
+.webviews {
+  display: flex;
+  flex-direction: row;
+  flex-basis: 100%;
+}
+
+.webviews > #webview {
+  flex-grow: 5;
+}
+.webviews > .tab {
+  flex-grow: 0;
+  line-height: 100%;
+  cursor: pointer;
+  align-items: center;
+  width: 15px;
+  display: flex;
+  border: 1px solid #ccc;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-right: none;
+}
+.webviews > .tab span {
+  border-radius: 22px;
+  display: block;
+  height: 15px;
+  width: 15px;
+  line-height: 15px;
+  text-align: center;
+  font-weight: lighter;
+  /*border-left: 1px solid #ccc;*/
+  color: #999;
+}
+.webviews > #preview {
+  flex-grow: 1;
+  border: 1px solid #ccc;
+  border-left: none;
+}
+
+.webviews > #preview.hidden {
+  display: none;
+}
+
+.webviews > #preview.loading {
+  opacity: 0.1;
 }
