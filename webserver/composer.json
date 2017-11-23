@@ -1,0 +1,16 @@
+{
+    "name": "facebook/facebook-instant-articles-rules-editor",
+    "description": "Instant Articles Rules Editor",
+    "keywords": ["facebook", "instant-articles", "rules", "editor"],
+    "type": "project",
+    "homepage": "https://github.com/facebook/facebook-instant-articles-rules-editor",
+    "license": "proprietary",
+    "authors": [{
+        "name": "Facebook",
+        "homepage": "https://facebook.com"
+    }],
+    "require": {
+        "php": "^5.4 || ^7.0",
+        "facebook/facebook-instant-articles-sdk-php": "^1.7.0"
+    }
+}

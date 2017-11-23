@@ -9,6 +9,7 @@
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
+const php = require('gulp-connect-php');
 
 require('electron-debug')({ showDevTools: false });
 
@@ -71,3 +72,9 @@ app.on('activate', () => {
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.
+// php ruleZ
+
+php.server({
+  port: 8088,
+  base: path.resolve(__dirname) + '/../../webserver',
+});
