@@ -442,7 +442,11 @@ class RuleList extends React.Component<Props, State> {
             }
           />
         ))}
-        <button className="button" onClick={this.handleExport}>
+        <button
+          className="button"
+          id="export-button"
+          onClick={this.handleExport}
+        >
           Export
         </button>
         <button className="button" onClick={this.handleAddRule}>

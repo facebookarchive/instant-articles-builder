@@ -17,6 +17,8 @@
     "devtron": "^1.4.0",
     "electron": "1.7.9",
     "electron-devtools-installer": "^2.2.1",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-15": "^1.0.5",
     "eslint": "^4.11.0",
     "eslint-config-fbjs": "^2.0.0",
     "eslint-plugin-babel": "^4.1.2",
@@ -30,7 +32,8 @@
     "moment": "^2.18.1",
     "prettier-eslint-cli": "^4.4.0",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1"
+    "react-dom": "^15.6.1",
+    "react-test-renderer": "^15.6.2"
   },
   "scripts": {
     "start": "electron .",
