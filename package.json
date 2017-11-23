@@ -58,5 +58,8 @@
   ],
   "dependencies": {
     "electron-debug": "^1.4.0"
+  },
+  "jest": {
+    "watchman": false
   }
 }
