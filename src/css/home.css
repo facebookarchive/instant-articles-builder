@@ -30,11 +30,16 @@ ol {
   list-style-type: none;
 }
 ol li {
-    counter-increment: count-me;
-    margin: 10px;
+  counter-increment: count-me;
+  margin: 10px;
 }
 ol li::before {
-    content: counter(count-me) ". ";
-    color: #3b5998;
-    font-weight: normal;
+  content: counter(count-me) '. ';
+  color: #3b5998;
+  font-weight: normal;
+}
+li span {
+  display: block;
+  font-size: 0.5em;
+  text-align: center;
 }
