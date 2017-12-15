@@ -33,6 +33,7 @@ type Props = {
   findAttributeName: ?string,
   onFind: (name: string, multiple: boolean) => void,
   onSelectorChanged: (selector: ?string, multiple: ?boolean) => void,
+  onRulesJSONChanged: (rulesJSON: string) => void,
   resolvedCssSelector: ?string,
   rules: Array<InputRule>,
   selectedElementAttributes: Array<Attribute>,
@@ -101,6 +102,10 @@ class RuleList extends React.Component<Props, State> {
       maxRuleKey: props.rules.length - 1,
       allAvailableRules: allAvailableRules,
     };
+
+    this.props.onRulesJSONChanged(
+      JSON.stringify(this.exportRulesJSON(this.state))
+    );
   }
 
   getRuleSettings(ruleKey: string): ?RuleSettingsType {
@@ -349,9 +354,18 @@ class RuleList extends React.Component<Props, State> {
     }
   }
 
-  handleExport = (e: Event) => {
+  componentDidUpdate = (prevProps: Props, prevState: State) => {
+    let oldJSON = JSON.stringify(this.exportRulesJSON(prevState));
+    let newJSON = JSON.stringify(this.exportRulesJSON(this.state));
+    if (newJSON != oldJSON) {
+      this.props.onRulesJSONChanged(newJSON);
+    }
+  };
+
+  exportRulesJSON = (providedState: State) => {
+    const state = providedState ? providedState : this.state;
     const exportedRules: Array<OutputRuleType> = [];
-    [...this.state.rulesSettings].forEach(([ruleKey, ruleSettings]) => {
+    [...state.rulesSettings].forEach(([ruleKey, ruleSettings]) => {
       const exportedRuleSettings: OutputRuleType = {
         ...ruleSettings,
         properties: {},
@@ -372,7 +386,10 @@ class RuleList extends React.Component<Props, State> {
         }
       });
     });
+    return RuleUtils.getUpdatedRules(exportedRules);
+  };
 
+  handleExport = (e: Event) => {
     Dialog.showSaveDialog(
       {
         defaultPath: 'rules.json',
@@ -385,11 +402,7 @@ class RuleList extends React.Component<Props, State> {
       },
       fileName => {
         if (fileName) {
-          const contents = JSON.stringify(
-            RuleUtils.getUpdatedRules(exportedRules),
-            null,
-            2
-          );
+          const contents = JSON.stringify(this.exportRulesJSON(), null, 2);
           Fs.writeFile(fileName, contents, error => {
             if (error) {
               Dialog.showErrorBox('Unable to save file', error);

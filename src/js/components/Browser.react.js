@@ -8,6 +8,7 @@
 
 let React = require('react');
 let fs = require('fs');
+let debounce = require('../utils/debounce.js');
 
 const homeURL = `file:///${__dirname}/../../html/home.html`;
 
@@ -19,6 +20,7 @@ class Browser extends React.Component {
     this.state = {
       url: homeURL,
       displayURL: '',
+      showPreview: true,
     };
   }
 
@@ -38,10 +40,13 @@ class Browser extends React.Component {
   displayURL = url => {
     if (this.state.displayURL.startsWith('file:///')) {
       return '';
-    }
-    else {
+    } else {
       return this.state.displayURL;
     }
+  };
+
+  togglePreview = e => {
+    this.setState(prevState => ({ showPreview: !prevState.showPreview }));
   };
 
   syncURL = e => {
@@ -59,9 +64,19 @@ class Browser extends React.Component {
   getResponseDetails = e => {
     // this faux progress bar calculation will ensure progress is registered
     // but the progress bar will never be completely full
-    this.setState((prevState) => ({
-      progress: prevState.progress > 0 ? prevState.progress + (1 - prevState.progress)/10 : 0
+    this.setState(prevState => ({
+      progress:
+        prevState.progress > 0
+          ? prevState.progress + (1 - prevState.progress) / 10
+          : 0,
     }));
+  };
+
+  previewLoading = e => {
+    this.preview.classList.add('loading');
+  };
+  previewFinishedLoading = e => {
+    this.preview.classList.remove('loading');
   };
 
   urlTyped = e => {
@@ -72,8 +87,7 @@ class Browser extends React.Component {
     let url = this.state.displayURL;
     if (url === 'about:home') {
       url = homeURL;
-    }
-    else if (!/^https?:\/\//i.test(url)) {
+    } else if (!/^https?:\/\//i.test(url)) {
       url = 'http://' + url;
     }
     this.setState({ url: url });
@@ -128,6 +142,20 @@ class Browser extends React.Component {
     });
   }
 
+  renderPreview = debounce(() => {
+    let newURL =
+      'view-source:http://127.0.0.1:8088/index.php?url=' +
+      encodeURIComponent(this.state.displayURL) +
+      '&rules=' +
+      encodeURIComponent(this.props.rulesJSON) +
+      '&timestamp=' +
+      performance.now();
+    if (this.preview && this.preview.src != newURL) {
+      console.log(newURL);
+      this.preview.src = newURL;
+    }
+  }, 1000);
+
   componentWillReceiveProps(nextProps) {
     if (
       nextProps.selector != this.props.selector &&
@@ -139,11 +167,15 @@ class Browser extends React.Component {
         selector: nextProps.selector,
         multiple: nextProps.findMultipleElements,
       });
-    } else if (nextProps.findAttribute) {
+    }
+    if (this.webview && nextProps.findAttribute) {
       this.webview.send('message', {
         method: 'selectElement',
         multiple: nextProps.findMultipleElements,
       });
+    }
+    if (this.preview && nextProps.rulesJSON != this.props.rulesJSON) {
+      this.renderPreview();
     }
   }
 
@@ -162,15 +194,24 @@ class Browser extends React.Component {
       this.webview.addEventListener('did-start-loading', this.startProgress);
       this.webview.addEventListener('did-stop-loading', this.resetProgress);
       this.webview.addEventListener('did-navigate', this.startProgress);
-      this.webview.addEventListener('did-get-response-details', this.getResponseDetails);
+      this.webview.addEventListener('did-navigate', this.renderPreview);
+      this.webview.addEventListener('did-navigate', this.syncURL);
+      this.webview.addEventListener(
+        'did-get-response-details',
+        this.getResponseDetails
+      );
       this.webview.addEventListener('dom-ready', this.highlightElements);
       this.webview.addEventListener('dom-ready', this.resetProgress);
-      this.webview.addEventListener('did-navigate', this.syncURL);
       this.webview.addEventListener('error', console.log.bind(console));
       this.webview.addEventListener(
         'ipc-message',
         event => this.receiveMessage(event.args[0]),
         false
+      );
+      this.preview.addEventListener('did-start-loading', this.previewLoading);
+      this.preview.addEventListener(
+        'did-stop-loading',
+        this.previewFinishedLoading
       );
     }
   }
@@ -197,18 +238,33 @@ class Browser extends React.Component {
             Go!
           </button>
         </form>
-        <progress value={this.state.progress}></progress>
-        <webview
-          ref={webview => {
-            if (webview) {
-              webview.nodeintegration = true;
-              this.webview = webview;
-            }
-          }}
-          id="foo"
-          src={this.state.url}
-          preload="../js/injected.js"
-        />
+        <progress value={this.state.progress} />
+        <div className="webviews">
+          <webview
+            ref={webview => {
+              if (webview) {
+                webview.nodeintegration = true;
+                this.webview = webview;
+              }
+            }}
+            id="webview"
+            src={this.state.url}
+            preload="../js/injected.js"
+          />
+          <div className="tab" onClick={this.togglePreview}>
+            <span>{this.state.showPreview ? '>' : '<'}</span>
+          </div>
+          <webview
+            ref={preview => {
+              if (preview) {
+                preview.nodeintegration = true;
+                this.preview = preview;
+              }
+            }}
+            className={this.state.showPreview ? '' : 'hidden'}
+            id="preview"
+          />
+        </div>
       </div>
     );
   }
