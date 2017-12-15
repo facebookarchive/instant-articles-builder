@@ -517,7 +517,6 @@ form button {
   line-height: 15px;
   text-align: center;
   font-weight: lighter;
-  /*border-left: 1px solid #ccc;*/
   color: #999;
 }
 .webviews > #preview {
