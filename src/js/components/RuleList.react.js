@@ -362,7 +362,7 @@ class RuleList extends React.Component<Props, State> {
     }
   };
 
-  exportRulesJSON = (providedState: State) => {
+  exportRulesJSON = (providedState?: State) => {
     const state = providedState ? providedState : this.state;
     const exportedRules: Array<OutputRuleType> = [];
     [...state.rulesSettings].forEach(([ruleKey, ruleSettings]) => {
