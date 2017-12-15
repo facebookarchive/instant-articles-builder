@@ -49,9 +49,6 @@ $transformer->loadRules($rules);
 $instant_article = InstantArticle::create();
 $transformer->transformString($instant_article, $content);
 
-// Read transformation warnings
-// $warnings = $transformer->getWarnings();
-
 // Output
 ob_end_clean();
 
