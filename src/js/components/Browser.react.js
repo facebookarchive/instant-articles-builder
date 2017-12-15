@@ -20,7 +20,7 @@ class Browser extends React.Component {
     this.state = {
       url: homeURL,
       displayURL: '',
-      showPreview: false,
+      showPreview: true,
     };
   }
 
