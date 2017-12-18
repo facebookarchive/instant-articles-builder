@@ -75,12 +75,7 @@ module.exports = {
     },
     {
       class: 'BoldRule',
-      defaultSelector: 'b',
-    },
-    {
-      class: 'BoldRule',
-      displayName: 'Strong',
-      defaultSelector: 'strong',
+      defaultSelector: 'b, strong',
     },
     {
       class: 'ParagraphRule',
@@ -110,13 +105,8 @@ module.exports = {
     },
     {
       class: 'ListElementRule',
-      displayName: 'Unordered List',
-      defaultSelector: 'ul',
-    },
-    {
-      class: 'ListElementRule',
-      displayName: 'Ordered List',
-      defaultSelector: 'ol',
+      displayName: 'List',
+      defaultSelector: 'ol, ul',
     },
     {
       class: 'BlockquoteRule',
