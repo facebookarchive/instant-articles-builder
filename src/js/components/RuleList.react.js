@@ -102,10 +102,6 @@ class RuleList extends React.Component<Props, State> {
       maxRuleKey: props.rules.length - 1,
       allAvailableRules: allAvailableRules,
     };
-
-    this.props.onRulesJSONChanged(
-      JSON.stringify(this.exportRulesJSON(this.state))
-    );
   }
 
   getRuleSettings(ruleKey: string): ?RuleSettingsType {
@@ -353,6 +349,12 @@ class RuleList extends React.Component<Props, State> {
       });
     }
   }
+
+  componentDidMount = () => {
+    this.props.onRulesJSONChanged(
+      JSON.stringify(this.exportRulesJSON(this.state))
+    );
+  };
 
   componentDidUpdate = (prevProps: Props, prevState: State) => {
     let oldJSON = JSON.stringify(this.exportRulesJSON(prevState));
