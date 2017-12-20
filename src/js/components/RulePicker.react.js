@@ -45,7 +45,7 @@ type Props = {
   onSelectorChanged: RuleSelectorChangedArgs => void,
   properties: Map<string, PropertySettings>,
   ruleKey: string,
-  selector: ?string
+  selector: string
 };
 
 type State = {

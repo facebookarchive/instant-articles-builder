@@ -22,7 +22,7 @@ type Props = {
 type State = {
   findAttributeName?: ?string,
   findMultipleElements?: ?boolean,
-  resolvedCssSelector: ?string,
+  resolvedCssSelector: string,
   selectedElementAttributes: Array<Attribute>,
   selectedElementCount?: number,
   selector?: ?string,
@@ -33,7 +33,7 @@ class App extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      resolvedCssSelector: null,
+      resolvedCssSelector: '',
       selectedElementAttributes: [],
       rulesJSON: '{rules:[]}',
     };
@@ -75,7 +75,7 @@ class App extends React.Component<Props, State> {
     });
   };
 
-  handleBrowserCssSelectorResolved = (resolvedCssSelector: ?string) => {
+  handleBrowserCssSelectorResolved = (resolvedCssSelector: string) => {
     this.setState({
       resolvedCssSelector: resolvedCssSelector,
       selectedElementAttributes: [],
