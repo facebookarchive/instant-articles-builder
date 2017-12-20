@@ -20,6 +20,6 @@ export type PropertySettings = {
   name: string,
   placeholder: string,
   selectedAttribute?: Attribute,
-  selector?: ?string,
+  selector: string,
   type?: string
 };
