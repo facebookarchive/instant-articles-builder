@@ -126,7 +126,7 @@ class App extends React.Component<Props, State> {
             <Browser
               selector={this.state.selector}
               rulesJSON={this.state.rulesJSON}
-              findAttribute={this.state.findAttributeName !== null}
+              findAttribute={!!this.state.findAttributeName}
               findMultipleElements={this.state.findMultipleElements}
               onAttributesReceived={this.receiveAttributes}
               onCssSelectorResolved={this.handleBrowserCssSelectorResolved}
@@ -142,7 +142,7 @@ class App extends React.Component<Props, State> {
               onRulesJSONChanged={this.handleRulesJSONChanged}
               onFind={this.handleRuleListFind}
               findAttributeName={this.state.findAttributeName}
-              finding={this.state.findAttributeName !== null}
+              finding={!!this.state.findAttributeName}
             />
           </nav>
         </div>
