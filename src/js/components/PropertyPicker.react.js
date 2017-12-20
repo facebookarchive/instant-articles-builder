@@ -153,20 +153,16 @@ class PropertyPicker extends React.Component<Props> {
           <label htmlFor={this.props.name} className="sub-label">
             Attribute
           </label>
-          <select onChange={this.handleSelectedAttributeChanged}>
+          <select
+            onChange={this.handleSelectedAttributeChanged}
+            value={this.props.defaultAttribute}
+          >
             {this.props.attributes &&
               this.props.attributes.map(attribute => (
                 <option
                   value={attribute.name}
                   data-attribute-value={attribute.value}
                   key={attribute.name}
-                  selected={
-                    (!!this.props.selectedAttribute &&
-                      attribute.name == this.props.selectedAttribute.name) ||
-                    attribute.name == this.props.defaultAttribute
-                      ? 'selected'
-                      : ''
-                  }
                 >
                   {attribute.name}: "{attribute.value.trim()}"
                 </option>
