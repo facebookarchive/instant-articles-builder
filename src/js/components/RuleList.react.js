@@ -34,7 +34,7 @@ type Props = {
   onFind: (name: string, multiple: boolean) => void,
   onSelectorChanged: (selector: ?string, multiple: ?boolean) => void,
   onRulesJSONChanged: (rulesJSON: string) => void,
-  resolvedCssSelector: ?string,
+  resolvedCssSelector: string,
   rules: Array<InputRule>,
   selectedElementAttributes: Array<Attribute>,
   selectedElementCount: ?number
@@ -53,12 +53,12 @@ type RuleSettingsType = {
   class: string,
   displayName?: string,
   properties: Map<string, PropertySettings>,
-  selector: ?string
+  selector: string
 };
 
 type OutputRuleType = {
   class: string,
-  selector: ?string,
+  selector: string,
   properties: Object
 };
 
@@ -152,6 +152,7 @@ class RuleList extends React.Component<Props, State> {
         ruleSettings.properties.set(property.name, {
           ...property,
           attributes: [],
+          selector: '',
         });
       });
     }

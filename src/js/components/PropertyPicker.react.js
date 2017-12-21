@@ -38,7 +38,7 @@ type Props = {
   onFocus: SelectorChangedArgs => void,
   onSelectorChanged: SelectorChangedArgs => void,
   placeholder: string,
-  selector: ?string,
+  selector: string,
   selectedAttribute: Attribute
 };
 
