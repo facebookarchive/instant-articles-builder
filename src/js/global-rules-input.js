@@ -115,8 +115,8 @@ module.exports = {
     },
     {
       class: 'H1Rule',
-      displayName: 'Header (h1)',
-      defaultSelector: 'h1',
+      displayName: 'Title, Header (h1)',
+      defaultSelector: 'title, h1',
       properties: {
         'h1.class': {
           label: 'Class',
@@ -124,11 +124,6 @@ module.exports = {
           defaultAttribute: 'class',
         },
       },
-    },
-    {
-      class: 'H1Rule',
-      displayName: 'Title',
-      defaultSelector: 'title',
     },
     {
       class: 'H2Rule',
