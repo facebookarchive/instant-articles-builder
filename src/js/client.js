@@ -4,6 +4,8 @@
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
  */
 
 let App = require('./components/App.react.js');
@@ -12,11 +14,22 @@ let React = require('react');
 
 const InputRules = require('./global-rules-input.js');
 
+import type { InputRule } from './types/InputRule';
+
 document.addEventListener('DOMContentLoaded', function() {
   const root = document.getElementById('root');
+  if (!root) {
+    console.error('Could not find root element');
+    return;
+  }
 
-  let rules = [];
+  const rulesByClassName: Map<string, InputRule> = new Map();
   InputRules.rules.forEach(inputRule => {
+    if (rulesByClassName.has(inputRule.class)) {
+      console.warn(`Duplicate rule '${inputRule.class}' found`);
+      return;
+    }
+
     let properties = [];
     if (inputRule.properties) {
       Object.entries(inputRule.properties).forEach(
@@ -33,8 +46,8 @@ document.addEventListener('DOMContentLoaded', function() {
       ...inputRule,
       properties: properties,
     };
-    rules.push(rule);
+    rulesByClassName.set(inputRule.class, rule);
   });
 
-  ReactDOM.render(<App rules={rules} />, root);
+  ReactDOM.render(<App rulesByClassName={rulesByClassName} />, root);
 });

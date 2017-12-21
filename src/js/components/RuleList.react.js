@@ -18,7 +18,6 @@ const RuleUtils = require('../utils/rule-utils.js');
 const { dialog: Dialog } = require('electron').remote;
 const Fs = require('fs');
 
-import type { AvailableRule } from '../types/AvailableRule';
 import type { Attribute } from '../types/Attribute';
 import type { InputRule } from '../types/InputRule';
 import type { PropertySettings } from '../types/PropertySettings';
@@ -42,7 +41,7 @@ type Props = {
   onSelectorChanged: (selector: ?string, multiple: ?boolean) => void,
   onRulesJSONChanged: (rulesJSON: string) => void,
   resolvedCssSelector: string,
-  rules: Array<InputRule>,
+  rulesByClassName: Map<string, InputRule>,
   selectedElementAttributes: Array<Attribute>,
   selectedElementCount: ?number
 };
@@ -51,8 +50,8 @@ type State = {
   activeFindType?: number,
   activePropertyName?: string,
   activeRuleKey?: string,
-  allAvailableRules: Array<AvailableRule>,
   maxRuleKey: number,
+  ruleClassToDisplayNames: Map<string, string>,
   rulesSettings: Map<string, RuleSettingsType>
 };
 
@@ -80,34 +79,39 @@ class RuleList extends React.Component<Props, State> {
     super(props);
 
     const visibleRulesSettings: Map<string, RuleSettingsType> = new Map();
-    let allAvailableRules = [];
+    let ruleClassToDisplayNames: Map<string, string> = new Map();
 
-    if (props.rules) {
-      allAvailableRules = props.rules
-        .map((inputRule, ruleIndex) => {
-          if (inputRule.showByDefault) {
-            const currentRuleSettings = this.getRuleSettingsFromInputRule(
-              inputRule
-            );
-            visibleRulesSettings.set(ruleIndex.toString(), currentRuleSettings);
-          }
-          return {
-            displayName: NameUtils.getInputRuleDisplayName(inputRule),
-            index: ruleIndex,
-          };
-        })
-        .sort(
-          (a, b) =>
-            a.displayName > b.displayName
-              ? 1
-              : a.displayName < b.displayName ? -1 : 0
+    [...props.rulesByClassName].forEach(
+      ([ruleClassName, inputRule], ruleIndex) => {
+        if (inputRule.showByDefault) {
+          const currentRuleSettings = this.getRuleSettingsFromInputRule(
+            inputRule
+          );
+          visibleRulesSettings.set(ruleIndex.toString(), currentRuleSettings);
+        }
+        ruleClassToDisplayNames.set(
+          inputRule.class,
+          NameUtils.getInputRuleDisplayName(inputRule)
         );
-    }
+      }
+    );
+
+    ruleClassToDisplayNames = new Map(
+      [...ruleClassToDisplayNames].sort(
+        (
+          [firstRuleClassName, firstRuleDisplayName],
+          [secondRuleClassName, secondRuleDisplayName]
+        ) =>
+          firstRuleDisplayName > secondRuleDisplayName
+            ? 1
+            : firstRuleDisplayName < secondRuleDisplayName ? -1 : 0
+      )
+    );
 
     this.state = {
       rulesSettings: visibleRulesSettings,
-      maxRuleKey: props.rules.length - 1,
-      allAvailableRules: allAvailableRules,
+      maxRuleKey: props.rulesByClassName.size - 1,
+      ruleClassToDisplayNames: ruleClassToDisplayNames,
     };
   }
 
@@ -169,11 +173,7 @@ class RuleList extends React.Component<Props, State> {
 
   getMatchingInputRule(outputRule: OutputRuleType): ?InputRule {
     // Find the matching InputRule based on the rule class name
-    const matchingInputRules = this.props.rules.filter(
-      inputRule => inputRule.class === outputRule.class
-    );
-
-    return matchingInputRules.length === 0 ? null : matchingInputRules[0];
+    return this.props.rulesByClassName.get(outputRule.class);
   }
 
   getRuleSettingsFromOutputRule(outputRule: OutputRuleType): ?RuleSettingsType {
@@ -223,9 +223,13 @@ class RuleList extends React.Component<Props, State> {
   }
 
   handleRulePickerRuleChanged = (e: RuleChangedArgs) => {
-    const inputRule = this.props.rules[e.selectedInputRuleIndex];
-    const newRuleSettings = this.getRuleSettingsFromInputRule(inputRule);
+    const inputRule = this.props.rulesByClassName.get(e.ruleClassName);
+    if (!inputRule) {
+      console.warn(`Could not find rule with class '${e.ruleClassName}'`);
+      return;
+    }
 
+    const newRuleSettings = this.getRuleSettingsFromInputRule(inputRule);
     const rulesSettings: Map<string, RuleSettingsType> = new Map(
       this.state.rulesSettings
     );
@@ -528,7 +532,7 @@ class RuleList extends React.Component<Props, State> {
             // themselves when raising events
             ruleKey={ruleKey}
             {...ruleSettings}
-            availableRules={this.state.allAvailableRules}
+            ruleClassToDisplayNames={this.state.ruleClassToDisplayNames}
             showEmptyRuleOption={!ruleSettings.class}
             onRuleChanged={this.handleRulePickerRuleChanged}
             onSelectorChanged={this.handleRulePickerSelectorChanged}
@@ -571,7 +575,11 @@ class RuleList extends React.Component<Props, State> {
         >
           Import
         </button>
-        <button className="button" onClick={this.handleAddRule}>
+        <button
+          className="button"
+          id="add-rule-button"
+          onClick={this.handleAddRule}
+        >
           Add Rule
         </button>
       </div>
