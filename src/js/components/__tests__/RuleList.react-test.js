@@ -277,7 +277,10 @@ describe('RuleList', () => {
     });
 
     const component = mount(
-      <RuleList onRulesJSONChanged={() => {}} rules={inputRules} />
+      <RuleList
+        onRulesJSONChanged={() => {}}
+        rulesByClassName={inputRulesToMap(inputRules)}
+      />
     );
     component.find('#import-button').simulate('click');
     component.find('#export-button').simulate('click');
@@ -298,7 +301,10 @@ function simulateButtonClick(buttonId, rules) {
   }
   // Mount the RuleList component
   const component = mount(
-    <RuleList onRulesJSONChanged={() => {}} rules={rules} />
+    <RuleList
+      onRulesJSONChanged={() => {}}
+      rulesByClassName={inputRulesToMap(rules)}
+    />
   );
 
   // Trigger a click on a button
@@ -325,4 +331,8 @@ function testImportedFileResult(inputRules, importedRules, expectCallback) {
 
   // Trigger the verification callback passing the mounted component
   expectCallback(component);
+}
+
+function inputRulesToMap(inputRules) {
+  return new Map(inputRules.map(inputRule => [inputRule.class, inputRule]));
 }
