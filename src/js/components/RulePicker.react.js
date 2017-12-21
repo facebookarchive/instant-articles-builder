@@ -14,7 +14,6 @@ const SelectorPicker = require('./SelectorPicker.react.js');
 const FindSelectorTypes = require('../types/FindSelectorTypes.js');
 const classNames = require('classnames');
 
-import type { AvailableRule } from '../types/AvailableRule';
 import type { AttributeChangedArgs } from '../types/AttributeChangedArgs';
 import type { DateTimeFormatChangedArgs } from '../types/DateTimeFormatChangedArgs';
 import type { PropertySettings } from '../types/PropertySettings';
@@ -30,7 +29,6 @@ import type { SelectorFindArgs } from '../types/SelectorFindArgs';
 type Props = {
   active: boolean,
   activePropertyName?: string,
-  availableRules: Array<AvailableRule>,
   class: string,
   displayName: string,
   finding: boolean,
@@ -44,6 +42,7 @@ type Props = {
   onRuleChanged: RuleChangedArgs => void,
   onSelectorChanged: RuleSelectorChangedArgs => void,
   properties: Map<string, PropertySettings>,
+  ruleClassToDisplayNames: Map<string, string>,
   ruleKey: string,
   selector: string
 };
@@ -64,8 +63,8 @@ class RulePicker extends React.Component<Props, State> {
     const selectElement = event.target;
     if (selectElement instanceof HTMLSelectElement) {
       this.props.onRuleChanged({
+        ruleClassName: selectElement.value,
         ruleKey: this.props.ruleKey,
-        selectedInputRuleIndex: Number(selectElement.value),
       });
     }
   };
@@ -184,11 +183,13 @@ class RulePicker extends React.Component<Props, State> {
         onChange={this.handleRuleChanged}
       >
         {firstRuleOption}
-        {this.props.availableRules.map(availableRule => (
-          <option key={availableRule.index} value={availableRule.index}>
-            {availableRule.displayName}
-          </option>
-        ))}
+        {[...this.props.ruleClassToDisplayNames].map(
+          ([ruleClassName, ruleDisplayName]) => (
+            <option key={ruleClassName} value={ruleClassName}>
+              {ruleDisplayName}
+            </option>
+          )
+        )}
       </select>
     ) : (
       // eslint-disable-next-line jsx-a11y/no-noninteractive-element-interactions
