@@ -32,7 +32,7 @@ import type { RuleSelectorFindArgs } from '../types/RuleSelectorFindArgs';
 const dialogDefaultPath = 'rules.json';
 const dialogFilter = {
   name: 'JSON',
-  extensions: ['json', 'txt'],
+  extensions: ['json'],
 };
 const importExportEncoding = 'utf8';
 
