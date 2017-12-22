@@ -75,12 +75,7 @@ module.exports = {
     },
     {
       class: 'BoldRule',
-      defaultSelector: 'b',
-    },
-    {
-      class: 'BoldRule',
-      displayName: 'Strong',
-      defaultSelector: 'strong',
+      defaultSelector: 'b, strong',
     },
     {
       class: 'ParagraphRule',
@@ -110,13 +105,8 @@ module.exports = {
     },
     {
       class: 'ListElementRule',
-      displayName: 'Unordered List',
-      defaultSelector: 'ul',
-    },
-    {
-      class: 'ListElementRule',
-      displayName: 'Ordered List',
-      defaultSelector: 'ol',
+      displayName: 'List',
+      defaultSelector: 'ol, ul',
     },
     {
       class: 'BlockquoteRule',
@@ -125,8 +115,8 @@ module.exports = {
     },
     {
       class: 'H1Rule',
-      displayName: 'Header (h1)',
-      defaultSelector: 'h1',
+      displayName: 'Title, Header (h1)',
+      defaultSelector: 'title, h1',
       properties: {
         'h1.class': {
           label: 'Class',
@@ -134,11 +124,6 @@ module.exports = {
           defaultAttribute: 'class',
         },
       },
-    },
-    {
-      class: 'H1Rule',
-      displayName: 'Title',
-      defaultSelector: 'title',
     },
     {
       class: 'H2Rule',

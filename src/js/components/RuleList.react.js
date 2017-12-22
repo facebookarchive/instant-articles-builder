@@ -29,6 +29,13 @@ import type { RuleDateTimeFormatChangedArgs } from '../types/RuleDateTimeFormatC
 import type { RuleSelectorChangedArgs } from '../types/RuleSelectorChangedArgs';
 import type { RuleSelectorFindArgs } from '../types/RuleSelectorFindArgs';
 
+const dialogDefaultPath = 'rules.json';
+const dialogFilter = {
+  name: 'JSON',
+  extensions: ['json'],
+};
+const importExportEncoding = 'utf8';
+
 type Props = {
   findAttributeName: ?string,
   onFind: (name: string, multiple: boolean) => void,
@@ -155,6 +162,61 @@ class RuleList extends React.Component<Props, State> {
           selector: '',
         });
       });
+    }
+
+    return ruleSettings;
+  }
+
+  getMatchingInputRule(outputRule: OutputRuleType): ?InputRule {
+    // Find the matching InputRule based on the rule class name
+    const matchingInputRules = this.props.rules.filter(
+      inputRule => inputRule.class === outputRule.class
+    );
+
+    return matchingInputRules.length === 0 ? null : matchingInputRules[0];
+  }
+
+  getRuleSettingsFromOutputRule(outputRule: OutputRuleType): ?RuleSettingsType {
+    const matchingInputRule = this.getMatchingInputRule(outputRule);
+    if (!matchingInputRule) {
+      return null;
+    }
+
+    // Get the blank rule settings, as if the user had added the rule
+    const templateRuleSettings = this.getRuleSettingsFromInputRule(
+      matchingInputRule
+    );
+    const ruleSettings = {
+      ...templateRuleSettings,
+      selector: outputRule.selector,
+    };
+
+    if (outputRule.properties) {
+      Object.entries(outputRule.properties).forEach(
+        ([propertyName, propertySettingsObj]) => {
+          const propertySettings = ((propertySettingsObj: any): OutputPropertyType);
+          ruleSettings.properties.set(propertyName, {
+            attributes: [
+              {
+                name: propertySettings.attribute,
+                value: '',
+              },
+            ],
+            defaultAttribute: propertySettings.attribute,
+            label: propertyName,
+            name: propertyName,
+            placeholder: '',
+            selectedAttribute: {
+              name:
+                propertySettings.attribute !== null
+                  ? propertySettings.attribute
+                  : 'content',
+              value: '',
+            },
+            selector: propertySettings.selector,
+          });
+        }
+      );
     }
 
     return ruleSettings;
@@ -395,18 +457,13 @@ class RuleList extends React.Component<Props, State> {
   handleExport = (e: Event) => {
     Dialog.showSaveDialog(
       {
-        defaultPath: 'rules.json',
-        filters: [
-          {
-            name: 'JSON',
-            extensions: ['json', 'txt'],
-          },
-        ],
+        defaultPath: dialogDefaultPath,
+        filters: [dialogFilter],
       },
       fileName => {
         if (fileName) {
           const contents = JSON.stringify(this.exportRulesJSON(), null, 2);
-          Fs.writeFile(fileName, contents, error => {
+          Fs.writeFile(fileName, contents, importExportEncoding, error => {
             if (error) {
               Dialog.showErrorBox('Unable to save file', error);
             }
@@ -417,6 +474,48 @@ class RuleList extends React.Component<Props, State> {
 
     e.preventDefault();
   };
+
+  handleImport = (e: Event) => {
+    Dialog.showOpenDialog(
+      {
+        defaultPath: dialogDefaultPath,
+        filters: [dialogFilter],
+        properties: ['openFile'],
+      },
+      (filePaths: Array<string>) => {
+        if (filePaths && filePaths.length === 1) {
+          Fs.readFile(filePaths[0], importExportEncoding, (error, data) => {
+            this.loadFromExportedData(data);
+          });
+        }
+      }
+    );
+  };
+
+  loadFromExportedData(data: string) {
+    const rulesSettings: Map<string, RuleSettingsType> = new Map();
+    let nextRuleKey = this.state.maxRuleKey;
+
+    const outputRules = JSON.parse(data).rules;
+    outputRules.forEach((outputRule: OutputRuleType) => {
+      if (
+        // TODO: Define list of rules to be excluded
+        outputRule.class !== 'TextNodeRule' &&
+        (outputRule.class !== 'PassThroughRule' || outputRule.selector !== '*')
+      ) {
+        const ruleSettings = this.getRuleSettingsFromOutputRule(outputRule);
+        if (ruleSettings) {
+          nextRuleKey++;
+          rulesSettings.set(nextRuleKey.toString(), ruleSettings);
+        }
+      }
+    });
+
+    this.setState({
+      maxRuleKey: nextRuleKey,
+      rulesSettings: rulesSettings,
+    });
+  }
 
   render() {
     return (
@@ -464,6 +563,13 @@ class RuleList extends React.Component<Props, State> {
           onClick={this.handleExport}
         >
           Export
+        </button>
+        <button
+          className="button"
+          id="import-button"
+          onClick={this.handleImport}
+        >
+          Import
         </button>
         <button className="button" onClick={this.handleAddRule}>
           Add Rule
