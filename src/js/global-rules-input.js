@@ -30,6 +30,11 @@ module.exports = {
           defaultAttribute: 'content',
           multiple: true,
         },
+        'image.url': {
+          label: 'Hero Image',
+          placeholder: 'Example: div.hero-image img',
+          defaultAttribute: 'src',
+        },
         'article.body': {
           label: 'Article Content',
           placeholder: 'Example: article',
