@@ -41,5 +41,5 @@ ol li::before {
 li span {
   display: block;
   font-size: 0.5em;
-  text-align: center;
+  text-align: left;
 }
