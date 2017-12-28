@@ -17,15 +17,7 @@ const React = require('react');
 const RuleList = require('../RuleList.react.js');
 
 // Rules that are always included in the exported file
-const defaultExportedRules = [
-  {
-    class: 'TextNodeRule',
-  },
-  {
-    class: 'PassThroughRule',
-    selector: '*',
-  },
-];
+const defaultExportedRules = [];
 
 const RULE_HEADER_SELECTOR = 'h2.rule-header';
 
