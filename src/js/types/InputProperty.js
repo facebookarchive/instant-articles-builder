@@ -13,6 +13,7 @@ export type InputProperty = {
   defaultAttribute: string,
   label: string,
   multiple?: boolean,
+  required?: boolean,
   name: string,
   placeholder: string,
   // selector?: string,

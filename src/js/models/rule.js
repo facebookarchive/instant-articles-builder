@@ -19,15 +19,25 @@ class Rule {
   }
 
   toJSON() {
+    if (!this.class || !this.selector) {
+      return null;
+    }
+
+    let json = {};
     const properties = {};
+
+    json.class = this.class;
+    json.selector = this.selector;
+
     this.properties.forEach(property => {
       properties[property.property] = property.toJSON();
     });
-    return {
-      class: this.class,
-      selector: this.selector,
-      properties: properties,
-    };
+
+    if (Object.keys(properties).length > 0) {
+      json.properties = properties;
+    }
+
+    return json;
   }
 
   toString() {
