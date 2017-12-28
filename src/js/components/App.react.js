@@ -16,7 +16,7 @@ import type { Attribute } from '../types/Attribute';
 import type { InputRule } from '../types/InputRule';
 
 type Props = {
-  rules: Array<InputRule>
+  rulesByClassName: Map<string, InputRule>
 };
 
 type State = {
@@ -134,7 +134,7 @@ class App extends React.Component<Props, State> {
           </main>
           <nav id="nav">
             <RuleList
-              rules={this.props.rules}
+              rulesByClassName={this.props.rulesByClassName}
               resolvedCssSelector={this.state.resolvedCssSelector}
               selectedElementAttributes={this.state.selectedElementAttributes}
               selectedElementCount={this.state.selectedElementCount}

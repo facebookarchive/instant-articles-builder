@@ -9,6 +9,6 @@
  */
 
 export type RuleChangedArgs = {
-  ruleKey: string,
-  selectedInputRuleIndex: number
+  ruleClassName: string,
+  ruleKey: string
 };
