@@ -32,9 +32,7 @@ function buildRule(payload) {
 function getUpdatedRules(payload) {
   return {
     rules: [
-      { class: 'TextNodeRule' },
-      { class: 'PassThroughRule', selector: '*' },
-      ...payload.map(rule => buildRule(rule).toJSON()),
+      ...payload.map(rule => buildRule(rule).toJSON()).filter(rule => !!rule),
     ],
   };
 }
