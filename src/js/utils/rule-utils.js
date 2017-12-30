@@ -6,8 +6,8 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-const Rule = require('../models/rule.js');
-const RuleProperty = require('../models/rule-property.js');
+const Rule = require('../models/Rule.js');
+const RuleProperty = require('../models/RuleProperty.js');
 
 function buildRule(payload) {
   const rule = new Rule(payload.class, payload.selector);

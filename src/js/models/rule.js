@@ -4,45 +4,29 @@
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
  */
 
-class Rule {
-  constructor(clazz, selector, properties) {
-    this.class = clazz;
-    this.selector = selector;
-    this.properties = typeof properties === 'undefined' ? [] : properties;
-  }
+import { Record, Map, Seq } from 'immutable';
+import { RuleDefinitionFactory } from './RuleDefinition.js';
+import type { RuleDefinition } from './RuleDefinition.js';
+import type { RuleProperty } from './RuleProperty';
 
-  addProperty(property) {
-    this.properties.push(property);
-    return this;
-  }
+import type { RecordOf, RecordFactory } from 'immutable';
 
-  toJSON() {
-    if (!this.class || !this.selector) {
-      return null;
-    }
+type RuleRecord = {
+  guid: string,
+  definition: RuleDefinition,
+  properties: Map<string, RuleProperty>,
+  selector: ?string
+};
 
-    let json = {};
-    const properties = {};
+export const RuleFactory: RecordFactory<RuleRecord> = Record({
+  guid: '',
+  definition: RuleDefinitionFactory(),
+  properties: Map(),
+  selector: null,
+});
 
-    json.class = this.class;
-    json.selector = this.selector;
-
-    this.properties.forEach(property => {
-      properties[property.property] = property.toJSON();
-    });
-
-    if (Object.keys(properties).length > 0) {
-      json.properties = properties;
-    }
-
-    return json;
-  }
-
-  toString() {
-    return JSON.stringify(this.toJSON());
-  }
-}
-
-module.exports = Rule;
+export type Rule = RecordOf<RuleRecord>;

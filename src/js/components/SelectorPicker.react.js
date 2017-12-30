@@ -9,21 +9,12 @@
  */
 
 const React = require('react');
+import type { Rule } from '../models/Rule';
+import type { RuleProperty } from '../models/RuleProperty';
 
-import type { SelectorChangedArgs } from '../types/SelectorChangedArgs';
-import type { SelectorFindArgs } from '../types/SelectorFindArgs';
+import type { Props as BaseProps } from '../containers/AppContainer.react';
 
-type Props = {
-  finding: boolean,
-  name: string,
-  multiple: boolean,
-  onBlur?: SelectorChangedArgs => void,
-  onFind: SelectorFindArgs => void,
-  onFocus?: SelectorChangedArgs => void,
-  onSelectorChanged: SelectorChangedArgs => void,
-  placeholder?: string,
-  selector: string
-};
+type Props = BaseProps & { target: Rule | RuleProperty };
 
 type State = {
   findButtonCenterX: number,
@@ -33,11 +24,25 @@ type State = {
 };
 
 class SelectorPicker extends React.Component<Props, State> {
-  handleMouseMove: Event => void;
-
   constructor(props: Props) {
     super(props);
-    this.handleMouseMove = this.handleMouseMove.bind(this);
+    this.configureLine();
+    this.enableMouseMoveTracking();
+  }
+
+  configureLine(): void {
+    const clientRect = this.refs.targetButton.getBoundingClientRect();
+    this.setState({
+      findButtonCenterX: clientRect.left + clientRect.width / 2,
+      findButtonCenterY: clientRect.top + clientRect.height / 2,
+    });
+  }
+
+  isFinding(): boolean {
+    if (this.props.app.finding == this.props.target) {
+      return true;
+    }
+    return false;
   }
 
   enableMouseMoveTracking() {
@@ -49,21 +54,11 @@ class SelectorPicker extends React.Component<Props, State> {
   }
 
   componentWillUnmount() {
-    if (this.props.finding) {
-      this.disableMouseMoveTracking();
-    }
+    this.disableMouseMoveTracking();
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.finding && !this.props.finding) {
-      this.enableMouseMoveTracking();
-    } else if (!nextProps.finding && this.props.finding) {
-      this.disableMouseMoveTracking();
-    }
-  }
-
-  handleMouseMove(event: MouseEvent) {
-    if (this.props.finding) {
+  handleMouseMove = (event: MouseEvent) => {
+    if (this.isFinding()) {
       const findSvgStyle = {
         top: Math.min(event.pageY, this.state.findButtonCenterY),
         left: Math.min(event.pageX, this.state.findButtonCenterX),
@@ -83,67 +78,35 @@ class SelectorPicker extends React.Component<Props, State> {
         findLineLocationAttributes,
       });
     }
-  }
+  };
 
   handleSelectorChanged = (event: Event) => {
-    if (this.props.onSelectorChanged) {
-      const inputElement = event.target;
-      if (inputElement instanceof HTMLInputElement) {
-        const selector = inputElement.value;
-        this.props.onSelectorChanged({
-          selector: selector,
-          name: this.props.name,
-          multiple: this.props.multiple,
-        });
-      }
+    const inputElement = event.target;
+    if (inputElement instanceof HTMLInputElement) {
+      const selector = inputElement.value;
     }
   };
 
   handleFocus = (event: Event) => {
-    if (this.props.onFocus) {
-      const inputElement = event.target;
-      if (inputElement instanceof HTMLInputElement) {
-        const selector = inputElement.value;
-        this.props.onFocus({
-          selector: selector,
-          name: this.props.name,
-          multiple: this.props.multiple,
-        });
-      }
+    const inputElement = event.target;
+    if (inputElement instanceof HTMLInputElement) {
+      const selector = inputElement.value;
     }
   };
 
   handleBlur = (event: Event) => {
-    if (this.props.onBlur) {
-      const inputElement = event.target;
-      if (inputElement instanceof HTMLInputElement) {
-        const selector = inputElement.value;
-        this.props.onBlur({
-          selector: selector,
-          name: this.props.name,
-          multiple: this.props.multiple,
-        });
-      }
+    const inputElement = event.target;
+    if (inputElement instanceof HTMLInputElement) {
+      const selector = inputElement.value;
     }
   };
 
   handleFindButtonClick = (event: Event) => {
-    const clientRect = this.refs.targetButton.getBoundingClientRect();
-    this.setState({
-      findButtonCenterX: clientRect.left + clientRect.width / 2,
-      findButtonCenterY: clientRect.top + clientRect.height / 2,
-    });
-    if (this.props.onFind) {
-      this.props.onFind({
-        name: this.props.name,
-        multiple: this.props.multiple,
-      });
-    }
     event.preventDefault();
   };
 
   render() {
-    const findLine = this.props.finding ? (
+    const findLine = this.isFinding() ? (
       <svg className="line" style={this.state.findSvgStyle}>
         <line {...this.state.findLineLocationAttributes} />
       </svg>
@@ -153,9 +116,8 @@ class SelectorPicker extends React.Component<Props, State> {
       <div>
         <input
           type="text"
-          name={this.props.name}
-          placeholder={this.props.placeholder}
-          value={this.props.selector}
+          placeholder={this.props.target.definition.placeholder}
+          value={this.props.target.selector}
           onChange={this.handleSelectorChanged}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}

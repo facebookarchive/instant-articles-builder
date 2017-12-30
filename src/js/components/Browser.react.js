@@ -6,10 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-let React = require('react');
-let fs = require('fs');
-let debounce = require('../utils/debounce.js');
-
+const React = require('react');
+const fs = require('fs');
+const debounce = require('../utils/debounce.js');
 const homeURL = `file:///${__dirname}/../../html/home.html`;
 
 class Browser extends React.Component {
