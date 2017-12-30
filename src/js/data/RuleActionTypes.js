@@ -8,7 +8,12 @@
  * @flow
  */
 
-export type Attribute = {
-  name: string,
-  value: string
+const RuleActionTypes = {
+  ADD_RULE: 'ADD_RULE',
+  REMOVE_RULE: 'REMOVE_RULE',
+  EDIT_RULE: 'EDIT_RULE',
 };
+
+export type RuleActionType = $Values<typeof RuleActionTypes>;
+
+export default RuleActionTypes;
