@@ -10,23 +10,16 @@
 
 const React = require('react');
 const RulePicker = require('./RulePicker.react.js');
-
 const FindSelectorTypes = require('../types/FindSelectorTypes.js');
 const NameUtils = require('../utils/name-utils.js');
 const RuleUtils = require('../utils/rule-utils.js');
-
-const { dialog: Dialog } = require('electron').remote;
+const RuleActions = require('../data/RuleActions');
+const { remote: { dialog: Dialog } } = require('electron');
 const Fs = require('fs');
 
-import type { Attribute } from '../types/Attribute';
-import type { InputRule } from '../types/InputRule';
-import type { PropertySettings } from '../types/PropertySettings';
-import type { RemoveRuleArgs } from '../types/RemoveRuleArgs';
-import type { RuleAttributeChangedArgs } from '../types/RuleAttributeChangedArgs';
-import type { RuleChangedArgs } from '../types/RuleChangedArgs';
-import type { RuleDateTimeFormatChangedArgs } from '../types/RuleDateTimeFormatChangedArgs';
-import type { RuleSelectorChangedArgs } from '../types/RuleSelectorChangedArgs';
-import type { RuleSelectorFindArgs } from '../types/RuleSelectorFindArgs';
+import { RuleFactory } from '../models/Rule';
+import type { Rule } from '../models/Rule';
+import type { Props } from '../containers/AppContainer.react';
 
 const dialogDefaultPath = 'rules.json';
 const dialogFilter = {
@@ -35,428 +28,13 @@ const dialogFilter = {
 };
 const importExportEncoding = 'utf8';
 
-type Props = {
-  findAttributeName: ?string,
-  onFind: (name: string, multiple: boolean) => void,
-  onSelectorChanged: (selector: ?string, multiple: ?boolean) => void,
-  onRulesJSONChanged: (rulesJSON: string) => void,
-  resolvedCssSelector: string,
-  rulesByClassName: Map<string, InputRule>,
-  selectedElementAttributes: Array<Attribute>,
-  selectedElementCount: ?number
-};
-
-type State = {
-  activeFindType?: number,
-  activePropertyName?: string,
-  activeRuleKey?: string,
-  maxRuleKey: number,
-  ruleClassToDisplayNames: Map<string, string>,
-  rulesSettings: Map<string, RuleSettingsType>
-};
-
-type RuleSettingsType = {
-  class: string,
-  displayName?: string,
-  properties: Map<string, PropertySettings>,
-  selector: string
-};
-
-type OutputRuleType = {
-  class: string,
-  selector: string,
-  properties: Object
-};
-
-type OutputPropertyType = {
-  attribute: string,
-  dateTimeFormat?: string,
-  selector: string
-};
-
-class RuleList extends React.Component<Props, State> {
+class RuleList extends React.PureComponent<Props> {
   constructor(props: Props) {
     super(props);
-
-    const visibleRulesSettings: Map<string, RuleSettingsType> = new Map();
-    let ruleClassToDisplayNames: Map<string, string> = new Map();
-
-    [...props.rulesByClassName].forEach(
-      ([ruleClassName, inputRule], ruleIndex) => {
-        if (inputRule.showByDefault) {
-          const currentRuleSettings = this.getRuleSettingsFromInputRule(
-            inputRule
-          );
-          visibleRulesSettings.set(ruleIndex.toString(), currentRuleSettings);
-        }
-        ruleClassToDisplayNames.set(
-          inputRule.class,
-          NameUtils.getInputRuleDisplayName(inputRule)
-        );
-      }
-    );
-
-    ruleClassToDisplayNames = new Map(
-      [...ruleClassToDisplayNames].sort(
-        (
-          [firstRuleClassName, firstRuleDisplayName],
-          [secondRuleClassName, secondRuleDisplayName]
-        ) =>
-          firstRuleDisplayName > secondRuleDisplayName
-            ? 1
-            : firstRuleDisplayName < secondRuleDisplayName ? -1 : 0
-      )
-    );
-
-    this.state = {
-      rulesSettings: visibleRulesSettings,
-      maxRuleKey: props.rulesByClassName.size - 1,
-      ruleClassToDisplayNames: ruleClassToDisplayNames,
-    };
   }
 
-  getRuleSettings(ruleKey: string): ?RuleSettingsType {
-    return this.state.rulesSettings.get(ruleKey);
-  }
-
-  getActiveRuleSettings(): ?RuleSettingsType {
-    return this.state.activeRuleKey
-      ? this.getRuleSettings(this.state.activeRuleKey)
-      : null;
-  }
-
-  getActivePropertySettings(): ?PropertySettings {
-    return this.state.activeRuleKey && this.state.activePropertyName
-      ? this.getPropertySettings(
-        this.state.activeRuleKey,
-        this.state.activePropertyName
-      )
-      : null;
-  }
-
-  getPropertySettings(
-    ruleKey: string,
-    propertyName: string
-  ): ?PropertySettings {
-    const ruleSettings = this.getRuleSettings(ruleKey);
-    return ruleSettings ? ruleSettings.properties.get(propertyName) : null;
-  }
-
-  getRuleSettingsFromInputRule(inputRule: InputRule): RuleSettingsType {
-    const {
-      defaultSelector: selector,
-      properties: inputRuleProperties,
-      ...reducedInputRule
-    } = inputRule;
-    const ruleSettings: RuleSettingsType = {
-      ...reducedInputRule,
-      selector,
-      properties: new Map(),
-    };
-
-    if (!ruleSettings.displayName) {
-      ruleSettings.displayName = NameUtils.getInputRuleDisplayName(inputRule);
-    }
-
-    if (inputRuleProperties) {
-      inputRuleProperties.forEach(property => {
-        ruleSettings.properties.set(property.name, {
-          ...property,
-          attributes: [],
-          selector: '',
-        });
-      });
-    }
-
-    return ruleSettings;
-  }
-
-  getMatchingInputRule(outputRule: OutputRuleType): ?InputRule {
-    // Find the matching InputRule based on the rule class name
-    return this.props.rulesByClassName.get(outputRule.class);
-  }
-
-  getRuleSettingsFromOutputRule(outputRule: OutputRuleType): ?RuleSettingsType {
-    const matchingInputRule = this.getMatchingInputRule(outputRule);
-    if (!matchingInputRule) {
-      return null;
-    }
-
-    // Get the blank rule settings, as if the user had added the rule
-    const templateRuleSettings = this.getRuleSettingsFromInputRule(
-      matchingInputRule
-    );
-    const ruleSettings = {
-      ...templateRuleSettings,
-      selector: outputRule.selector,
-    };
-
-    if (outputRule.properties) {
-      Object.entries(outputRule.properties).forEach(
-        ([propertyName, propertySettingsObj]) => {
-          const propertySettings = ((propertySettingsObj: any): OutputPropertyType);
-          ruleSettings.properties.set(propertyName, {
-            attributes: [
-              {
-                name: propertySettings.attribute,
-                value: '',
-              },
-            ],
-            defaultAttribute: propertySettings.attribute,
-            label: propertyName,
-            name: propertyName,
-            placeholder: '',
-            selectedAttribute: {
-              name:
-                propertySettings.attribute !== null
-                  ? propertySettings.attribute
-                  : 'content',
-              value: '',
-            },
-            selector: propertySettings.selector,
-          });
-        }
-      );
-    }
-
-    return ruleSettings;
-  }
-
-  handleRulePickerRuleChanged = (e: RuleChangedArgs) => {
-    const inputRule = this.props.rulesByClassName.get(e.ruleClassName);
-    if (!inputRule) {
-      console.warn(`Could not find rule with class '${e.ruleClassName}'`);
-      return;
-    }
-
-    const newRuleSettings = this.getRuleSettingsFromInputRule(inputRule);
-    const rulesSettings: Map<string, RuleSettingsType> = new Map(
-      this.state.rulesSettings
-    );
-    rulesSettings.set(e.ruleKey, newRuleSettings);
-
-    this.setState({
-      rulesSettings: rulesSettings,
-    });
-  };
-
-  handleRulePickerSelectorChanged = (e: RuleSelectorChangedArgs) => {
-    const selector = e.selector;
-    const ruleSettings = this.getRuleSettings(e.ruleKey);
-    const newRuleSettings = {
-      ...ruleSettings,
-      selector,
-    };
-
-    const rulesSettings: Map<string, RuleSettingsType> = new Map(
-      this.state.rulesSettings
-    );
-    rulesSettings.set(e.ruleKey, newRuleSettings);
-
-    this.setState({
-      rulesSettings: rulesSettings,
-    });
-
-    this.props.onSelectorChanged(e.selector, e.multiple);
-  };
-
-  handleRulePickerPropertySelectorChanged = (e: RuleSelectorChangedArgs) => {
-    const ruleSettings = this.getRuleSettings(e.ruleKey);
-    if (!ruleSettings) {
-      return;
-    }
-
-    const propertySettings = this.getPropertySettings(e.ruleKey, e.name);
-    // Only update if we have a new selector (we could be selecting a different
-    // text box)
-    if (propertySettings && propertySettings.selector !== e.selector) {
-      const newPropertySettings = {
-        ...propertySettings,
-        selector: e.selector,
-        // Clear attributes, they will get populated by browser
-        attributes: [],
-        count: 0,
-      };
-      ruleSettings.properties.set(e.name, newPropertySettings);
-    }
-
-    // TODO: State should be immutable
-    this.setState({
-      activeRuleKey: e.ruleKey,
-      activePropertyName: e.name,
-      rulesSettings: this.state.rulesSettings,
-    });
-
-    this.onSelectorChanged(ruleSettings.selector, e.selector, e.multiple);
-  };
-
-  onSelectorChanged(
-    ruleSelector: ?string,
-    propertySelector: string,
-    multiple: boolean
-  ) {
-    // Create new selector based on selector of the parent rule
-    // Note: Assumes rules cannot be nested
-    const scopedSelector =
-      ruleSelector && propertySelector
-        ? ruleSelector + ' ' + propertySelector
-        : propertySelector;
-    this.props.onSelectorChanged(scopedSelector, multiple);
-  }
-
-  handleRulePickerAttributeChanged = (e: RuleAttributeChangedArgs) => {
-    const propertySettings = this.getPropertySettings(
-      e.ruleKey,
-      e.propertyName
-    );
-    if (!propertySettings) {
-      return;
-    }
-
-    propertySettings.selectedAttribute = e.attribute;
-
-    // TODO: State should be immutable
-    this.setState({
-      rulesSettings: this.state.rulesSettings,
-    });
-  };
-
-  handleRulePickerDateTimeFormatChanged = (
-    e: RuleDateTimeFormatChangedArgs
-  ) => {
-    let propertySettings = this.getPropertySettings(e.ruleKey, e.propertyName);
-    if (!propertySettings) {
-      return;
-    }
-
-    propertySettings.dateTimeFormat = e.format;
-
-    // TODO: State should be immutable
-    this.setState({
-      rulesSettings: this.state.rulesSettings,
-    });
-  };
-
-  handleRulePickerRemove = (e: RemoveRuleArgs) => {
-    const rulesSettings = new Map(this.state.rulesSettings);
-    rulesSettings.delete(e.ruleKey);
-
-    this.setState({
-      rulesSettings: rulesSettings,
-    });
-  };
-
-  handleRulePickerFind = (e: RuleSelectorFindArgs) => {
-    this.setState({
-      activeRuleKey: e.ruleKey,
-      activePropertyName: e.name,
-      activeFindType: e.findType,
-    });
-    this.props.onFind(e.name, e.multiple);
-  };
-
-  handleAddRule = (e: Event) => {
-    const newRuleKey = this.state.maxRuleKey + 1;
-    const newRuleSettings = {
-      class: '',
-      selector: '',
-      properties: new Map(),
-    };
-
-    const rulesSettings: Map<string, RuleSettingsType> = new Map(
-      this.state.rulesSettings
-    );
-    rulesSettings.set(newRuleKey.toString(), newRuleSettings);
-
-    this.setState({
-      rulesSettings: rulesSettings,
-      maxRuleKey: newRuleKey,
-    });
-
-    e.preventDefault();
-  };
-
-  componentWillReceiveProps(nextProps: Props) {
-    if (
-      nextProps.selectedElementAttributes !==
-        this.props.selectedElementAttributes &&
-      this.state.activeFindType !== FindSelectorTypes.RULE
-    ) {
-      // TODO: State should be immutable
-      // Update the attributes for the item that have the selector
-      const activePropertySettings = this.getActivePropertySettings();
-
-      if (activePropertySettings) {
-        activePropertySettings.attributes = nextProps.selectedElementAttributes;
-        activePropertySettings.count = nextProps.selectedElementCount;
-
-        this.setState({
-          rulesSettings: this.state.rulesSettings,
-        });
-      }
-    }
-
-    if (nextProps.resolvedCssSelector !== this.props.resolvedCssSelector) {
-      // TODO: State should be immutable
-      // Update the selector for the item that changed
-      if (this.state.activeFindType === FindSelectorTypes.PROPERTY) {
-        const activePropertySettings = this.getActivePropertySettings();
-        if (activePropertySettings) {
-          activePropertySettings.selector = nextProps.resolvedCssSelector;
-        }
-      } else if (this.state.activeFindType === FindSelectorTypes.RULE) {
-        const activeRuleSettings = this.getActiveRuleSettings();
-        if (activeRuleSettings) {
-          activeRuleSettings.selector = nextProps.resolvedCssSelector;
-        }
-      }
-
-      this.setState({
-        rulesSettings: this.state.rulesSettings,
-      });
-    }
-  }
-
-  componentDidMount = () => {
-    this.props.onRulesJSONChanged(
-      JSON.stringify(this.exportRulesJSON(this.state))
-    );
-  };
-
-  componentDidUpdate = (prevProps: Props, prevState: State) => {
-    let oldJSON = JSON.stringify(this.exportRulesJSON(prevState));
-    let newJSON = JSON.stringify(this.exportRulesJSON(this.state));
-    if (newJSON != oldJSON) {
-      this.props.onRulesJSONChanged(newJSON);
-    }
-  };
-
-  exportRulesJSON = (providedState?: State) => {
-    const state = providedState ? providedState : this.state;
-    const exportedRules: Array<OutputRuleType> = [];
-    [...state.rulesSettings].forEach(([ruleKey, ruleSettings]) => {
-      const exportedRuleSettings: OutputRuleType = {
-        ...ruleSettings,
-        properties: {},
-      };
-      exportedRules.push(exportedRuleSettings);
-
-      [...ruleSettings.properties].forEach(([propertyName, property]) => {
-        if (property.selector && property.selectedAttribute) {
-          const exportedProperty: OutputPropertyType = {
-            selector: property.selector,
-            attribute: property.selectedAttribute.name,
-          };
-          if (property.dateTimeFormat) {
-            exportedProperty.dateTimeFormat = property.dateTimeFormat;
-          }
-
-          exportedRuleSettings.properties[propertyName] = exportedProperty;
-        }
-      });
-    });
-    return RuleUtils.getUpdatedRules(exportedRules);
-  };
+  exportRulesJSON = () => {};
+  loadFromExportedData = (data: string) => {};
 
   handleExport = (e: Event) => {
     Dialog.showSaveDialog(
@@ -496,71 +74,21 @@ class RuleList extends React.Component<Props, State> {
     );
   };
 
-  loadFromExportedData(data: string) {
-    const rulesSettings: Map<string, RuleSettingsType> = new Map();
-    let nextRuleKey = this.state.maxRuleKey;
-
-    const outputRules = JSON.parse(data).rules;
-    outputRules.forEach((outputRule: OutputRuleType) => {
-      if (
-        // TODO: Define list of rules to be excluded
-        outputRule.class !== 'TextNodeRule' &&
-        (outputRule.class !== 'PassThroughRule' || outputRule.selector !== '*')
-      ) {
-        const ruleSettings = this.getRuleSettingsFromOutputRule(outputRule);
-        if (ruleSettings) {
-          nextRuleKey++;
-          rulesSettings.set(nextRuleKey.toString(), ruleSettings);
-        }
+  handleAddRule = (e: Event) => {
+    const selectElement = event.target;
+    if (selectElement instanceof HTMLSelectElement) {
+      const ruleDefinition = this.props.ruleDefinitions.get(
+        selectElement.value
+      );
+      if (ruleDefinition != null) {
+        RuleActions.addRule(RuleFactory({ definition: ruleDefinition }));
       }
-    });
-
-    this.setState({
-      maxRuleKey: nextRuleKey,
-      rulesSettings: rulesSettings,
-    });
-  }
+    }
+  };
 
   render() {
     return (
       <div>
-        {[...this.state.rulesSettings].map(([ruleKey, ruleSettings]) => (
-          <RulePicker
-            // This field is required by React
-            key={ruleKey}
-            // This is the key the child components will use to identify
-            // themselves when raising events
-            ruleKey={ruleKey}
-            {...ruleSettings}
-            ruleClassToDisplayNames={this.state.ruleClassToDisplayNames}
-            showEmptyRuleOption={!ruleSettings.class}
-            onRuleChanged={this.handleRulePickerRuleChanged}
-            onSelectorChanged={this.handleRulePickerSelectorChanged}
-            onPropertySelectorChanged={
-              this.handleRulePickerPropertySelectorChanged
-            }
-            onAttributeChanged={this.handleRulePickerAttributeChanged}
-            onDateTimeFormatChanged={this.handleRulePickerDateTimeFormatChanged}
-            onRemove={this.handleRulePickerRemove}
-            onFind={this.handleRulePickerFind}
-            active={this.state.activeRuleKey === ruleKey}
-            activePropertyName={this.state.activePropertyName}
-            findAttributeName={
-              this.state.activeRuleKey === ruleKey
-                ? this.props.findAttributeName
-                : null
-            }
-            finding={
-              this.state.activeRuleKey === ruleKey &&
-              this.props.findAttributeName !== null
-            }
-            findType={
-              this.state.activeRuleKey === ruleKey
-                ? this.state.activeFindType
-                : null
-            }
-          />
-        ))}
         <button
           className="button"
           id="export-button"
@@ -575,13 +103,22 @@ class RuleList extends React.Component<Props, State> {
         >
           Import
         </button>
-        <button
-          className="button"
-          id="add-rule-button"
-          onClick={this.handleAddRule}
-        >
-          Add Rule
-        </button>
+
+        <select className="rule-selector" onChange={this.handleAddRule}>
+          <option value={null}>Select a Rule...</option>
+          {this.props.ruleDefinitions.map(ruleDefinition => (
+            <option
+              key={ruleDefinition.className}
+              value={ruleDefinition.className}
+            >
+              {ruleDefinition.displayName}
+            </option>
+          ))}
+        </select>
+
+        {this.props.rules.map(rule => (
+          <RulePicker {...this.props} rule={rule} />
+        ))}
       </div>
     );
   }

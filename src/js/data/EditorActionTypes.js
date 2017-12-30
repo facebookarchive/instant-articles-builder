@@ -8,11 +8,12 @@
  * @flow
  */
 
-import type { InputProperty } from './InputProperty';
-
-export type InputRule = {
-  class: string,
-  defaultSelector: string,
-  properties: Map<string, InputProperty>,
-  showByDefault: boolean
+const EditorActionTypes = {
+  START_FINDING: 'START_FINDING',
+  FOUND: 'FOUND',
+  STOP_FINDING: 'STOP_FINDING',
 };
+
+export type EditorActionType = $Values<typeof EditorActionTypes>;
+
+export default EditorActionTypes;
