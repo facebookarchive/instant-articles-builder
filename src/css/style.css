@@ -52,6 +52,7 @@ header > img {
   padding-left: 10px;
   padding-right: 10px;
   overflow-y: auto;
+  display: flex;
 }
 
 #nav button {
@@ -63,7 +64,7 @@ header > img {
   margin-bottom: 20px;
 }
 
-.field-line > div {
+.field-line .selector-picker {
   display: flex;
 }
 
@@ -135,13 +136,38 @@ header > img {
 }
 
 .button {
-  color: #ffffff;
+  color: #fff;
   min-width: 40px;
   height: 30px;
   background-color: #3b5998;
   border: none;
   border-radius: 4px;
   font-size: 1.1em;
+}
+
+.tools {
+  display: flex;
+  margin-bottom: 10px;
+  flex-shrink: 0;
+}
+.tools .button {
+  color: #333;
+  background: none;
+  border-radius: 0;
+  flex-grow: 1;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+.tools .button:hover {
+  border-color: #ccc;
+}
+.tools .button:active,
+.tools .button:focus {
+  outline: none;
+  box-shadow: none;
+}
+.tools .button:active {
+  border-style: inset;
 }
 
 .address {
@@ -280,6 +306,10 @@ header > img {
   border-bottom-left-radius: 5px;
   display: block;
   background: #ccc;
+}
+.datetime-picker .warning,
+.datetime-picker .notice {
+  width: 253px;
 }
 .field-line.active .warning {
   background: #e76e63;
@@ -437,7 +467,7 @@ webview {
   text-overflow: ellipsis;
   height: 19px;
   font-size: 13.2px;
-  margin: -6px 0px 5px -6px;
+  margin: -6px 0px 0px -6px;
   color: #fff;
   background: #3b5998;
   border-radius: 5px;
@@ -448,10 +478,6 @@ webview {
   cursor: pointer;
 }
 
-.rule-settings {
-  max-height: 600px;
-  transition: all 0.5s linear;
-}
 .collapsed {
   overflow: hidden;
 }
@@ -531,4 +557,13 @@ form button {
 
 .webviews > #preview.loading {
   opacity: 0.1;
+}
+
+.rule-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.scrollable {
+  overflow-y: scroll;
 }

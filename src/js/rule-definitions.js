@@ -19,7 +19,7 @@ const ruleDefinitions: RuleDefinition[] = [];
 
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'GlobalRule',
+    name: 'GlobalRule',
     placeholder: 'Example: html',
     displayName: 'Article Structure',
     unique: true,
@@ -72,14 +72,14 @@ ruleDefinitions.push(
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'ItalicRule',
+    name: 'ItalicRule',
     displayName: 'Italic Text',
     placeholder: 'Example: i',
   })
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'CaptionRule',
+    name: 'CaptionRule',
     displayName: 'Caption',
     placeholder: 'Example: article',
     properties: Map({
@@ -95,7 +95,7 @@ ruleDefinitions.push(
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'AnchorRule',
+    name: 'AnchorRule',
     displayName: 'Link',
     placeholder: 'Example: a',
     properties: Map({
@@ -119,35 +119,35 @@ ruleDefinitions.push(
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'EmphasizedRule',
+    name: 'EmphasizedRule',
     displayName: 'Emphasized Text',
     placeholder: 'Example: em',
   })
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'BoldRule',
+    name: 'BoldRule',
     displayName: 'Bold Text',
     placeholder: 'Example: b, strong',
   })
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'ParagraphRule',
+    name: 'ParagraphRule',
     displayName: 'Paragraph',
     placeholder: 'Example: p',
   })
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'ListItemRule',
+    name: 'ListItemRule',
     displayName: 'List Item',
     placeholder: 'Example: li',
   })
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'SponsorRule',
+    name: 'SponsorRule',
     displayName: 'Sponsor(s)',
     placeholder: 'Example: ul.op-sponsors',
     properties: Map({
@@ -164,35 +164,35 @@ ruleDefinitions.push(
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'ListElementRule',
+    name: 'ListElementRule',
     displayName: 'List',
     placeholder: 'Example: ol, ul',
   })
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'BlockquoteRule',
+    name: 'BlockquoteRule',
     displayName: 'Block Quotation',
     placeholder: 'Example: blockquote',
   })
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'H1Rule',
+    name: 'H1Rule',
     displayName: 'Title, Header (h1)',
     placeholder: 'Example: title, h1',
   })
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'H2Rule',
+    name: 'H2Rule',
     displayName: 'Sub-title, Header (h2)',
     placeholder: 'Example: h2',
   })
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
-    className: 'RelatedArticlesRule',
+    name: 'RelatedArticlesRule',
     displayName: 'Related Articles',
     placeholder: 'Example: ul.op-related-articles',
     properties: Map({

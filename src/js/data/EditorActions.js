@@ -9,7 +9,7 @@
  */
 
 const RulesEditorDispatcher = require('./RulesEditorDispatcher.js');
-
+import { Map } from 'immutable';
 import type { Attribute } from '../models/Attribute';
 import type { Field } from '../models/Field';
 import EditorActionTypes from './EditorActionTypes.js';
@@ -19,6 +19,11 @@ class EditorActions {
     RulesEditorDispatcher.dispatch({
       type: EditorActionTypes.FOCUS_FIELD,
       field,
+    });
+  }
+  static blur() {
+    RulesEditorDispatcher.dispatch({
+      type: EditorActionTypes.BLUR,
     });
   }
   static startFinding(field: Field) {
@@ -32,11 +37,14 @@ class EditorActions {
       type: EditorActionTypes.STOP_FINDING,
     });
   }
-  static found(attributes: Attribute[], count: number) {
+  static found(
+    elementAttributes: Map<string, Attribute>,
+    elementCount: number
+  ) {
     RulesEditorDispatcher.dispatch({
       type: EditorActionTypes.FOUND,
-      attributes,
-      count,
+      elementAttributes,
+      elementCount,
     });
   }
 }

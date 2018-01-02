@@ -35,9 +35,7 @@ const BaseRuleFactory: RecordFactory<RuleRecord> = Record({
 // Private counter for generating guid
 let counter = 0;
 
-export const RuleFactory: RecordFactory<RuleRecord> = (
-  values: $Shape<RuleRecord>
-): Rule => {
+export const RuleFactory = (values: $Shape<RuleRecord>): Rule => {
   let rule: Rule = BaseRuleFactory(values);
 
   // Generates a guid if none is provided

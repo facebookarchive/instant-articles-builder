@@ -26,6 +26,11 @@ class RuleDefinitionActions {
       ruleDefinition,
     });
   }
+  static removeAll() {
+    RulesEditorDispatcher.dispatch({
+      type: RuleDefinitionActionTypes.REMOVE_ALL,
+    });
+  }
 }
 
 module.exports = RuleDefinitionActions;

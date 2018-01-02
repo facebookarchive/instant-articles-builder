@@ -33,24 +33,10 @@ class PropertyPicker extends React.Component<Props> {
   render() {
     let property = this.props.property;
     let attributes = null;
-    let warning = null;
 
     // Look for the attributes for the current selector on the global attribute store
     if (property.selector) {
       attributes = this.props.editor.elementAttributes.get(property.selector);
-    }
-
-    if (false) {
-      warning = property.definition.unique ? (
-        <div className="warning">
-          Warning: the current selector matches {'N'} elements, but only the
-          first one will be used.
-        </div>
-      ) : (
-        <div className="notice">
-          The current selector matches {'N'} elements.
-        </div>
-      );
     }
 
     const dateTimeFormatPicker = property.definition.supportedTypes.includes(
@@ -59,38 +45,52 @@ class PropertyPicker extends React.Component<Props> {
         <DateTimeFormatPicker {...this.props} />
       ) : null;
 
-    const attributePicker = (
-      <div
-        className="attributes"
-        style={attributes == null ? { display: 'none' } : {}}
-      >
-        <label className="sub-label">Attribute</label>
-        <select
-          value={property.definition.defaultAttribute}
-          onChange={this.handleAttributeChange}
-        >
-          {attributes != null
-            ? attributes.valueSeq().map(attribute => (
-              <option
-                value={attribute.name}
-                data-attribute-value={attribute.value}
-                key={attribute.name}
-              >
-                {attribute.name}: "{attribute.value.trim()}"
-              </option>
-            ))
-            : null}
-        </select>
-        {dateTimeFormatPicker}
-      </div>
-    );
+    const attributePicker =
+      attributes != null || property.attribute != null ? (
+        <div className="attributes">
+          <label className="sub-label">Attribute</label>
+          <select
+            value={property.attribute || property.definition.defaultAttribute}
+            onChange={this.handleAttributeChange}
+          >
+            {property.attribute != null &&
+            (attributes == null || !attributes.has(property.attribute)) ? (
+                <option
+                  value={property.attribute}
+                  data-attribute-value={property.attribute}
+                  key={property.attribute}
+                >
+                  {property.attribute}
+                </option>
+              ) : null}
+            {attributes != null
+              ? attributes.valueSeq().map(attribute => (
+                <option
+                  value={attribute.name}
+                  data-attribute-value={attribute.value}
+                  key={attribute.name}
+                >
+                  {attribute.name}: "{attribute.value.trim()}"
+                </option>
+              ))
+              : null}
+          </select>
+          {dateTimeFormatPicker}
+        </div>
+      ) : null;
 
     return (
       <div
         className={classNames({
           'field-line': true,
-          'single-element-found': false,
-          'multiple-elements-found': false,
+          'single-element-found':
+            this.props.editor.elementCounts.get(this.props.property.selector) ==
+            1,
+          'multiple-elements-found':
+            (this.props.editor.elementCounts.get(
+              this.props.property.selector
+            ) || 0) > 1,
+          active: this.props.editor.focusedField == this.props.property,
           multiple: !this.props.property.definition.unique,
         })}
       >
@@ -98,8 +98,6 @@ class PropertyPicker extends React.Component<Props> {
 
         <label className="sub-label">Selector</label>
         <SelectorPicker {...this.props} field={this.props.property} />
-        {warning}
-
         {attributePicker}
       </div>
     );

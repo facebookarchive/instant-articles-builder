@@ -63,7 +63,20 @@ class RulePicker extends React.Component<Props, State> {
         </button>
 
         <div className="rule-settings">
-          <div className="field-line">
+          <div
+            className={classNames({
+              'field-line': true,
+              'single-element-found':
+                this.props.editor.elementCounts.get(this.props.rule.selector) ==
+                1,
+              'multiple-elements-found':
+                (this.props.editor.elementCounts.get(
+                  this.props.rule.selector
+                ) || 0) > 1,
+              active: this.props.editor.focusedField == this.props.rule,
+              multiple: !this.props.rule.definition.unique,
+            })}
+          >
             <label>Selector</label>
             <SelectorPicker {...this.props} field={this.props.rule} />
           </div>

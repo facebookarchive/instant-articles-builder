@@ -42,6 +42,10 @@ class EditorStore extends ReduceStore<Editor> {
 
   reduce(state: Editor, action: Action): Editor {
     switch (action.type) {
+      case EditorActionTypes.FOCUS_FIELD:
+        return state.set('focusedField', action.field);
+      case EditorActionTypes.BLUR:
+        return state.remove('focusedField');
       case EditorActionTypes.START_FINDING:
         return state.set('focusedField', action.field).set('finding', true);
 

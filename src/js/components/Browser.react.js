@@ -13,9 +13,12 @@ const fs = require('fs');
 const debounce = require('../utils/debounce.js');
 const homeURL = `file:///${__dirname}/../../html/home.html`;
 
+import RuleUtils from '../utils/RuleUtils';
 import EditorActions from '../data/EditorActions';
 import RuleActions from '../data/RuleActions';
+import type { Attribute } from '../models/Attribute';
 import { Map } from 'immutable';
+import { AttributeFactory } from '../models/Attribute';
 import type { Props } from '../containers/AppContainer.react';
 
 type State = {
@@ -42,7 +45,12 @@ class Browser extends React.Component<Props, State> {
   receiveMessage = (event: any) => {
     if (event.message == 'attributes') {
       // Attributes retrieved
-      const elementAttributes = event.value.attributes;
+      const elementAttributes: Map<string, Attribute> = Map(
+        event.value.attributes.map(attribute => [
+          attribute.name,
+          AttributeFactory(attribute),
+        ])
+      );
       const elementCount = event.value.count;
       EditorActions.found(elementAttributes, elementCount);
     } else if (event.message == 'DOM') {
@@ -142,6 +150,8 @@ class Browser extends React.Component<Props, State> {
   };
 
   highlightElements = () => {
+    // Uncomment to debug the injected script
+    // this.webview.openDevTools();
     if (this.props.editor.focusedField != null) {
       let findMultipleElements = !this.props.editor.focusedField.definition
         .unique;
@@ -172,18 +182,22 @@ class Browser extends React.Component<Props, State> {
         'view-source:http://127.0.0.1:8105/index.php?url=' +
         encodeURIComponent(this.state.displayURL) +
         '&rules=' +
-        encodeURIComponent(JSON.stringify(this.props.rules)) +
+        encodeURIComponent(JSON.stringify(RuleUtils.export(this.props.rules))) +
         '&timestamp=' +
         performance.now();
       if (this.preview && this.preview.src != newURL) {
-        console.log(newURL);
         this.preview.src = newURL;
       }
     }
   }, 1000);
 
   componentDidUpdate(prevProps: Props, prevState: State) {
-    this.highlightElements();
+    if (
+      prevProps.editor.focusedField != this.props.editor.focusedField ||
+      prevProps.editor.finding != this.props.editor.finding
+    ) {
+      this.highlightElements();
+    }
 
     if (!this.props.rules.equals(prevProps.rules)) {
       this.renderPreview();

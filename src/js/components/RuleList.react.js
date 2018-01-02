@@ -10,14 +10,12 @@
 
 const React = require('react');
 const RulePicker = require('./RulePicker.react.js');
-const FindSelectorTypes = require('../types/FindSelectorTypes.js');
-const NameUtils = require('../utils/name-utils.js');
-const RuleUtils = require('../utils/rule-utils.js');
 const RuleActions = require('../data/RuleActions');
 const { remote: { dialog: Dialog } } = require('electron');
 const Fs = require('fs');
 
 import { RuleFactory } from '../models/Rule';
+import RuleUtils from '../utils/RuleUtils';
 import type { Rule } from '../models/Rule';
 import type { Props } from '../containers/AppContainer.react';
 
@@ -33,8 +31,9 @@ class RuleList extends React.Component<Props> {
     super(props);
   }
 
-  exportRulesJSON = () => {};
-  loadFromExportedData = (data: string) => {};
+  loadFromExportedData = (data: string) => {
+    RuleUtils.import(data, this.props.ruleDefinitions);
+  };
 
   handleExport = (e: Event) => {
     Dialog.showSaveDialog(
@@ -44,7 +43,7 @@ class RuleList extends React.Component<Props> {
       },
       fileName => {
         if (fileName) {
-          const contents = JSON.stringify(this.exportRulesJSON(), null, 2);
+          const contents = JSON.stringify(RuleUtils.export(this.props.rules));
           Fs.writeFile(fileName, contents, importExportEncoding, error => {
             if (error) {
               Dialog.showErrorBox('Unable to save file', error);
@@ -86,24 +85,38 @@ class RuleList extends React.Component<Props> {
     }
   };
 
+  handleNew = (event: Event) => {
+    RuleActions.removeAllRules();
+  };
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.rules.count() < this.props.rules.count()) {
+      this.refs.scrollable.scrollTop = 99999;
+    }
+  }
+
   render() {
     return (
-      <div>
-        <button
-          className="button"
-          id="export-button"
-          onClick={this.handleExport}
-        >
-          Export
-        </button>
-        <button
-          className="button"
-          id="import-button"
-          onClick={this.handleImport}
-        >
-          Import
-        </button>
-        <hr />
+      <div className="rule-list">
+        <div className="tools">
+          <button className="button" id="new-button" onClick={this.handleNew}>
+            📄 New
+          </button>
+          <button
+            className="button"
+            id="import-button"
+            onClick={this.handleImport}
+          >
+            📂 Open
+          </button>
+          <button
+            className="button"
+            id="export-button"
+            onClick={this.handleExport}
+          >
+            💾 Save
+          </button>
+        </div>
         <form className="selectors-form">
           <select
             className="rule-selector"
@@ -111,17 +124,14 @@ class RuleList extends React.Component<Props> {
             value=""
           >
             <option value="" disabled={true}>
-              Add a new Rule
+              + Add a new Rule...
             </option>
             <optgroup>
               {this.props.ruleDefinitions
                 .sortBy(defintion => defintion.displayName)
                 .valueSeq()
                 .map(ruleDefinition => (
-                  <option
-                    key={ruleDefinition.className}
-                    value={ruleDefinition.className}
-                  >
+                  <option key={ruleDefinition.name} value={ruleDefinition.name}>
                     {ruleDefinition.displayName}
                   </option>
                 ))}
@@ -129,11 +139,13 @@ class RuleList extends React.Component<Props> {
           </select>
         </form>
 
-        {this.props.rules
-          .valueSeq()
-          .map(rule => (
-            <RulePicker {...this.props} key={rule.guid} rule={rule} />
-          ))}
+        <div className="scrollable" ref="scrollable">
+          {this.props.rules
+            .valueSeq()
+            .map(rule => (
+              <RulePicker {...this.props} key={rule.guid} rule={rule} />
+            ))}
+        </div>
       </div>
     );
   }
