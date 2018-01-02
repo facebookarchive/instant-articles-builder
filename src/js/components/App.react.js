@@ -11,9 +11,11 @@
 const React = require('react');
 const Browser = require('./Browser.react.js');
 const RuleList = require('./RuleList.react.js');
+const EditorActions = require('../data/EditorActions');
+
 import type { Props } from '../containers/AppContainer.react';
 
-class App extends React.PureComponent<Props> {
+class App extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
@@ -29,7 +31,7 @@ class App extends React.PureComponent<Props> {
     // Handle element selection cancelation on 'esc' press
     if (e.keyCode == 27) {
       // escape key maps to keycode `27`
-      // this.ruleListFindCancel();
+      EditorActions.stopFinding();
     }
   };
 

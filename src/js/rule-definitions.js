@@ -8,197 +8,202 @@
  * @flow
  */
 
-import RuleDefinition from './models/RuleDefinition';
-import RulePropertyDefinition from './models/RulePropertyDefinition';
+import { Map, Set } from 'immutable';
 import RulePropertyTypes from './models/RulePropertyTypes.js';
+import type { RuleDefinition } from './models/RuleDefinition';
+import type { RulePropertyDefinition } from './models/RulePropertyDefinition';
+import { RuleDefinitionFactory } from './models/RuleDefinition';
+import { RulePropertyDefinitionFactory } from './models/RulePropertyDefinition';
 
 const ruleDefinitions: RuleDefinition[] = [];
 
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'GlobalRule',
     placeholder: 'Example: html',
     displayName: 'Article Structure',
-    properties: [
-      new RulePropertyDefinition({
+    unique: true,
+    properties: Map({
+      'article.title': RulePropertyDefinitionFactory({
         name: 'article.title',
         displayName: 'Title',
         placeholder: 'Example: h1',
         defaultAttribute: 'content',
-        supportedTypes: [RulePropertyTypes.ELEMENT],
+        supportedTypes: Set([RulePropertyTypes.ELEMENT]),
         unique: true,
         required: true,
       }),
-      new RulePropertyDefinition({
+      'article.publish': RulePropertyDefinitionFactory({
         name: 'article.publish',
         displayName: 'Published Date',
         placeholder: 'Example: time',
         defaultAttribute: 'datetime',
-        supportedTypes: [RulePropertyTypes.DATETIME],
+        supportedTypes: Set([RulePropertyTypes.DATETIME]),
         unique: true,
         required: true,
       }),
-      new RulePropertyDefinition({
+      'author.name': RulePropertyDefinitionFactory({
         name: 'author.name',
         displayName: 'Author(s)',
         placeholder: 'Example: span.author',
         defaultAttribute: 'contentString',
-        supportedTypes: [RulePropertyTypes.STRING],
+        supportedTypes: Set([RulePropertyTypes.STRING]),
         required: true,
       }),
-      new RulePropertyDefinition({
+      'image.url': RulePropertyDefinitionFactory({
         name: 'image.url',
         displayName: 'Hero Image',
         placeholder: 'Example: div.hero-image img',
         defaultAttribute: 'src',
-        supportedTypes: [RulePropertyTypes.STRING],
+        supportedTypes: Set([RulePropertyTypes.STRING]),
         unique: true,
       }),
-      new RulePropertyDefinition({
+      'article.body': RulePropertyDefinitionFactory({
         name: 'article.body',
         displayName: 'Article Content',
         placeholder: 'Example: article',
         defaultAttribute: 'content',
-        supportedTypes: [RulePropertyTypes.ELEMENT],
+        supportedTypes: Set([RulePropertyTypes.ELEMENT]),
         required: true,
         unique: true,
       }),
-    ],
+    }),
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'ItalicRule',
     displayName: 'Italic Text',
     placeholder: 'Example: i',
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'CaptionRule',
     displayName: 'Caption',
     placeholder: 'Example: article',
-    properties: [
-      new RulePropertyDefinition({
+    properties: Map({
+      'caption.default': RulePropertyDefinitionFactory({
         name: 'caption.default',
         displayName: 'Default',
         placeholder: 'Example: img',
-        supportedTypes: [RulePropertyTypes.ELEMENT],
+        supportedTypes: Set([RulePropertyTypes.ELEMENT]),
         defaultAttribute: 'content',
       }),
-    ],
+    }),
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'AnchorRule',
     displayName: 'Link',
     placeholder: 'Example: a',
-    properties: [
-      new RulePropertyDefinition({
+    properties: Map({
+      'anchor.href': RulePropertyDefinitionFactory({
         name: 'anchor.href',
         displayName: 'HRef',
         placeholder: 'Example: a',
-        supportedTypes: [RulePropertyTypes.STRING],
+        supportedTypes: Set([RulePropertyTypes.STRING]),
         defaultAttribute: 'href',
         required: true,
       }),
-      new RulePropertyDefinition({
+      'anchor.rel': RulePropertyDefinitionFactory({
         name: 'anchor.rel',
         displayName: 'Rel',
         placeholder: 'Example: a',
-        supportedTypes: [RulePropertyTypes.STRING],
+        supportedTypes: Set([RulePropertyTypes.STRING]),
         defaultAttribute: 'rel',
       }),
-    ],
+    }),
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'EmphasizedRule',
     displayName: 'Emphasized Text',
     placeholder: 'Example: em',
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'BoldRule',
     displayName: 'Bold Text',
     placeholder: 'Example: b, strong',
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'ParagraphRule',
     displayName: 'Paragraph',
     placeholder: 'Example: p',
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'ListItemRule',
+    displayName: 'List Item',
     placeholder: 'Example: li',
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'SponsorRule',
     displayName: 'Sponsor(s)',
     placeholder: 'Example: ul.op-sponsors',
-    properties: [
-      new RulePropertyDefinition({
+    properties: Map({
+      'sponsor.page_url': RulePropertyDefinitionFactory({
         name: 'sponsor.page_url',
         displayName: 'Page URL',
         placeholder: 'Example: a',
         defaultAttribute: 'href',
-        supportedTypes: [RulePropertyTypes.STRING],
+        supportedTypes: Set([RulePropertyTypes.STRING]),
         required: true,
       }),
-    ],
+    }),
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'ListElementRule',
     displayName: 'List',
     placeholder: 'Example: ol, ul',
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'BlockquoteRule',
     displayName: 'Block Quotation',
     placeholder: 'Example: blockquote',
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'H1Rule',
     displayName: 'Title, Header (h1)',
     placeholder: 'Example: title, h1',
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'H2Rule',
     displayName: 'Sub-title, Header (h2)',
     placeholder: 'Example: h2',
   })
 );
 ruleDefinitions.push(
-  new RuleDefinition({
+  RuleDefinitionFactory({
     className: 'RelatedArticlesRule',
     displayName: 'Related Articles',
     placeholder: 'Example: ul.op-related-articles',
-    properties: [
-      new RulePropertyDefinition({
+    properties: Map({
+      'related.title': RulePropertyDefinitionFactory({
         name: 'related.title',
         displayName: 'Section Title',
         placeholder: 'Example: ul.op-related-articles',
-        supportedTypes: [RulePropertyTypes.STRING],
+        supportedTypes: Set([RulePropertyTypes.STRING]),
         defaultAttribute: 'title',
       }),
-    ],
+    }),
   })
 );
 

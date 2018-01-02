@@ -10,16 +10,21 @@
 
 const RulesEditorDispatcher = require('./RulesEditorDispatcher.js');
 
-import type { Rule } from '../models/Rule';
-import type { RuleProperty } from '../models/RuleProperty';
 import type { Attribute } from '../models/Attribute';
+import type { Field } from '../models/Field';
 import EditorActionTypes from './EditorActionTypes.js';
 
 class EditorActions {
-  static startFinding(target: RuleProperty | Rule) {
+  static focusField(field: Field) {
+    RulesEditorDispatcher.dispatch({
+      type: EditorActionTypes.FOCUS_FIELD,
+      field,
+    });
+  }
+  static startFinding(field: Field) {
     RulesEditorDispatcher.dispatch({
       type: EditorActionTypes.START_FINDING,
-      target,
+      field,
     });
   }
   static stopFinding() {
@@ -27,11 +32,11 @@ class EditorActions {
       type: EditorActionTypes.STOP_FINDING,
     });
   }
-  static found(target: RuleProperty | Rule, attributes: Attribute[]) {
+  static found(attributes: Attribute[], count: number) {
     RulesEditorDispatcher.dispatch({
       type: EditorActionTypes.FOUND,
-      target,
       attributes,
+      count,
     });
   }
 }

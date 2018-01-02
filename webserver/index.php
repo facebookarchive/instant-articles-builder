@@ -75,13 +75,11 @@ ob_end_clean();
 Converted Instant Article Preview
 =================================
 
-# Transfomed URL: <?php echo $url; ?>
+# Transfomed URL: <?php if (isset($url)) { echo $url; } ?>
 
 
 <?php
 if ($error) {
-
-
 ?>
 ======================================
 Transformation failed due to an error:
@@ -98,12 +96,8 @@ Stacktrace:
 
 
 <?php
-
-
 }
 else {
-
-
 ?>
 
 -->
@@ -114,15 +108,13 @@ else {
 <!--
 
 <?php
-
-
 }
 ?>
 ==========
 Rules used
 ==========
 
-<?php echo json_encode(json_decode($rules), JSON_PRETTY_PRINT); ?>
+<?php if (isset($rules)) { echo json_encode(json_decode($rules), JSON_PRETTY_PRINT); } ?>
 
 
 -->

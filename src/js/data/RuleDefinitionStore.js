@@ -8,7 +8,7 @@
  * @flow
  */
 
-const { ReduceStore } = require('flux');
+import { ReduceStore } from 'flux/utils';
 const Immutable = require('immutable');
 const RulesEditorDispatcher = require('./RulesEditorDispatcher.js');
 

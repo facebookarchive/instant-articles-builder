@@ -14,16 +14,16 @@ import type { RuleDefinition } from '../models/RuleDefinition';
 import RuleDefinitionActionTypes from './RuleDefinitionActionTypes.js';
 
 class RuleDefinitionActions {
-  static addRuleDefinition(rule: RuleDefinition) {
+  static addRuleDefinition(ruleDefinition: RuleDefinition) {
     RulesEditorDispatcher.dispatch({
       type: RuleDefinitionActionTypes.ADD_RULE_DEFINITION,
-      rule,
+      ruleDefinition,
     });
   }
-  static removeRuleDefinition(rule: RuleDefinition) {
+  static removeRuleDefinition(ruleDefinition: RuleDefinition) {
     RulesEditorDispatcher.dispatch({
       type: RuleDefinitionActionTypes.REMOVE_RULE_DEFINITION,
-      rule,
+      ruleDefinition,
     });
   }
 }
