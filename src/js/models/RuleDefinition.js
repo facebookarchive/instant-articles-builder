@@ -13,7 +13,7 @@ import type { RecordOf, RecordFactory } from 'immutable';
 import type { RulePropertyDefinition } from './RulePropertyDefinition';
 
 type RuleDefinitionRecord = {
-  className: string,
+  name: string,
   displayName: string,
   placeholder: string,
   properties: Map<string, RulePropertyDefinition>,
@@ -23,7 +23,7 @@ type RuleDefinitionRecord = {
 export const RuleDefinitionFactory: RecordFactory<
   RuleDefinitionRecord
 > = Record({
-  className: '',
+  name: '',
   displayName: '',
   placeholder: '',
   properties: Map(),

@@ -10,7 +10,7 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
 }
 set_error_handler("exception_error_handler");
-ob_start();
+//ob_start();
 
 \Logger::configure(
     [
@@ -28,6 +28,8 @@ ob_start();
         ]
     ]
 );
+
+$error = null;
 
 try {
   // Read the URL parameter
@@ -59,7 +61,7 @@ catch (Exception $e) {
   $stacktrace = $e->getTraceAsString();
 }
 // Output
-ob_end_clean();
+//ob_end_clean();
 
 
 

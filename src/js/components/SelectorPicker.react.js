@@ -67,6 +67,7 @@ class SelectorPicker extends React.Component<Props, State> {
 
   handleMouseMove = (event: MouseEvent) => {
     if (this.isFinding()) {
+      this.configureLine();
       const findSvgStyle = {
         top: Math.min(event.pageY, this.state.findButtonCenterY),
         left: Math.min(event.pageX, this.state.findButtonCenterX),
@@ -99,14 +100,7 @@ class SelectorPicker extends React.Component<Props, State> {
   handleFocus = (event: Event) => {
     const inputElement = event.target;
     if (inputElement instanceof HTMLInputElement) {
-      const selector = inputElement.value;
-    }
-  };
-
-  handleBlur = (event: Event) => {
-    const inputElement = event.target;
-    if (inputElement instanceof HTMLInputElement) {
-      const selector = inputElement.value;
+      EditorActions.focusField(this.props.field);
     }
   };
 
@@ -116,6 +110,22 @@ class SelectorPicker extends React.Component<Props, State> {
   };
 
   render() {
+    let warning = null;
+    let count = this.props.editor.elementCounts.get(this.props.field.selector);
+
+    if (count != null && count > 1) {
+      warning = this.props.field.definition.unique ? (
+        <div className="warning">
+          Warning: the current selector matched {count} elements, but only the
+          first one will be used.
+        </div>
+      ) : (
+        <div className="notice">
+          The current selector matched {count} elements.
+        </div>
+      );
+    }
+
     const findLine = this.isFinding() ? (
       <svg className="line" style={this.state.findSvgStyle}>
         <line {...this.state.findLineLocationAttributes} />
@@ -124,22 +134,25 @@ class SelectorPicker extends React.Component<Props, State> {
 
     return (
       <div>
-        <input
-          type="text"
-          placeholder={this.props.field.definition.placeholder}
-          value={this.props.field.selector}
-          onChange={this.handleSelectorChanged}
-          onFocus={this.handleFocus}
-          onBlur={this.handleBlur}
-        />
-        <button
-          ref="targetButton"
-          className="find-button"
-          onClick={this.handleFindButtonClick}
-        >
-          Find
-        </button>
-        {findLine}
+        <div className="selector-picker">
+          <input
+            type="text"
+            name={this.props.field.definition.name}
+            placeholder={this.props.field.definition.placeholder}
+            value={this.props.field.selector}
+            onChange={this.handleSelectorChanged}
+            onFocus={this.handleFocus}
+          />
+          <button
+            ref="targetButton"
+            className="find-button"
+            onClick={this.handleFindButtonClick}
+          >
+            Find
+          </button>
+          {findLine}
+        </div>
+        {warning}
       </div>
     );
   }

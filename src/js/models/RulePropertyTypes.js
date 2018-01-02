@@ -15,7 +15,7 @@ const RulePropertyTypes = {
   STRING: 'string',
   ELEMENT: 'element',
   INTEGER: 'int',
-  DATETIME: 'datetime',
+  DATETIME: 'date',
 };
 
 export type RulePropertyType = $Values<typeof RulePropertyTypes>;

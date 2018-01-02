@@ -11,6 +11,7 @@
 const Immutable = require('immutable');
 const RulesEditorDispatcher = require('./RulesEditorDispatcher.js');
 
+import EditorActions from './EditorActions';
 import { ReduceStore } from 'flux/utils';
 import RuleActionTypes from './RuleActionTypes.js';
 import { RuleFactory } from '../models/Rule';
@@ -43,13 +44,14 @@ class RuleStore extends ReduceStore<State> {
         if (action.field == null) {
           return state;
         }
-        if (action.field.fieldType === 'Rule') {
-          return state.set(action.field.guid, action.field);
+        let field = action.field;
+        if (field.fieldType === 'Rule') {
+          return state.set(field.guid, field);
         }
-        if (action.field.fieldType === 'RuleProperty') {
+        if (field.fieldType === 'RuleProperty' && field.rule != null) {
           return state.setIn(
-            [action.field.rule.guid, 'properties', action.field.name],
-            action.field
+            [field.rule.guid, 'properties', field.definition.name],
+            field
           );
         }
         return state;
@@ -59,6 +61,9 @@ class RuleStore extends ReduceStore<State> {
           return state;
         }
         return state.delete(action.rule.guid);
+
+      case RuleActionTypes.REMOVE_ALL_RULES:
+        return this.getInitialState();
 
       default:
         return state;
