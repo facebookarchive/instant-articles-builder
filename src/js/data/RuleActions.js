@@ -10,6 +10,8 @@
 
 const RulesEditorDispatcher = require('./RulesEditorDispatcher.js');
 import type { Rule } from '../models/Rule';
+import type { RuleProperty } from '../models/RuleProperty';
+import type { Field } from '../models/Field';
 
 import RuleActionTypes from './RuleActionTypes.js';
 
@@ -26,10 +28,10 @@ class RuleActions {
       rule,
     });
   }
-  static editRule(rule: Rule) {
+  static editField(field: Field) {
     RulesEditorDispatcher.dispatch({
-      type: RuleActionTypes.EDIT_RULE,
-      rule,
+      type: RuleActionTypes.EDIT_FIELD,
+      field,
     });
   }
 }

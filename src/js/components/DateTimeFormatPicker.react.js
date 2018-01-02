@@ -11,6 +11,7 @@
 const React = require('react');
 const classNames = require('classnames');
 const moment = require('moment');
+import type { Attribute } from '../types/Attribute';
 import type { RuleProperty } from '../models/RuleProperty';
 import type { Props as BaseProps } from '../containers/AppContainer.react';
 
@@ -32,9 +33,12 @@ class DateTimeFormatPicker extends React.Component<Props, State> {
     };
   }
 
-  expectedDateTime(props?: Props): string {
+  expectedDateTime(props?: Props): ?string {
     props = props || this.props;
-    return props.app.attributes.get(props.property.attribute).value;
+    const attribute = props.editor.elementAttributes.get(
+      props.property.attribute
+    );
+    return attribute != null ? attribute.value : null;
   }
 
   componentWillReceiveProps(nextProps: Props) {

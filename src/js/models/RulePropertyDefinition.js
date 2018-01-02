@@ -35,4 +35,5 @@ export const RulePropertyDefinitionFactory: RecordFactory<
   unique: false,
 });
 
-export type RulePropertyDefinition = RecordOf<RulePropertyDefinitionRecord>;
+export type RulePropertyDefinition = RecordOf<RulePropertyDefinitionRecord> &
+  RulePropertyDefinitionFactory;

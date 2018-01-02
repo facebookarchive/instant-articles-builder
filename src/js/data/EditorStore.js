@@ -8,13 +8,14 @@
  * @flow
  */
 
-const { ReduceStore } = require('flux');
+import { ReduceStore } from 'flux/utils';
 const RulesEditorDispatcher = require('./RulesEditorDispatcher.js');
 
 import { Record, Map } from 'immutable';
 import type { RecordOf, RecordFactory } from 'immutable';
 import type { RuleProperty } from '../models/RuleProperty';
 import type { Rule } from '../models/Rule';
+import type { Field } from '../models/Field';
 
 import EditorActionTypes from './EditorActionTypes.js';
 import { EditorFactory } from '../models/Editor';
@@ -24,8 +25,10 @@ import type { Editor } from '../models/Editor';
 
 type Action = {
   type: EditorActionType,
-  target?: RuleProperty | Rule,
-  attributes?: Map<string, Attribute>
+  field?: Field,
+  elementAttributes?: Map<string, Attribute>,
+  elementCount: ?number,
+  selector: ?string
 };
 
 class EditorStore extends ReduceStore<Editor> {
@@ -40,23 +43,30 @@ class EditorStore extends ReduceStore<Editor> {
   reduce(state: Editor, action: Action): Editor {
     switch (action.type) {
       case EditorActionTypes.START_FINDING:
-        return state.set('finding', action.target);
+        return state.set('focusedField', action.field).set('finding', true);
 
       case EditorActionTypes.STOP_FINDING:
-        return state.remove('finding');
+        return state.set('finding', false);
 
       case EditorActionTypes.FOUND:
         if (
-          state.finding != null &&
-          state.finding.selector != null &&
-          action.attributes != null
+          state.focusedField != null &&
+          action.elementAttributes != null &&
+          action.elementCount != null
         ) {
-          state = state.setIn(
-            ['attributes', state.finding.selector],
-            action.attributes
+          const selector: string = state.focusedField.selector;
+          const elementCount: number = action.elementCount;
+          const elementAttributes: Map<string, Attribute> =
+            action.elementAttributes;
+
+          state = state.update('elementCounts', counts =>
+            counts.set(selector, elementCount)
+          );
+          state = state.update('elementAttributes', attributes =>
+            attributes.set(selector, elementAttributes)
           );
         }
-        return state.remove('finding');
+        return state.set('finding', false);
 
       default:
         return state;

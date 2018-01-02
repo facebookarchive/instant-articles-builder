@@ -8,32 +8,41 @@
  * @flow
  */
 
-const { Container, Store } = require('flux');
+const React = require('react');
+const { Container, Store } = require('flux/utils');
 const RuleStore = require('../data/RuleStore.js');
 const RuleDefinitionStore = require('../data/RuleDefinitionStore.js');
-const AppStore = require('../data/AppStore.js');
+const EditorStore = require('../data/EditorStore.js');
 const App = require('../components/App.react.js');
 
 import type { State as RuleStoreState } from '../data/RuleStore';
 import type { State as RuleDefinitionStoreState } from '../data/RuleDefinitionStore';
-import type { State as AppStoreState } from '../data/AppStore';
+import type { Editor } from '../models/Editor';
 
 export type Props = {
   rules: RuleStoreState,
   ruleDefinitions: RuleDefinitionStoreState,
-  app: AppStoreState
+  editor: Editor
 };
 
+function AppContainer(props: Props) {
+  return <App {...props} />;
+}
+
+/**
+ * The State of the container becomes the Props of
+ * the views.
+ */
 function getState(): Props {
   return {
     rules: RuleStore.getState(),
     ruleDefinitions: RuleDefinitionStore.getState(),
-    app: AppStore.getState(),
+    editor: EditorStore.getState(),
   };
 }
 
 function getStores(): Store[] {
-  return [RuleStore, RuleDefinitionStore, AppStore];
+  return [RuleStore, RuleDefinitionStore, EditorStore];
 }
 
-module.exports = Container.createFunctional(App, getStores, getState);
+module.exports = Container.createFunctional(AppContainer, getStores, getState);
