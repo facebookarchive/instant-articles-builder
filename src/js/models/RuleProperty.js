@@ -22,7 +22,7 @@ type RulePropertyRecord = {
   selector: string,
   type: ?RulePropertyType,
   attribute: ?string,
-  format: '',
+  format: string,
   rule: ?Rule
 };
 

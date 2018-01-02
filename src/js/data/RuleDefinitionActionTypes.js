@@ -11,6 +11,7 @@
 const RuleDefinitionActionTypes = {
   ADD_RULE_DEFINITION: 'ADD_RULE_DEFINITION',
   REMOVE_RULE_DEFINITION: 'REMOVE_RULE_DEFINITION',
+  REMOVE_ALL: 'REMOVE_ALL',
 };
 
 export type RuleDefinitionActionType = $Values<

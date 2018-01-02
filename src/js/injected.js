@@ -13,15 +13,12 @@ window.addEventListener('load', () => {
   ipcRenderer.on('message', (event, message) => receiveMessage(message));
 
   function getAttributes(element) {
-    const attributes = [...element.attributes]
+    let attributes = [...element.attributes]
       .filter(attr => !['class', 'id', 'style'].includes(attr.name))
-      .reduce(
-        (result, nextAttr) =>
-          Object.assign(result, { [nextAttr.name]: nextAttr.value }),
-        {}
-      );
-    attributes.content = element.textContent;
-    attributes.contentString = element.textContent;
+      .map(attr => ({ name: attr.name, value: attr.value }));
+
+    attributes.push({ name: 'content', value: element.textContent });
+    attributes.push({ name: 'textContent', value: element.textContent });
     return attributes;
   }
 

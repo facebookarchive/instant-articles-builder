@@ -35,13 +35,13 @@ class RuleDefinitionStore extends ReduceStore<State> {
   reduce(state: State, action: Action): State {
     switch (action.type) {
       case RuleDefinitionActionTypes.ADD_RULE_DEFINITION:
-        return state.set(
-          action.ruleDefinition.className,
-          action.ruleDefinition
-        );
+        return state.set(action.ruleDefinition.name, action.ruleDefinition);
 
       case RuleDefinitionActionTypes.REMOVE_RULE_DEFINITION:
-        return state.delete(action.ruleDefinition.className);
+        return state.delete(action.ruleDefinition.name);
+
+      case RuleDefinitionActionTypes.REMOVE_ALL:
+        return this.getInitialState();
 
       default:
         return state;
