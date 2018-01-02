@@ -21,4 +21,4 @@ export const AttributeFactory: RecordFactory<AttributeRecord> = Record({
   value: '',
 });
 
-export type Attribute = RecordOf<AttributeRecord>;
+export type Attribute = RecordOf<AttributeRecord> & AttributeFactory;

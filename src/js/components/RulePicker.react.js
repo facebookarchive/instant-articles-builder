@@ -63,10 +63,15 @@ class RulePicker extends React.Component<Props, State> {
         </button>
 
         <div className="rule-settings">
-          <SelectorPicker {...this.props} target={this.props.rule} />
-          {(this.props.rule.properties || []).forEach(property => (
-            <PropertyPicker {...this.props} property={property} />
-          ))}
+          <div className="field-line">
+            <label>Selector</label>
+            <SelectorPicker {...this.props} field={this.props.rule} />
+          </div>
+          {this.props.rule.properties
+            .valueSeq()
+            .map((property, name) => (
+              <PropertyPicker {...this.props} key={name} property={property} />
+            ))}
         </div>
       </form>
     );

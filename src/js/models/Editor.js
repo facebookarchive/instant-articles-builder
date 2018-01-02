@@ -12,19 +12,21 @@ import { Map, Record } from 'immutable';
 import type { Rule } from './Rule';
 import type { RuleProperty } from './RuleProperty';
 import type { Attribute } from '../models/Attribute';
-
+import type { Field } from './Field';
 import type { RecordOf, RecordFactory } from 'immutable';
 
 type EditorRecord = {
-  attributes: Map<string, Map<string, Attribute>>,
-  finding: ?RuleProperty | ?Rule
+  elementAttributes: Map<string, Map<string, Attribute>>,
+  elementCounts: Map<string, number>,
+  focusedField: ?Field,
+  finding: boolean
 };
 
-const BaseEditorFactory: RecordFactory<EditorRecord> = Record({
-  attributes: Map(),
-  finding: null,
+export const EditorFactory: RecordFactory<EditorRecord> = Record({
+  elementAttributes: Map(),
+  elementCounts: Map(),
+  focusedField: null,
+  finding: false,
 });
 
-export class EditorFactory extends BaseEditorFactory {}
-
-export type Editor = RecordOf<EditorRecord>;
+export type Editor = RecordOf<EditorRecord> & EditorFactory;

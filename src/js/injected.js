@@ -35,6 +35,9 @@ window.addEventListener('load', () => {
 
   function receiveMessage(event) {
     if (event.method == 'highlightElements') {
+      document.body.classList.remove(
+        'facebook-instant-articles-sdk-rules-editor-highlight-mode'
+      );
       let elements = highlightElements(
         event.selector,
         event.source,
@@ -44,6 +47,13 @@ window.addEventListener('load', () => {
       selectingElement = true;
       selectingMultipleElements = !!event.multiple;
       document.body.classList.add(
+        'facebook-instant-articles-sdk-rules-editor-highlight-mode'
+      );
+      clearHighlightedElements();
+    } else if (event.method == 'clear') {
+      selectingElement = false;
+      selectingMultipleElements = false;
+      document.body.classList.remove(
         'facebook-instant-articles-sdk-rules-editor-highlight-mode'
       );
       clearHighlightedElements();

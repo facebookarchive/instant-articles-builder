@@ -16,7 +16,8 @@ type RuleDefinitionRecord = {
   className: string,
   displayName: string,
   placeholder: string,
-  properties: Map<string, RulePropertyDefinition>
+  properties: Map<string, RulePropertyDefinition>,
+  unique: boolean
 };
 
 export const RuleDefinitionFactory: RecordFactory<
@@ -26,6 +27,8 @@ export const RuleDefinitionFactory: RecordFactory<
   displayName: '',
   placeholder: '',
   properties: Map(),
+  unique: false,
 });
 
-export type RuleDefinition = RecordOf<RuleDefinitionRecord>;
+export type RuleDefinition = RecordOf<RuleDefinitionRecord> &
+  RuleDefinitionFactory;

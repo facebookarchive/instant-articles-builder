@@ -14,12 +14,22 @@ const DateTimeFormatPicker = require('./DateTimeFormatPicker.react.js');
 const SelectorPicker = require('./SelectorPicker.react.js');
 import type { RuleProperty } from '../models/RuleProperty';
 import RulePropertyTypes from '../models/RulePropertyTypes';
+import RuleActions from '../data/RuleActions';
 
 import type { Props as BaseProps } from '../containers/AppContainer.react';
 
 type Props = BaseProps & { property: RuleProperty };
 
 class PropertyPicker extends React.Component<Props> {
+  handleAttributeChange = (event: Event) => {
+    const selectElement = event.target;
+    if (selectElement instanceof HTMLSelectElement) {
+      RuleActions.editField(
+        this.props.property.set('attribute', selectElement.value)
+      );
+    }
+  };
+
   render() {
     let property = this.props.property;
     let attributes = null;
@@ -27,7 +37,7 @@ class PropertyPicker extends React.Component<Props> {
 
     // Look for the attributes for the current selector on the global attribute store
     if (property.selector) {
-      attributes = this.props.app.attributes.get(property.selector);
+      attributes = this.props.editor.elementAttributes.get(property.selector);
     }
 
     if (false) {
@@ -45,9 +55,9 @@ class PropertyPicker extends React.Component<Props> {
 
     const dateTimeFormatPicker = property.definition.supportedTypes.includes(
       RulePropertyTypes.DATETIME
-    )
-      ? null //<DateTimeFormatPicker {...this.props} />
-      : null;
+    ) ? (
+        <DateTimeFormatPicker {...this.props} />
+      ) : null;
 
     const attributePicker = (
       <div
@@ -55,9 +65,12 @@ class PropertyPicker extends React.Component<Props> {
         style={attributes == null ? { display: 'none' } : {}}
       >
         <label className="sub-label">Attribute</label>
-        <select value={property.definition.defaultAttribute}>
-          {attributes &&
-            attributes.map(attribute => (
+        <select
+          value={property.definition.defaultAttribute}
+          onChange={this.handleAttributeChange}
+        >
+          {attributes != null
+            ? attributes.valueSeq().map(attribute => (
               <option
                 value={attribute.name}
                 data-attribute-value={attribute.value}
@@ -65,7 +78,8 @@ class PropertyPicker extends React.Component<Props> {
               >
                 {attribute.name}: "{attribute.value.trim()}"
               </option>
-            ))}
+            ))
+            : null}
         </select>
         {dateTimeFormatPicker}
       </div>
@@ -80,13 +94,10 @@ class PropertyPicker extends React.Component<Props> {
           multiple: !this.props.property.definition.unique,
         })}
       >
-        <label>
-          {this.props.property.definition.displayName}
-          <span />
-        </label>
+        <label>{this.props.property.definition.displayName}</label>
 
         <label className="sub-label">Selector</label>
-        <SelectorPicker {...this.props} target={this.props.property} />
+        <SelectorPicker {...this.props} field={this.props.property} />
         {warning}
 
         {attributePicker}

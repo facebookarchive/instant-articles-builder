@@ -9,9 +9,10 @@
  */
 
 const EditorActionTypes = {
+  FOCUS_FIELD: 'FOCUS_FIELD',
   START_FINDING: 'START_FINDING',
-  FOUND: 'FOUND',
   STOP_FINDING: 'STOP_FINDING',
+  FOUND: 'FOUND',
 };
 
 export type EditorActionType = $Values<typeof EditorActionTypes>;

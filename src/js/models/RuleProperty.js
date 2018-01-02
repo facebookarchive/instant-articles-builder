@@ -9,7 +9,6 @@
  */
 
 import { Record } from 'immutable';
-import { RuleFactory } from './Rule';
 import { RulePropertyDefinitionFactory } from './RulePropertyDefinition';
 
 import type { RecordOf, RecordFactory } from 'immutable';
@@ -18,19 +17,23 @@ import type { RulePropertyDefinition } from './RulePropertyDefinition';
 import type { RulePropertyType } from './RulePropertyTypes.js';
 
 type RulePropertyRecord = {
+  fieldType: 'RuleProperty',
   definition: RulePropertyDefinition,
-  selector: ?string,
+  selector: string,
   type: ?RulePropertyType,
   attribute: ?string,
-  format: ?string
+  format: '',
+  rule: ?Rule
 };
 
 export const RulePropertyFactory: RecordFactory<RulePropertyRecord> = Record({
+  fieldType: 'RuleProperty',
   definition: RulePropertyDefinitionFactory(),
-  selector: null,
+  selector: '',
   type: null,
   attribute: null,
-  format: null,
+  format: '',
+  rule: null,
 });
 
-export type RuleProperty = RecordOf<RulePropertyRecord>;
+export type RuleProperty = RecordOf<RulePropertyRecord> & RulePropertyFactory;

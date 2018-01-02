@@ -9,12 +9,17 @@
  */
 
 const React = require('react');
+
+import RuleActions from '../data/RuleActions';
+import EditorActions from '../data/EditorActions';
 import type { Rule } from '../models/Rule';
+import { RuleFactory } from '../models/Rule';
+import { RulePropertyFactory } from '../models/RuleProperty';
 import type { RuleProperty } from '../models/RuleProperty';
-
 import type { Props as BaseProps } from '../containers/AppContainer.react';
+import type { Field } from '../models/Field';
 
-type Props = BaseProps & { target: Rule | RuleProperty };
+type Props = BaseProps & { field: Field };
 
 type State = {
   findButtonCenterX: number,
@@ -26,8 +31,6 @@ type State = {
 class SelectorPicker extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
-    this.configureLine();
-    this.enableMouseMoveTracking();
   }
 
   configureLine(): void {
@@ -39,10 +42,10 @@ class SelectorPicker extends React.Component<Props, State> {
   }
 
   isFinding(): boolean {
-    if (this.props.app.finding == this.props.target) {
-      return true;
-    }
-    return false;
+    return (
+      this.props.editor.focusedField == this.props.field &&
+      this.props.editor.finding
+    );
   }
 
   enableMouseMoveTracking() {
@@ -51,6 +54,11 @@ class SelectorPicker extends React.Component<Props, State> {
 
   disableMouseMoveTracking() {
     document.removeEventListener('mousemove', this.handleMouseMove);
+  }
+
+  componentDidMount() {
+    this.enableMouseMoveTracking();
+    this.configureLine();
   }
 
   componentWillUnmount() {
@@ -84,6 +92,7 @@ class SelectorPicker extends React.Component<Props, State> {
     const inputElement = event.target;
     if (inputElement instanceof HTMLInputElement) {
       const selector = inputElement.value;
+      RuleActions.editField(this.props.field.set('selector', selector));
     }
   };
 
@@ -102,6 +111,7 @@ class SelectorPicker extends React.Component<Props, State> {
   };
 
   handleFindButtonClick = (event: Event) => {
+    EditorActions.startFinding(this.props.field);
     event.preventDefault();
   };
 
@@ -116,8 +126,8 @@ class SelectorPicker extends React.Component<Props, State> {
       <div>
         <input
           type="text"
-          placeholder={this.props.target.definition.placeholder}
-          value={this.props.target.selector}
+          placeholder={this.props.field.definition.placeholder}
+          value={this.props.field.selector}
           onChange={this.handleSelectorChanged}
           onFocus={this.handleFocus}
           onBlur={this.handleBlur}

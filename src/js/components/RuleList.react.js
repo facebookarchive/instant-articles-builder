@@ -28,7 +28,7 @@ const dialogFilter = {
 };
 const importExportEncoding = 'utf8';
 
-class RuleList extends React.PureComponent<Props> {
+class RuleList extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
   }
@@ -74,7 +74,7 @@ class RuleList extends React.PureComponent<Props> {
     );
   };
 
-  handleAddRule = (e: Event) => {
+  handleAddRule = (event: Event) => {
     const selectElement = event.target;
     if (selectElement instanceof HTMLSelectElement) {
       const ruleDefinition = this.props.ruleDefinitions.get(
@@ -103,22 +103,37 @@ class RuleList extends React.PureComponent<Props> {
         >
           Import
         </button>
-
-        <select className="rule-selector" onChange={this.handleAddRule}>
-          <option value={null}>Select a Rule...</option>
-          {this.props.ruleDefinitions.map(ruleDefinition => (
-            <option
-              key={ruleDefinition.className}
-              value={ruleDefinition.className}
-            >
-              {ruleDefinition.displayName}
+        <hr />
+        <form className="selectors-form">
+          <select
+            className="rule-selector"
+            onChange={this.handleAddRule}
+            value=""
+          >
+            <option value="" disabled={true}>
+              Add a new Rule
             </option>
-          ))}
-        </select>
+            <optgroup>
+              {this.props.ruleDefinitions
+                .sortBy(defintion => defintion.displayName)
+                .valueSeq()
+                .map(ruleDefinition => (
+                  <option
+                    key={ruleDefinition.className}
+                    value={ruleDefinition.className}
+                  >
+                    {ruleDefinition.displayName}
+                  </option>
+                ))}
+            </optgroup>
+          </select>
+        </form>
 
-        {this.props.rules.map(rule => (
-          <RulePicker {...this.props} rule={rule} />
-        ))}
+        {this.props.rules
+          .valueSeq()
+          .map(rule => (
+            <RulePicker {...this.props} key={rule.guid} rule={rule} />
+          ))}
       </div>
     );
   }

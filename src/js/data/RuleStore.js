@@ -8,15 +8,18 @@
  * @flow
  */
 
-const { ReduceStore } = require('flux');
 const Immutable = require('immutable');
 const RulesEditorDispatcher = require('./RulesEditorDispatcher.js');
-import RuleActionTypes from './RuleActionTypes.js';
 
+import { ReduceStore } from 'flux/utils';
+import RuleActionTypes from './RuleActionTypes.js';
+import { RuleFactory } from '../models/Rule';
+import { RulePropertyFactory } from '../models/RuleProperty';
 import type { Rule } from '../models/Rule';
+import type { Field } from '../models/Field';
 import type { RuleActionType } from './RuleActionTypes.js';
 
-type Action = { type: RuleActionType, rule: Rule };
+type Action = { type: RuleActionType, rule?: Rule, field?: Field };
 export type State = Immutable.Map<string, Rule>;
 
 class RuleStore extends ReduceStore<State> {
@@ -31,15 +34,30 @@ class RuleStore extends ReduceStore<State> {
   reduce(state: State, action: Action): State {
     switch (action.type) {
       case RuleActionTypes.ADD_RULE:
-        return state.set(action.rule.guid, action.rule);
-
-      case RuleActionTypes.EDIT_RULE:
-        if (!state.has(action.rule.guid)) {
+        if (action.rule == null) {
           return state;
         }
         return state.set(action.rule.guid, action.rule);
 
+      case RuleActionTypes.EDIT_FIELD:
+        if (action.field == null) {
+          return state;
+        }
+        if (action.field.fieldType === 'Rule') {
+          return state.set(action.field.guid, action.field);
+        }
+        if (action.field.fieldType === 'RuleProperty') {
+          return state.setIn(
+            [action.field.rule.guid, 'properties', action.field.name],
+            action.field
+          );
+        }
+        return state;
+
       case RuleActionTypes.REMOVE_RULE:
+        if (action.rule == null) {
+          return state;
+        }
         return state.delete(action.rule.guid);
 
       default:
