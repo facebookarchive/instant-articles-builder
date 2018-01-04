@@ -51,6 +51,9 @@ export const RuleFactory = (values: $Shape<RuleRecord>): Rule => {
       if (property != null) {
         return property;
       }
+      if (definition.defaultProperty != null) {
+        return definition.defaultProperty;
+      }
       return RulePropertyFactory({ rule, definition });
     })
   );

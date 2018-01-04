@@ -14,6 +14,7 @@ import type { RuleDefinition } from './models/RuleDefinition';
 import type { RulePropertyDefinition } from './models/RulePropertyDefinition';
 import { RuleDefinitionFactory } from './models/RuleDefinition';
 import { RulePropertyDefinitionFactory } from './models/RulePropertyDefinition';
+import { RulePropertyFactory } from './models/RuleProperty';
 
 const ruleDefinitions: RuleDefinition[] = [];
 
@@ -66,6 +67,19 @@ ruleDefinitions.push(
         supportedTypes: Set([RulePropertyTypes.ELEMENT]),
         required: true,
         unique: true,
+      }),
+      'article.url': RulePropertyDefinitionFactory({
+        name: 'article.url',
+        displayName: 'Article URL',
+        placeholder: 'Example: link[rel=canonical]',
+        defaultAttribute: 'href',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        required: true,
+        unique: true,
+        defaultProperty: RulePropertyFactory({
+          selector: 'link[rel=canonical]',
+          attribute: 'href',
+        }),
       }),
     }),
   })
