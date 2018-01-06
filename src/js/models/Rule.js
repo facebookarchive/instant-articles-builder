@@ -11,6 +11,7 @@
 import { Record, Map, Seq } from 'immutable';
 import { RuleDefinitionFactory } from './RuleDefinition.js';
 import { RulePropertyFactory } from './RuleProperty';
+import { RulePropertyUtils } from './RuleProperty';
 import type { RuleDefinition } from './RuleDefinition.js';
 import type { RuleProperty } from './RuleProperty';
 
@@ -49,7 +50,7 @@ export const RuleFactory = (values: $Shape<RuleRecord>): Rule => {
     rule.definition.properties.map(definition => {
       let property = properties.get(definition.name);
       if (property != null) {
-        return property;
+        return property.set('definition', definition);
       }
       if (definition.defaultProperty != null) {
         return definition.defaultProperty;
@@ -60,5 +61,16 @@ export const RuleFactory = (values: $Shape<RuleRecord>): Rule => {
 
   return rule;
 };
+
+export class RuleUtils {
+  static isValid(rule: Rule) {
+    if (rule.selector == '' || rule.selector == null) {
+      return false;
+    }
+    return rule.properties
+      .filter(property => property.definition.required)
+      .every(property => RulePropertyUtils.isValid(property));
+  }
+}
 
 export type Rule = RecordOf<RuleRecord> & RuleFactory;
