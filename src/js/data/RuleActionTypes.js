@@ -13,6 +13,7 @@ const RuleActionTypes = {
   REMOVE_RULE: 'REMOVE_RULE',
   EDIT_FIELD: 'EDIT_FIELD',
   REMOVE_ALL_RULES: 'REMOVE_ALL_RULES',
+  CHANGE_ORDER: 'CHANGE_ORDER',
 };
 
 export type RuleActionType = $Values<typeof RuleActionTypes>;
