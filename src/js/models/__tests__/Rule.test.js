@@ -7,7 +7,7 @@
  */
 
 import type { Rule } from '../Rule';
-import { Map } from 'immutable';
+import { Map, Set } from 'immutable';
 import { RuleFactory } from '../Rule';
 import { RulePropertyFactory } from '../RuleProperty';
 import { RuleDefinitionFactory } from '../RuleDefinition';
@@ -160,6 +160,7 @@ describe('RuleUtils', () => {
           properties: Map({
             'valid-property': RulePropertyDefinitionFactory({
               name: 'valid-property',
+              supportedTypes: Set([RulePropertyTypes.ELEMENT]),
               required: true,
             }),
           }),

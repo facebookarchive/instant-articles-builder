@@ -18,6 +18,7 @@ import { RuleFactory } from '../models/Rule';
 import { RulePropertyFactory } from '../models/RuleProperty';
 import RulePropertyTypes from '../models/RulePropertyTypes';
 import { RuleUtils } from '../models/Rule';
+import { RulePropertyUtils } from '../models/RuleProperty';
 
 type JSONFormat = {
   rules: RuleJSON[]
@@ -86,6 +87,7 @@ class RuleExporter {
   ): ?{ [string]: RulePropertyJSON } {
     if (properties != null) {
       return properties
+        .filter(property => RulePropertyUtils.isValid(property))
         .map(property => this.createJSONFromRuleProperty(property))
         .filter(Boolean)
         .toJSON();
