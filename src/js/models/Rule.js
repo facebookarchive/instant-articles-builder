@@ -39,7 +39,7 @@ export const RuleFactory = (values: $Shape<RuleRecord>): Rule => {
   let rule: Rule = BaseRuleFactory(values);
 
   // Generates a guid if none is provided
-  rule = rule.update('guid', guid => (guid == '' ? 'rule-' + counter++ : ''));
+  rule = rule.update('guid', guid => (guid == '' ? 'rule-' + counter++ : guid));
   // Sets the rule of child properties to the right parent
   rule = rule.update('properties', properties =>
     properties.map(property => property.set('rule', rule))
