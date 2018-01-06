@@ -6,10 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { Map } from 'immutable';
+import { Map, Set } from 'immutable';
 import RuleExporter from '../RuleExporter';
 import { RuleFactory } from '../../models/Rule';
 import { RuleDefinitionFactory } from '../../models/RuleDefinition';
+import { RulePropertyDefinitionFactory } from '../../models/RulePropertyDefinition';
+import { RulePropertyFactory } from '../../models/RuleProperty';
+import RulePropertyTypes from '../../models/RulePropertyTypes';
 
 // Rules that are always included in the exported file
 const defaultExportedRules = [{ class: 'TextNodeRule' }];
@@ -35,6 +38,48 @@ describe('RuleExporter', () => {
     expect(exportedRules.rules).toEqual([
       ...defaultExportedRules,
       { class: 'ValidRule', selector: '.some-selector' },
+    ]);
+  });
+
+  it('should export only valid configured rule properties', () => {
+    const exportedRules = RuleExporter.export(
+      Map({
+        'valid-rule': RuleFactory({
+          definition: RuleDefinitionFactory({
+            name: 'ValidRule',
+            properties: Map({
+              'valid-property': RulePropertyDefinitionFactory({
+                name: 'valid-property',
+                supportedTypes: Set([RulePropertyTypes.ELEMENT]),
+              }),
+              'invalid-property': RulePropertyDefinitionFactory({
+                name: 'invalid-property',
+              }),
+            }),
+          }),
+          properties: Map({
+            'valid-property': RulePropertyFactory({
+              type: RulePropertyTypes.ELEMENT,
+              selector: '.some-selector',
+            }),
+            'invalid-property': RulePropertyFactory(),
+          }),
+          selector: '.some-selector',
+        }),
+      })
+    );
+    expect(exportedRules.rules).toEqual([
+      ...defaultExportedRules,
+      {
+        class: 'ValidRule',
+        selector: '.some-selector',
+        properties: {
+          'valid-property': {
+            type: RulePropertyTypes.ELEMENT,
+            selector: '.some-selector',
+          },
+        },
+      },
     ]);
   });
 });

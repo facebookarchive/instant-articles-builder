@@ -13,7 +13,7 @@ const fs = require('fs');
 const debounce = require('../utils/debounce.js');
 const homeURL = `file:///${__dirname}/../../html/home.html`;
 
-import RuleUtils from '../utils/RuleUtils';
+import RuleExporter from '../utils/RuleExporter';
 import EditorActions from '../data/EditorActions';
 import RuleActions from '../data/RuleActions';
 import type { Attribute } from '../models/Attribute';
@@ -182,7 +182,9 @@ class Browser extends React.Component<Props, State> {
         'view-source:http://127.0.0.1:8105/index.php?url=' +
         encodeURIComponent(this.state.displayURL) +
         '&rules=' +
-        encodeURIComponent(JSON.stringify(RuleUtils.export(this.props.rules))) +
+        encodeURIComponent(
+          JSON.stringify(RuleExporter.export(this.props.rules))
+        ) +
         '&timestamp=' +
         performance.now();
       if (this.preview && this.preview.src != newURL) {
