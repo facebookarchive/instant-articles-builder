@@ -135,6 +135,10 @@ header > img {
   width: 266px;
 }
 
+.field-line.valid > label:first-of-type {
+  color: #3b5998;
+}
+
 .button {
   color: #fff;
   min-width: 40px;
@@ -420,12 +424,15 @@ webview {
   margin-bottom: 10px;
   position: relative;
   background: rgba(255, 255, 255, 0.6);
-  border: 1px solid #3b5998;
+  border: 1px solid #ccc;
   border-radius: 5px;
   width: 266px;
   padding: 5px;
   padding-bottom: 1px;
   box-shadow: 1px 1px 2px #ccc;
+}
+.selectors-form.valid {
+  border: 1px solid #3b5998;
 }
 
 .btn-close {
@@ -469,13 +476,17 @@ webview {
   font-size: 13.2px;
   margin: -6px 0px 0px -6px;
   color: #fff;
-  background: #3b5998;
+  background: #ccc;
   border-radius: 5px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
   padding: 5px;
   line-height: 19px;
   cursor: pointer;
+}
+
+.valid .rule-header {
+  background: #3b5998;
 }
 
 .collapsed {
@@ -506,12 +517,12 @@ webview {
   box-shadow: none;
 }
 
-form input:active,
-form input:focus {
+input:active,
+input:focus {
   outline: none;
   box-shadow: none;
 }
-form button {
+button {
   cursor: pointer;
 }
 .webviews {

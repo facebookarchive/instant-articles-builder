@@ -16,6 +16,7 @@ const RuleActions = require('../data/RuleActions');
 
 import type { Rule } from '../models/Rule';
 import type { Props as BaseProps } from '../containers/AppContainer.react';
+import { RuleUtils } from '../models/Rule';
 
 type Props = BaseProps & { rule: Rule };
 
@@ -48,10 +49,11 @@ class RulePicker extends React.Component<Props, State> {
       : '\u25BC'; // down triangle
 
     return (
-      <form
+      <div
         className={classNames({
           'selectors-form': true,
           collapsed: !!this.state.collapsed,
+          valid: RuleUtils.isValid(this.props.rule),
         })}
       >
         <h2 className="rule-header" onClick={this.handleToggle}>
@@ -75,18 +77,23 @@ class RulePicker extends React.Component<Props, State> {
                 ) || 0) > 1,
               active: this.props.editor.focusedField == this.props.rule,
               multiple: !this.props.rule.definition.unique,
+              valid: this.props.rule.selector != '',
             })}
           >
-            <label>Selector</label>
+            <label>
+              {this.props.rule.selector != '' ? <span>✔</span> : <span>✘</span>}{' '}
+              Selector
+            </label>
             <SelectorPicker {...this.props} field={this.props.rule} />
           </div>
           {this.props.rule.properties
+            .sortBy(property => !property.definition.required)
             .valueSeq()
             .map((property, name) => (
               <PropertyPicker {...this.props} key={name} property={property} />
             ))}
         </div>
-      </form>
+      </div>
     );
   }
 }
