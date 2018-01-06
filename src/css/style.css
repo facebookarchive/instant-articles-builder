@@ -581,4 +581,6 @@ button {
   flex-grow: 1;
   width: auto;
   flex-basis: 300px;
+  padding-left: 0;
+  margin: 0;
 }

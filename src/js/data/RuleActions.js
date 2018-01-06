@@ -43,6 +43,13 @@ class RuleActions {
     });
     EditorActions.focusField(field);
   }
+  static changeOrder(oldIndex: number, newIndex: number) {
+    RulesEditorDispatcher.dispatch({
+      type: RuleActionTypes.CHANGE_ORDER,
+      oldIndex,
+      newIndex,
+    });
+  }
 }
 
 module.exports = RuleActions;
