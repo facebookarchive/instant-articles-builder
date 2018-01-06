@@ -15,7 +15,7 @@ const { remote: { dialog: Dialog } } = require('electron');
 const Fs = require('fs');
 
 import { RuleFactory } from '../models/Rule';
-import RuleUtils from '../utils/RuleUtils';
+import RuleExporter from '../utils/RuleExporter';
 import type { Rule } from '../models/Rule';
 import type { Props } from '../containers/AppContainer.react';
 
@@ -32,7 +32,7 @@ class RuleList extends React.Component<Props> {
   }
 
   loadFromExportedData = (data: string) => {
-    RuleUtils.import(data, this.props.ruleDefinitions);
+    RuleExporter.import(data, this.props.ruleDefinitions);
   };
 
   handleExport = (e: Event) => {
@@ -43,7 +43,9 @@ class RuleList extends React.Component<Props> {
       },
       fileName => {
         if (fileName) {
-          const contents = JSON.stringify(RuleUtils.export(this.props.rules));
+          const contents = JSON.stringify(
+            RuleExporter.export(this.props.rules)
+          );
           Fs.writeFile(fileName, contents, importExportEncoding, error => {
             if (error) {
               Dialog.showErrorBox('Unable to save file', error);

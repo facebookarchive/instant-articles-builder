@@ -17,6 +17,7 @@ import RuleActions from '../data/RuleActions';
 import { RuleFactory } from '../models/Rule';
 import { RulePropertyFactory } from '../models/RuleProperty';
 import RulePropertyTypes from '../models/RulePropertyTypes';
+import { RuleUtils } from '../models/Rule';
 
 type JSONFormat = {
   rules: RuleJSON[]
@@ -35,7 +36,7 @@ type RuleJSON = {
   properties?: { [string]: RulePropertyJSON }
 };
 
-class RuleUtils {
+class RuleExporter {
   static import(
     data: string,
     ruleDefinitions: Immutable.Map<string, RuleDefinition>
@@ -58,6 +59,7 @@ class RuleUtils {
         { class: 'TextNodeRule' },
         ...Array.from(
           rules
+            .filter(rule => RuleUtils.isValid(rule))
             .map((rule: Rule): ?RuleJSON => this.createJSONFromRule(rule))
             .filter(Boolean)
             .values()
@@ -68,7 +70,9 @@ class RuleUtils {
 
   static createJSONFromRule(rule: Rule): ?RuleJSON {
     if (rule.selector != null) {
-      let properties = this.createJSONFromRuleProperties(rule.properties);
+      let properties = rule.properties.isEmpty()
+        ? null
+        : this.createJSONFromRuleProperties(rule.properties);
       return {
         class: rule.definition.name,
         selector: rule.selector,
@@ -154,4 +158,4 @@ class RuleUtils {
   }
 }
 
-export default RuleUtils;
+export default RuleExporter;

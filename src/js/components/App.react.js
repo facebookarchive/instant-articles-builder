@@ -23,15 +23,30 @@ class App extends React.Component<Props> {
   // Handle escaping selection on pressing ESC
   componentDidMount() {
     document.addEventListener('keyup', this.cancelOnEscape);
+    document.addEventListener('click', this.blurOnClickOut);
   }
   componentWillUnmount() {
     document.removeEventListener('keyup', this.cancelOnEscape);
+    document.removeEventListener('click', this.blurOnClickOut);
   }
   cancelOnEscape = (e: Event) => {
     // Handle element selection cancelation on 'esc' press
+    // escape key maps to keycode `27`
     if (e.keyCode == 27) {
-      // escape key maps to keycode `27`
-      EditorActions.stopFinding();
+      if (this.props.editor.get('finding')) {
+        EditorActions.stopFinding();
+      } else {
+        EditorActions.blur();
+      }
+    }
+  };
+  blurOnClickOut = (e: Event) => {
+    // Handle blur on clicking out of any form
+    if (
+      e.target instanceof HTMLElement &&
+      !e.target.matches('.selectors-form *')
+    ) {
+      EditorActions.blur();
     }
   };
 
