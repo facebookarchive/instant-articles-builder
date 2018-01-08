@@ -35,7 +35,7 @@ const SortableItem = SortableElement((props: any) => <RulePicker {...props} />);
 
 const SortableList = SortableContainer((props: any) => {
   return (
-    <ul className="scrollable">
+    <ul>
       {props.items.map((rule, index) => (
         <SortableItem
           {...props}
@@ -124,7 +124,7 @@ class RuleList extends React.Component<Props> {
 
   componentDidUpdate(prevProps: Props) {
     if (prevProps.rules.count() < this.props.rules.count()) {
-      //this.refs.scrollable.scrollTop = 99999;
+      this.refs.scrollable.scrollTop = 99999;
     }
   }
 
@@ -172,12 +172,14 @@ class RuleList extends React.Component<Props> {
           </select>
         </form>
 
-        <SortableList
-          {...this.props}
-          pressDelay={200}
-          items={this.props.rules.valueSeq()}
-          onSortEnd={this.handleSortEnd}
-        />
+        <div className="scrollable" ref="scrollable">
+          <SortableList
+            {...this.props}
+            pressDelay={200}
+            items={this.props.rules.valueSeq()}
+            onSortEnd={this.handleSortEnd}
+          />
+        </div>
       </div>
     );
   }

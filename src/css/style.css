@@ -573,3 +573,8 @@ form button {
   padding-left: 0;
   margin: 0;
 }
+
+.scrollable ul {
+  padding-left: 0;
+  margin: 0;
+}
