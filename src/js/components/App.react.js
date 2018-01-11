@@ -11,108 +11,29 @@
 const React = require('react');
 const Browser = require('./Browser.react.js');
 const RuleList = require('./RuleList.react.js');
+const EditorActions = require('../data/EditorActions');
 
-import type { Attribute } from '../types/Attribute';
-import type { InputRule } from '../types/InputRule';
+import type { Props } from '../containers/AppContainer.react';
 
-type Props = {
-  rulesByClassName: Map<string, InputRule>
-};
-
-type State = {
-  findAttributeName?: ?string,
-  findMultipleElements?: ?boolean,
-  resolvedCssSelector: string,
-  selectedElementAttributes: Array<Attribute>,
-  selectedElementCount?: number,
-  selector?: ?string,
-  rulesJSON: ?string
-};
-
-class App extends React.Component<Props, State> {
+class App extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
-    this.state = {
-      resolvedCssSelector: '',
-      selectedElementAttributes: [],
-      rulesJSON: '{rules:[]}',
-    };
   }
 
+  // Handle escaping selection on pressing ESC
   componentDidMount() {
     document.addEventListener('keyup', this.cancelOnEscape);
   }
-
   componentWillUnmount() {
     document.removeEventListener('keyup', this.cancelOnEscape);
   }
-
   cancelOnEscape = (e: Event) => {
     // Handle element selection cancelation on 'esc' press
-    if (e.keyCode == 27 && !!this.state.findAttributeName) {
+    if (e.keyCode == 27) {
       // escape key maps to keycode `27`
-      this.ruleListFindCancel();
+      EditorActions.stopFinding();
     }
   };
-
-  toNameValueAttributes(attributes: Map<string, string>): Array<Attribute> {
-    return [...attributes].map(([name, value]) => {
-      return {
-        name,
-        value,
-      };
-    });
-  }
-
-  receiveAttributes = (
-    selector: string,
-    attributes: Map<string, string>,
-    count: number
-  ) => {
-    this.setState({
-      selectedElementAttributes: this.toNameValueAttributes(attributes),
-      selectedElementCount: count,
-    });
-  };
-
-  handleBrowserCssSelectorResolved = (resolvedCssSelector: string) => {
-    this.setState({
-      resolvedCssSelector: resolvedCssSelector,
-      selectedElementAttributes: [],
-      findAttributeName: null,
-      findMultipleElements: null,
-    });
-  };
-
-  handleRuleListSelectorChanged = (selector: ?string, multiple: ?boolean) => {
-    this.setState({
-      selector: selector,
-      findAttributeName: null,
-      findMultipleElements: multiple,
-    });
-  };
-
-  handleRuleListFind = (attributeName: string, multiple: boolean) => {
-    this.setState({
-      selector: null,
-      findAttributeName: attributeName,
-      findMultipleElements: multiple,
-    });
-  };
-
-  handleRulesJSONChanged = (rulesJSON: string) => {
-    this.setState({
-      rulesJSON: rulesJSON,
-    });
-  };
-
-  ruleListFindCancel() {
-    this.setState({
-      selector: null,
-      findAttributeName: null,
-      findMultipleElements: null,
-    });
-  }
 
   render() {
     return (
@@ -123,27 +44,10 @@ class App extends React.Component<Props, State> {
         </header>
         <div id="content-wrapper">
           <main id="content">
-            <Browser
-              selector={this.state.selector}
-              rulesJSON={this.state.rulesJSON}
-              findAttribute={!!this.state.findAttributeName}
-              findMultipleElements={this.state.findMultipleElements}
-              onAttributesReceived={this.receiveAttributes}
-              onCssSelectorResolved={this.handleBrowserCssSelectorResolved}
-            />
+            <Browser {...this.props} />
           </main>
           <nav id="nav">
-            <RuleList
-              rulesByClassName={this.props.rulesByClassName}
-              resolvedCssSelector={this.state.resolvedCssSelector}
-              selectedElementAttributes={this.state.selectedElementAttributes}
-              selectedElementCount={this.state.selectedElementCount}
-              onSelectorChanged={this.handleRuleListSelectorChanged}
-              onRulesJSONChanged={this.handleRulesJSONChanged}
-              onFind={this.handleRuleListFind}
-              findAttributeName={this.state.findAttributeName}
-              finding={!!this.state.findAttributeName}
-            />
+            <RuleList {...this.props} />
           </nav>
         </div>
       </div>

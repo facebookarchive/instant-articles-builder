@@ -10,7 +10,6 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
 }
 set_error_handler("exception_error_handler");
-ob_start();
 
 \Logger::configure(
     [
@@ -28,6 +27,8 @@ ob_start();
         ]
     ]
 );
+
+$error = null;
 
 try {
   // Read the URL parameter
@@ -59,7 +60,6 @@ catch (Exception $e) {
   $stacktrace = $e->getTraceAsString();
 }
 // Output
-ob_end_clean();
 
 
 
@@ -75,13 +75,11 @@ ob_end_clean();
 Converted Instant Article Preview
 =================================
 
-# Transfomed URL: <?php echo $url; ?>
+# Transfomed URL: <?php if (isset($url)) { echo $url; } ?>
 
 
 <?php
 if ($error) {
-
-
 ?>
 ======================================
 Transformation failed due to an error:
@@ -98,12 +96,8 @@ Stacktrace:
 
 
 <?php
-
-
 }
 else {
-
-
 ?>
 
 -->
@@ -114,15 +108,13 @@ else {
 <!--
 
 <?php
-
-
 }
 ?>
 ==========
 Rules used
 ==========
 
-<?php echo json_encode(json_decode($rules), JSON_PRETTY_PRINT); ?>
+<?php if (isset($rules)) { echo json_encode(json_decode($rules), JSON_PRETTY_PRINT); } ?>
 
 
 -->

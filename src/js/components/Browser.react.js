@@ -4,40 +4,67 @@
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
  */
 
-let React = require('react');
-let fs = require('fs');
-let debounce = require('../utils/debounce.js');
-
+const React = require('react');
+const fs = require('fs');
+const debounce = require('../utils/debounce.js');
 const homeURL = `file:///${__dirname}/../../html/home.html`;
 
-class Browser extends React.Component {
-  constructor(props) {
+import RuleUtils from '../utils/RuleUtils';
+import EditorActions from '../data/EditorActions';
+import RuleActions from '../data/RuleActions';
+import type { Attribute } from '../models/Attribute';
+import { Map } from 'immutable';
+import { AttributeFactory } from '../models/Attribute';
+import type { Props } from '../containers/AppContainer.react';
+
+type State = {
+  url: string,
+  displayURL: string,
+  showPreview: boolean,
+  progress: number
+};
+
+class Browser extends React.Component<Props, State> {
+  preview: any;
+  webview: any;
+
+  constructor(props: Props) {
     super(props);
-    this.selectElement = this.selectElement.bind(this);
-    this.receiveMessage = this.receiveMessage.bind(this);
     this.state = {
       url: homeURL,
       displayURL: '',
       showPreview: true,
+      progress: 0,
     };
   }
 
-  receiveMessage(event) {
+  receiveMessage = (event: any) => {
     if (event.message == 'attributes') {
-      const attributes = new Map(Object.entries(event.value.attributes));
-      this.props.onAttributesReceived(
-        event.value.selector,
-        attributes,
-        event.value.count
+      // Attributes retrieved
+      const elementAttributes: Map<string, Attribute> = Map(
+        event.value.attributes.map(attribute => [
+          attribute.name,
+          AttributeFactory(attribute),
+        ])
       );
+      const elementCount = event.value.count;
+      EditorActions.found(elementAttributes, elementCount);
     } else if (event.message == 'DOM') {
-      this.props.onCssSelectorResolved(event.value.resolvedCssSelector);
+      // Selector retrieved
+      const selector = event.value.resolvedCssSelector;
+      EditorActions.stopFinding();
+      if (this.props.editor.focusedField != null) {
+        let field = this.props.editor.focusedField;
+        RuleActions.editField(field.set('selector', selector));
+      }
     }
-  }
+  };
 
-  displayURL = url => {
+  displayURL = (): string => {
     if (this.state.displayURL.startsWith('file:///')) {
       return '';
     } else {
@@ -45,23 +72,23 @@ class Browser extends React.Component {
     }
   };
 
-  togglePreview = e => {
+  togglePreview = () => {
     this.setState(prevState => ({ showPreview: !prevState.showPreview }));
   };
 
-  syncURL = e => {
+  syncURL = (e: any) => {
     this.setState({ displayURL: e.url });
   };
 
-  startProgress = e => {
+  startProgress = () => {
     this.setState({ progress: 0.15 });
   };
 
-  resetProgress = e => {
+  resetProgress = () => {
     this.setState({ progress: 0 });
   };
 
-  getResponseDetails = e => {
+  getResponseDetails = () => {
     // this faux progress bar calculation will ensure progress is registered
     // but the progress bar will never be completely full
     this.setState(prevState => ({
@@ -72,18 +99,18 @@ class Browser extends React.Component {
     }));
   };
 
-  previewLoading = e => {
+  previewLoading = () => {
     this.preview.classList.add('loading');
   };
-  previewFinishedLoading = e => {
+  previewFinishedLoading = () => {
     this.preview.classList.remove('loading');
   };
 
-  urlTyped = e => {
+  urlTyped = (e: any) => {
     this.setState({ displayURL: e.target.value });
   };
 
-  go = e => {
+  go = (e: Event) => {
     let url = this.state.displayURL;
     if (url === 'about:home') {
       url = homeURL;
@@ -122,59 +149,57 @@ class Browser extends React.Component {
     return false;
   };
 
-  highlightElements = e => {
-    let selector = this.props.selector;
-    let findMultipleElements = this.props.findMultipleElements;
-    let webview = e.target;
-    webview.send('message', {
-      method: 'highlightElements',
-      selector: selector,
-      multiple: findMultipleElements,
-    });
+  highlightElements = () => {
+    // Uncomment to debug the injected script
+    // this.webview.openDevTools();
+    if (this.props.editor.focusedField != null) {
+      let findMultipleElements = !this.props.editor.focusedField.definition
+        .unique;
+      let selector = this.props.editor.focusedField.selector;
+
+      if (!this.props.editor.finding) {
+        this.webview.send('message', {
+          method: 'highlightElements',
+          selector: selector,
+          multiple: findMultipleElements,
+        });
+      } else {
+        this.webview.send('message', {
+          method: 'selectElement',
+          multiple: findMultipleElements,
+        });
+      }
+    } else {
+      this.webview.send('message', {
+        method: 'clear',
+      });
+    }
   };
 
-  selectElement(e) {
-    let webview = e.target;
-    let findMultipleElements = this.props.findMultipleElements;
-    webview.send('message', {
-      method: 'selectElement',
-      multiple: findMultipleElements,
-    });
-  }
-
   renderPreview = debounce(() => {
-    let newURL =
-      'view-source:http://127.0.0.1:8088/index.php?url=' +
-      encodeURIComponent(this.state.displayURL) +
-      '&rules=' +
-      encodeURIComponent(this.props.rulesJSON) +
-      '&timestamp=' +
-      performance.now();
-    if (this.preview && this.preview.src != newURL) {
-      console.log(newURL);
-      this.preview.src = newURL;
+    if (this.preview != null) {
+      let newURL =
+        'view-source:http://127.0.0.1:8105/index.php?url=' +
+        encodeURIComponent(this.state.displayURL) +
+        '&rules=' +
+        encodeURIComponent(JSON.stringify(RuleUtils.export(this.props.rules))) +
+        '&timestamp=' +
+        performance.now();
+      if (this.preview && this.preview.src != newURL) {
+        this.preview.src = newURL;
+      }
     }
   }, 1000);
 
-  componentWillReceiveProps(nextProps) {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     if (
-      nextProps.selector != this.props.selector &&
-      nextProps.selector &&
-      this.webview
+      prevProps.editor.focusedField != this.props.editor.focusedField ||
+      prevProps.editor.finding != this.props.editor.finding
     ) {
-      this.webview.send('message', {
-        method: 'highlightElements',
-        selector: nextProps.selector,
-        multiple: nextProps.findMultipleElements,
-      });
+      this.highlightElements();
     }
-    if (this.webview && nextProps.findAttribute) {
-      this.webview.send('message', {
-        method: 'selectElement',
-        multiple: nextProps.findMultipleElements,
-      });
-    }
-    if (this.preview && nextProps.rulesJSON != this.props.rulesJSON) {
+
+    if (!this.props.rules.equals(prevProps.rules)) {
       this.renderPreview();
     }
   }
@@ -243,7 +268,7 @@ class Browser extends React.Component {
           <webview
             ref={webview => {
               if (webview) {
-                webview.nodeintegration = true;
+                (webview: any).nodeintegration = true;
                 this.webview = webview;
               }
             }}
@@ -257,7 +282,7 @@ class Browser extends React.Component {
           <webview
             ref={preview => {
               if (preview) {
-                preview.nodeintegration = true;
+                (preview: any).nodeintegration = true;
                 this.preview = preview;
               }
             }}

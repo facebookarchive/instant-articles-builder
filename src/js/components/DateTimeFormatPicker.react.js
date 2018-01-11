@@ -11,16 +11,14 @@
 const React = require('react');
 const classNames = require('classnames');
 const moment = require('moment');
+import type { Attribute } from '../models/Attribute';
+import type { RuleProperty } from '../models/RuleProperty';
+import type { Props as BaseProps } from '../containers/AppContainer.react';
+import RuleActions from '../data/RuleActions';
+
+type Props = BaseProps & { property: RuleProperty };
 
 const DEFAULT_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
-
-type Props = {
-  expectedDateTime: ?string,
-  format: string,
-  name: string,
-  onFocus?: Event => void,
-  onFormatChanged: string => void
-};
 
 type State = {
   displayedDateTime?: ?string,
@@ -36,30 +34,58 @@ class DateTimeFormatPicker extends React.Component<Props, State> {
     };
   }
 
-  componentWillReceiveProps(nextProps: Props) {
-    if (nextProps.expectedDateTime !== this.props.expectedDateTime) {
-      let format = '';
-      let m = {};
-      if (nextProps.expectedDateTime != null) {
-        m = moment.parseZone(nextProps.expectedDateTime);
-        if (m.isValid()) {
-          format = m.creationData().format;
-        }
-      }
+  expectedDateTime(props?: Props): ?string {
+    props = props || this.props;
+    let attribute =
+      props.property.attribute || props.property.definition.defaultAttribute;
+    let selector = props.property.selector;
+    if (selector == null || attribute == null) {
+      return null;
+    }
+    let attributes = props.editor.get('elementAttributes').get(selector);
+    if (attributes == null) {
+      return null;
+    }
+    let expectedDateTime = attributes.find(attr => attr.name == attribute);
+    return expectedDateTime ? expectedDateTime.value : null;
+  }
 
-      this.setState({
-        moment: m,
-        displayedDateTime:
-          m && this.props.format ? m.format(this.props.format) : null,
-      });
-      this.onFormatChanged(format);
+  inferFormat() {
+    let format = '';
+    let m = {};
+    if (this.expectedDateTime() != null) {
+      m = moment.parseZone(this.expectedDateTime());
+      if (m.isValid()) {
+        format = m.creationData().format;
+      }
     }
 
-    if (nextProps.format !== this.props.format) {
+    this.setState({
+      moment: m,
+      displayedDateTime:
+        m && this.props.property.format
+          ? m.format(this.props.property.format)
+          : null,
+    });
+    this.formatChanged(format);
+  }
+
+  componentDidMount() {
+    // Hack to trigger a dispatch after this rendering
+    setTimeout(() => {
+      this.inferFormat();
+    }, 0);
+  }
+
+  componentDidUpdate(prevProps: Props) {
+    if (this.expectedDateTime() !== this.expectedDateTime(prevProps)) {
+      this.inferFormat();
+    }
+    if (this.props.property.format !== prevProps.property.format) {
       this.setState({
         displayedDateTime:
-          this.state.moment && nextProps.format
-            ? this.state.moment.format(nextProps.format)
+          this.state.moment && this.props.property.format
+            ? this.state.moment.format(this.props.property.format)
             : null,
       });
     }
@@ -69,20 +95,19 @@ class DateTimeFormatPicker extends React.Component<Props, State> {
     const inputElement = event.target;
     if (inputElement instanceof HTMLInputElement) {
       const newFormat = inputElement.value;
-      this.onFormatChanged(newFormat);
+      this.formatChanged(newFormat || '');
     }
   };
 
-  onFormatChanged(newFormat: string) {
-    if (this.props.onFormatChanged) {
-      this.props.onFormatChanged(newFormat);
-    }
-  }
+  formatChanged = (format: string) => {
+    let property = this.props.property.set('format', format);
+    RuleActions.editField(property);
+  };
 
   render() {
     let valid =
       !!this.state.displayedDateTime &&
-      this.state.displayedDateTime === this.props.expectedDateTime;
+      this.state.displayedDateTime === this.expectedDateTime();
     let classes = classNames({
       'datetime-picker': true,
       match: valid,
@@ -97,18 +122,15 @@ class DateTimeFormatPicker extends React.Component<Props, State> {
 
     return (
       <div className={classes}>
-        <label htmlFor={this.props.name} className="sub-label">
+        <label className="sub-label">
           DateTime Format String (RFC2822 or ISO)
         </label>
         <input
           type="text"
-          name={this.props.name}
           placeholder={'Example: ' + DEFAULT_FORMAT}
-          value={this.props.format}
-          disabled={this.props.expectedDateTime == null ? 'disabled' : ''}
+          value={this.props.property.format}
           onChange={this.handleFormatChange}
           className="date-time-format"
-          onFocus={this.props.onFocus}
         />
         {warning}
       </div>

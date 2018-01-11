@@ -75,6 +75,6 @@ app.on('activate', () => {
 // php ruleZ
 
 php.server({
-  port: 8088,
+  port: 8105,
   base: path.resolve(__dirname) + '/../../webserver',
 });

@@ -8,13 +8,16 @@
  * @flow
  */
 
-let App = require('./components/App.react.js');
-let ReactDOM = require('react-dom');
-let React = require('react');
+const AppContainer = require('./containers/AppContainer.react');
+const ReactDOM = require('react-dom');
+const React = require('react');
+const RuleDefinitionActions = require('./data/RuleDefinitionActions');
+const ruleDefinitions = require('./rule-definitions');
 
-const InputRules = require('./global-rules-input.js');
-
-import type { InputRule } from './types/InputRule';
+// Register all rule definitions on the store
+ruleDefinitions.map(ruleDefinition =>
+  RuleDefinitionActions.addRuleDefinition(ruleDefinition)
+);
 
 document.addEventListener('DOMContentLoaded', function() {
   const root = document.getElementById('root');
@@ -23,31 +26,5 @@ document.addEventListener('DOMContentLoaded', function() {
     return;
   }
 
-  const rulesByClassName: Map<string, InputRule> = new Map();
-  InputRules.rules.forEach(inputRule => {
-    if (rulesByClassName.has(inputRule.class)) {
-      console.warn(`Duplicate rule '${inputRule.class}' found`);
-      return;
-    }
-
-    let properties = [];
-    if (inputRule.properties) {
-      Object.entries(inputRule.properties).forEach(
-        ([propertyName, propertySettings]) => {
-          properties.push({
-            ...propertySettings,
-            name: propertyName,
-          });
-        }
-      );
-    }
-
-    const rule = {
-      ...inputRule,
-      properties: properties,
-    };
-    rulesByClassName.set(inputRule.class, rule);
-  });
-
-  ReactDOM.render(<App rulesByClassName={rulesByClassName} />, root);
+  ReactDOM.render(<AppContainer />, root);
 });
