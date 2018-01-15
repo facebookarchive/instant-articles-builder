@@ -63,6 +63,27 @@ describe('RuleFactory', () => {
     expect(rule.properties.get('property2')).not.toBeUndefined();
   });
 
+  it('should use a defaultProperty from the definition', () => {
+    const rule: Rule = RuleFactory({
+      definition: RuleDefinitionFactory({
+        properties: Map({
+          property1: RulePropertyDefinitionFactory({ name: 'property1' }),
+          property2: RulePropertyDefinitionFactory({
+            name: 'property2',
+            defaultProperty: RulePropertyFactory({ selector: '.default' }),
+          }),
+        }),
+      }),
+      properties: Map({
+        property1: RulePropertyFactory(),
+        // missing property2
+      }),
+    });
+
+    expect(rule.properties.get('property2')).not.toBeUndefined();
+    expect(rule.properties.get('property2').selector).toEqual('.default');
+  });
+
   it('should ignore property not present on the definition', () => {
     const rule: Rule = RuleFactory({
       definition: RuleDefinitionFactory({
