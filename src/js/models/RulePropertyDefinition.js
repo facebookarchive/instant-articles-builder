@@ -14,6 +14,9 @@ import type { RuleProperty } from './RuleProperty';
 import type { RulePropertyType } from './RulePropertyTypes.js';
 import type { RecordOf, RecordFactory } from 'immutable';
 
+/**
+ * @property {?RuleProperty} defaultProperty a default pre-filled property for this definition.
+ */
 type RulePropertyDefinitionRecord = {
   name: string,
   displayName: string,
