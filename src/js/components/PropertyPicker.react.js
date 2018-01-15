@@ -93,7 +93,7 @@ class PropertyPicker extends React.Component<Props> {
             ) || 0) > 1,
           active: this.props.editor.focusedField == this.props.property,
           multiple: !this.props.property.definition.unique,
-          required: !this.props.property.definition.required,
+          required: this.props.property.definition.required,
           valid: RulePropertyUtils.isValid(this.props.property),
         })}
       >
