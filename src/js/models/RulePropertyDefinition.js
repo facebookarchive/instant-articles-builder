@@ -10,9 +10,13 @@
 
 import { Record, Set } from 'immutable';
 
+import type { RuleProperty } from './RuleProperty';
 import type { RulePropertyType } from './RulePropertyTypes.js';
 import type { RecordOf, RecordFactory } from 'immutable';
 
+/**
+ * @property {?RuleProperty} defaultProperty a default pre-filled property for this definition.
+ */
 type RulePropertyDefinitionRecord = {
   name: string,
   displayName: string,
@@ -20,10 +24,11 @@ type RulePropertyDefinitionRecord = {
   defaultAttribute: ?string,
   supportedTypes: Set<RulePropertyType>,
   required: boolean,
-  unique: boolean
+  unique: boolean,
+  defaultProperty: ?RuleProperty
 };
 
-export const RulePropertyDefinitionFactory: RecordFactory<
+const BaseRulePropertyDefinitionFactory: RecordFactory<
   RulePropertyDefinitionRecord
 > = Record({
   name: '',
@@ -33,7 +38,23 @@ export const RulePropertyDefinitionFactory: RecordFactory<
   supportedTypes: Set(),
   required: false,
   unique: false,
+  defaultProperty: null,
 });
+
+export const RulePropertyDefinitionFactory = (
+  values: $Shape<RulePropertyDefinitionRecord>
+): RulePropertyDefinition => {
+  let rulePropertyDefinition: RulePropertyDefinition = BaseRulePropertyDefinitionFactory(
+    values
+  );
+  if (rulePropertyDefinition.defaultProperty != null) {
+    rulePropertyDefinition = rulePropertyDefinition.setIn(
+      ['defaultProperty', 'definition'],
+      rulePropertyDefinition
+    );
+  }
+  return rulePropertyDefinition;
+};
 
 export type RulePropertyDefinition = RecordOf<RulePropertyDefinitionRecord> &
   RulePropertyDefinitionFactory;

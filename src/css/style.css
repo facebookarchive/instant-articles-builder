@@ -566,4 +566,8 @@ form button {
 
 .scrollable {
   overflow-y: scroll;
+  overflow-x: hidden;
+  flex-grow: 1;
+  width: auto;
+  flex-basis: 300px;
 }
