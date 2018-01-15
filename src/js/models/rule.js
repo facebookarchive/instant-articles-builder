@@ -4,35 +4,58 @@
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
  */
 
-class Rule {
-  constructor(clazz, selector, properties) {
-    this.class = clazz;
-    this.selector = selector;
-    this.properties = typeof properties === 'undefined' ? [] : properties;
-  }
+import { Record, Map, Seq } from 'immutable';
+import { RuleDefinitionFactory } from './RuleDefinition.js';
+import { RulePropertyFactory } from './RuleProperty';
+import type { RuleDefinition } from './RuleDefinition.js';
+import type { RuleProperty } from './RuleProperty';
 
-  addProperty(property) {
-    this.properties.push(property);
-    return this;
-  }
+import type { RecordOf, RecordFactory } from 'immutable';
 
-  toJSON() {
-    const properties = {};
-    this.properties.forEach(property => {
-      properties[property.property] = property.toJSON();
-    });
-    return {
-      class: this.class,
-      selector: this.selector,
-      properties: properties,
-    };
-  }
+type RuleRecord = {
+  fieldType: 'Rule',
+  guid: string,
+  definition: RuleDefinition,
+  properties: Map<string, RuleProperty>,
+  selector: string
+};
 
-  toString() {
-    return JSON.stringify(this.toJSON());
-  }
-}
+const BaseRuleFactory: RecordFactory<RuleRecord> = Record({
+  fieldType: 'Rule',
+  guid: '',
+  definition: RuleDefinitionFactory(),
+  properties: Map(),
+  selector: '',
+});
 
-module.exports = Rule;
+// Private counter for generating guid
+let counter = 0;
+
+export const RuleFactory = (values: $Shape<RuleRecord>): Rule => {
+  let rule: Rule = BaseRuleFactory(values);
+
+  // Generates a guid if none is provided
+  rule = rule.update('guid', guid => (guid == '' ? 'rule-' + counter++ : ''));
+  // Sets the rule of child properties to the right parent
+  rule = rule.update('properties', properties =>
+    properties.map(property => property.set('rule', rule))
+  );
+  // Add any missing property from the definition
+  rule = rule.update('properties', properties =>
+    rule.definition.properties.map(definition => {
+      let property = properties.get(definition.name);
+      if (property != null) {
+        return property;
+      }
+      return RulePropertyFactory({ rule, definition });
+    })
+  );
+
+  return rule;
+};
+
+export type Rule = RecordOf<RuleRecord> & RuleFactory;

@@ -8,9 +8,6 @@
  * @flow
  */
 
-const FIND_SELECTOR_TYPES = {
-  RULE: 0,
-  PROPERTY: 1,
-};
+const { Dispatcher } = require('flux');
 
-module.exports = FIND_SELECTOR_TYPES;
+module.exports = new Dispatcher();

@@ -17,17 +17,17 @@ const React = require('react');
 const RuleList = require('../RuleList.react.js');
 
 // Rules that are always included in the exported file
-const defaultExportedRules = [
-  {
-    class: 'TextNodeRule',
-  },
-  {
-    class: 'PassThroughRule',
-    selector: '*',
-  },
-];
+const defaultExportedRules = [{ class: 'TextNodeRule' }];
 
 const RULE_HEADER_SELECTOR = 'h2.rule-header';
+
+import { RuleDefinitionFactory } from '../../models/RuleDefinition';
+import { RulePropertyDefinitionFactory } from '../../models/RulePropertyDefinition';
+import RuleDefinitionActions from '../../data/RuleDefinitionActions';
+import type { Rule } from '../../models/Rule';
+import type { RuleDefinition } from '../../models/RuleDefinition';
+import { Map } from 'immutable';
+import AppContainer from '../../containers/AppContainer.react';
 
 // Initialize Enzyme adapter
 Enzyme.configure({ adapter: new Adapter() });
@@ -68,12 +68,11 @@ describe('RuleList', () => {
     // Randomize the rule display name
     const ruleDisplayName = 'Rule' + Math.random().toString();
     const inputRules = [
-      {
+      RuleDefinitionFactory({
         // Will be matched with the one from the imported file
-        class: ruleClassName,
-        defaultSelector: 'any',
+        name: ruleClassName,
         displayName: ruleDisplayName,
-      },
+      }),
     ];
     // The contents of the file that will be imported
     const importedRules = [
@@ -99,11 +98,10 @@ describe('RuleList', () => {
     // Randomize the rule class name
     const inputRuleClassName = 'SomeRule' + Math.random().toString();
     const inputRules = [
-      {
+      RuleDefinitionFactory({
         // Will NOT be matched with the one from the imported file
-        class: inputRuleClassName,
-        defaultSelector: 'any',
-      },
+        name: inputRuleClassName,
+      }),
     ];
     // The contents of the file that will be imported
     const importedRules = [
@@ -124,10 +122,9 @@ describe('RuleList', () => {
     // Randomize the selector
     const selector = 'SomeSelector' + Math.random().toString();
     const inputRules = [
-      {
-        class: ruleClassName,
-        defaultSelector: 'any',
-      },
+      RuleDefinitionFactory({
+        name: ruleClassName,
+      }),
     ];
     // The contents of the file that will be imported
     const importedRules = [
@@ -140,14 +137,8 @@ describe('RuleList', () => {
     testImportedFileResult(inputRules, importedRules, component =>
       // Expect to find a text box that is a child of the rule with the selector
       expect(
-        component.findWhere(
-          node =>
-            node.is(
-              // This selector is not supported by Enzyme yet
-              // `${RULE_HEADER_SELECTOR} input[name="${propertyName}"]...`)
-              `input[name="${ruleClassName}"]`
-            ) && node.is(`input[value="${selector}"]`)
-        ).length
+        component.find(`input[name="${ruleClassName}"][value="${selector}"]`)
+          .length
       ).toBe(1)
     );
   });
@@ -159,16 +150,13 @@ describe('RuleList', () => {
     const selector = 'SomeSelector' + Math.random().toString();
     const ruleClassName = 'SomeRule';
     const inputRules = [
-      {
-        class: ruleClassName,
-        defaultSelector: 'any',
+      RuleDefinitionFactory({
+        name: ruleClassName,
         // This is the format expected by App and RuleList components
-        properties: [
-          {
-            name: propertyName,
-          },
-        ],
-      },
+        properties: Map({
+          [propertyName]: RulePropertyDefinitionFactory({ name: propertyName }),
+        }),
+      }),
     ];
     // The contents of the file that will be imported
     const importedRules = [
@@ -187,14 +175,8 @@ describe('RuleList', () => {
     testImportedFileResult(inputRules, importedRules, component =>
       // Expect to find a text box that is a child of the rule with the selector
       expect(
-        component.findWhere(
-          node =>
-            node.is(
-              // This selector is not supported by Enzyme yet
-              // `${RULE_HEADER_SELECTOR} input[name="${propertyName}"]...`)
-              `input[name="${propertyName}"]`
-            ) && node.is(`input[value="${selector}"]`)
-        ).length
+        component.find(`input[name="${propertyName}"][value="${selector}"]`)
+          .length
       ).toBe(1)
     );
   });
@@ -205,16 +187,13 @@ describe('RuleList', () => {
     const propertyName = 'SomeProperty';
     const ruleClassName = 'SomeRule';
     const inputRules = [
-      {
-        class: ruleClassName,
-        defaultSelector: 'any',
+      RuleDefinitionFactory({
+        name: ruleClassName,
         // This is the format expected by App and RuleList components
-        properties: [
-          {
-            name: propertyName,
-          },
-        ],
-      },
+        properties: Map({
+          [propertyName]: RulePropertyDefinitionFactory({ name: propertyName }),
+        }),
+      }),
     ];
     // The contents of the file that will be imported
     const importedRules = [
@@ -239,16 +218,18 @@ describe('RuleList', () => {
     const ruleClassName = `SomeClass${Math.random()}`;
     const propertyName = `SomeProperty${Math.random()}`;
     const inputRules = [
-      {
-        class: ruleClassName,
-        defaultSelector: 'any',
-        properties: [
-          {
-            name: propertyName,
-          },
-        ],
-      },
+      RuleDefinitionFactory({
+        name: ruleClassName,
+        // This is the format expected by App and RuleList components
+        properties: Map({
+          [propertyName]: RulePropertyDefinitionFactory({ name: propertyName }),
+        }),
+      }),
     ];
+
+    RuleDefinitionActions.removeAll();
+    inputRules.forEach(rule => RuleDefinitionActions.addRuleDefinition(rule));
+
     const importedFileObj = {
       rules: [
         ...defaultExportedRules,
@@ -276,14 +257,44 @@ describe('RuleList', () => {
       expect(JSON.parse(contents)).toEqual(importedFileObj);
     });
 
-    const component = mount(
-      <RuleList
-        onRulesJSONChanged={() => {}}
-        rulesByClassName={inputRulesToMap(inputRules)}
-      />
-    );
+    const component = mount(<AppContainer />);
     component.find('#import-button').simulate('click');
     component.find('#export-button').simulate('click');
+  });
+
+  it('should sort rules definitions by display name', () => {
+    const inputRules = [
+      RuleDefinitionFactory({
+        name: 'Rule1',
+        displayName: 'Rule X3 (Expected Third)',
+      }),
+      RuleDefinitionFactory({
+        name: 'Rule2',
+        displayName: 'Rule X2 (Expected Second)',
+      }),
+      RuleDefinitionFactory({
+        name: 'Rule3',
+        displayName: 'Rule X1 (Expected First)',
+      }),
+    ];
+
+    RuleDefinitionActions.removeAll();
+    inputRules.forEach(rule => RuleDefinitionActions.addRuleDefinition(rule));
+
+    // Mount the app with the input rules above
+    const component = mount(<AppContainer />);
+    const ruleOptions = component.find(
+      'select.rule-selector > optgroup > option'
+    );
+
+    expect(ruleOptions.length).toBe(inputRules.length);
+
+    for (let childIndex = 0; childIndex < inputRules.length - 1; childIndex++) {
+      expect(
+        ruleOptions.at(childIndex).text() <=
+          ruleOptions.at(childIndex + 1).text()
+      ).toBeTruthy();
+    }
   });
 });
 
@@ -296,16 +307,13 @@ function simlulateExport(rules) {
 }
 
 function simulateButtonClick(buttonId, rules) {
-  if (!rules) {
-    rules = [];
+  RuleDefinitionActions.removeAll();
+  if (rules) {
+    rules.forEach(rule => RuleDefinitionActions.addRuleDefinition(rule));
   }
+
   // Mount the RuleList component
-  const component = mount(
-    <RuleList
-      onRulesJSONChanged={() => {}}
-      rulesByClassName={inputRulesToMap(rules)}
-    />
-  );
+  const component = mount(<AppContainer />);
 
   // Trigger a click on a button
   // Exptected to trigger our callbacks
