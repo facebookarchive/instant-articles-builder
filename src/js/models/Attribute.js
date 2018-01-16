@@ -8,17 +8,21 @@
  * @flow
  */
 
-import { Record } from 'immutable';
+import { Record, Set } from 'immutable';
 import type { RecordOf, RecordFactory } from 'immutable';
+import type { RulePropertyType } from './RulePropertyTypes';
+import RulePropertyTypes from './RulePropertyTypes';
 
 type AttributeRecord = {
   name: string,
-  value: string
+  value: string,
+  type: RulePropertyType
 };
 
 export const AttributeFactory: RecordFactory<AttributeRecord> = Record({
   name: '',
   value: '',
+  type: RulePropertyTypes.STRING,
 });
 
 export type Attribute = RecordOf<AttributeRecord> & AttributeFactory;

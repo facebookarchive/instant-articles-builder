@@ -97,15 +97,26 @@ class RuleExporter {
   static createJSONFromRuleProperty(property: RuleProperty): ?RulePropertyJSON {
     if (property != null && property.selector != null) {
       return {
-        ...(property.attribute != null && property.attribute != 'content'
-          ? { attribute: property.attribute }
+        ...((property.attribute || property.definition.defaultAttribute) !=
+          null &&
+        (property.attribute || property.definition.defaultAttribute) !=
+          'content' &&
+        (property.attribute || property.definition.defaultAttribute) !=
+          'textContent'
+          ? {
+            attribute:
+                property.attribute || property.definition.defaultAttribute,
+          }
+          : {}),
+        ...((property.type || property.definition.supportedTypes.first()) ==
+        RulePropertyTypes.DATETIME
+          ? { dateTimeFormat: property.format }
           : {}),
         selector: property.selector,
         type:
-          property.attribute == 'content'
-            ? RulePropertyTypes.ELEMENT
-            : property.definition.supportedTypes.first() ||
-              RulePropertyTypes.STRING,
+          property.type != null
+            ? property.type
+            : property.definition.supportedTypes.first(),
       };
     }
   }
@@ -155,6 +166,7 @@ class RuleExporter {
         selector: rulePropertyJSON.selector,
         attribute: rulePropertyJSON.attribute,
         format: rulePropertyJSON.dateTimeFormat,
+        type: rulePropertyJSON.type,
       });
     }
   }
