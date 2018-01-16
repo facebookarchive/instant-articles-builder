@@ -151,7 +151,7 @@ class Browser extends React.Component<Props, State> {
 
   highlightElements = () => {
     // Uncomment to debug the injected script
-    this.webview.openDevTools();
+    // this.webview.openDevTools();
     if (this.props.editor.focusedField != null) {
       let findMultipleElements = !this.props.editor.focusedField.definition
         .unique;

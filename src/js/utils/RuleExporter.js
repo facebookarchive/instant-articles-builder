@@ -108,7 +108,7 @@ class RuleExporter {
                 property.attribute || property.definition.defaultAttribute,
           }
           : {}),
-        ...((property.type || property.definition.supportedTypes.first()) ==
+        ...((property.type || property.definition.defaultType) ==
         RulePropertyTypes.DATETIME
           ? { dateTimeFormat: property.format }
           : {}),
@@ -116,7 +116,7 @@ class RuleExporter {
         type:
           property.type != null
             ? property.type
-            : property.definition.supportedTypes.first(),
+            : property.definition.defaultType,
       };
     }
   }
