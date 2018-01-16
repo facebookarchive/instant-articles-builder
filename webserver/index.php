@@ -11,23 +11,6 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 }
 set_error_handler("exception_error_handler");
 
-\Logger::configure(
-    [
-        'rootLogger' => [
-            'appenders' => ['facebook-instantarticles-transformer']
-        ],
-        'appenders' => [
-            'facebook-instantarticles-transformer' => [
-                'class' => 'LoggerAppenderConsole',
-                'threshold' => 'off',
-                'layout' => [
-                    'class' => 'LoggerLayoutSimple'
-                ]
-            ]
-        ]
-    ]
-);
-
 $error = null;
 
 try {
