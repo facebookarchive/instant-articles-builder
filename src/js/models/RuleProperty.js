@@ -44,7 +44,8 @@ export class RulePropertyUtils {
     }
     if (
       ruleProperty.type != RulePropertyTypes.ELEMENT &&
-      ruleProperty.attribute == null
+      ruleProperty.attribute == null &&
+      ruleProperty.definition.defaultAttribute == null
     ) {
       return false;
     }
