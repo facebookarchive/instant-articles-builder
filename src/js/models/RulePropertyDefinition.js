@@ -10,6 +10,7 @@
 
 import { Record, Set } from 'immutable';
 
+import RulePropertyTypes from './RulePropertyTypes';
 import type { RuleProperty } from './RuleProperty';
 import type { RulePropertyType } from './RulePropertyTypes.js';
 import type { RecordOf, RecordFactory } from 'immutable';
@@ -25,7 +26,8 @@ type RulePropertyDefinitionRecord = {
   supportedTypes: Set<RulePropertyType>,
   required: boolean,
   unique: boolean,
-  defaultProperty: ?RuleProperty
+  defaultProperty: ?RuleProperty,
+  defaultType: RulePropertyType
 };
 
 const BaseRulePropertyDefinitionFactory: RecordFactory<
@@ -39,6 +41,7 @@ const BaseRulePropertyDefinitionFactory: RecordFactory<
   required: false,
   unique: false,
   defaultProperty: null,
+  defaultType: RulePropertyTypes.STRING,
 });
 
 export const RulePropertyDefinitionFactory = (

@@ -62,7 +62,4 @@ describe('RulePropertyUtils', () => {
       expect(RulePropertyUtils.isValid(ruleProperty)).toBe(true);
     });
   });
-  describe('inferType', () => {
-    it('should return ELEMENT if no attribute is selected', () => {});
-  });
 });
