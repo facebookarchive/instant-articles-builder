@@ -15,6 +15,7 @@ const SelectorPicker = require('./SelectorPicker.react.js');
 import type { RuleProperty } from '../models/RuleProperty';
 import RulePropertyTypes from '../models/RulePropertyTypes';
 import RuleActions from '../data/RuleActions';
+import { RulePropertyUtils } from '../models/RuleProperty';
 
 import type { Props as BaseProps } from '../containers/AppContainer.react';
 
@@ -25,7 +26,21 @@ class PropertyPicker extends React.Component<Props> {
     const selectElement = event.target;
     if (selectElement instanceof HTMLSelectElement) {
       RuleActions.editField(
-        this.props.property.set('attribute', selectElement.value)
+        this.props.property
+          .set('attribute', selectElement.value)
+          .update('type', type => {
+            const attributes = this.props.editor.elementAttributes.get(
+              this.props.property.selector
+            );
+            if (attributes == null) {
+              return type;
+            }
+            const attribute = attributes.get(selectElement.value);
+            if (attribute == null) {
+              return type;
+            }
+            return attribute.type;
+          })
       );
     }
   };
@@ -64,15 +79,22 @@ class PropertyPicker extends React.Component<Props> {
                 </option>
               ) : null}
             {attributes != null
-              ? attributes.valueSeq().map(attribute => (
-                <option
-                  value={attribute.name}
-                  data-attribute-value={attribute.value}
-                  key={attribute.name}
-                >
-                  {attribute.name}: "{attribute.value.trim()}"
-                </option>
-              ))
+              ? attributes
+                .valueSeq()
+                .filter(attribute =>
+                  this.props.property.definition.supportedTypes.includes(
+                    attribute.type
+                  )
+                )
+                .map(attribute => (
+                  <option
+                    value={attribute.name}
+                    data-attribute-value={attribute.value}
+                    key={attribute.name}
+                  >
+                    {attribute.name}: "{attribute.value.trim()}"
+                  </option>
+                ))
               : null}
           </select>
           {dateTimeFormatPicker}
@@ -92,9 +114,20 @@ class PropertyPicker extends React.Component<Props> {
             ) || 0) > 1,
           active: this.props.editor.focusedField == this.props.property,
           multiple: !this.props.property.definition.unique,
+          required: this.props.property.definition.required,
+          valid: RulePropertyUtils.isValid(this.props.property),
         })}
       >
-        <label>{this.props.property.definition.displayName}</label>
+        <label>
+          {RulePropertyUtils.isValid(this.props.property) ? (
+            <span>✔</span>
+          ) : this.props.property.definition.required ? (
+            <span>✘</span>
+          ) : (
+            <span>•</span>
+          )}{' '}
+          {this.props.property.definition.displayName}
+        </label>
 
         <label className="sub-label">Selector</label>
         <SelectorPicker {...this.props} field={this.props.property} />

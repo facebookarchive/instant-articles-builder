@@ -17,6 +17,8 @@ import RuleActions from '../data/RuleActions';
 import { RuleFactory } from '../models/Rule';
 import { RulePropertyFactory } from '../models/RuleProperty';
 import RulePropertyTypes from '../models/RulePropertyTypes';
+import { RuleUtils } from '../models/Rule';
+import { RulePropertyUtils } from '../models/RuleProperty';
 
 type JSONFormat = {
   rules: RuleJSON[]
@@ -35,7 +37,7 @@ type RuleJSON = {
   properties?: { [string]: RulePropertyJSON }
 };
 
-class RuleUtils {
+class RuleExporter {
   static import(
     data: string,
     ruleDefinitions: Immutable.Map<string, RuleDefinition>
@@ -58,6 +60,7 @@ class RuleUtils {
         { class: 'TextNodeRule' },
         ...Array.from(
           rules
+            .filter(rule => RuleUtils.isValid(rule))
             .map((rule: Rule): ?RuleJSON => this.createJSONFromRule(rule))
             .filter(Boolean)
             .values()
@@ -68,7 +71,9 @@ class RuleUtils {
 
   static createJSONFromRule(rule: Rule): ?RuleJSON {
     if (rule.selector != null) {
-      let properties = this.createJSONFromRuleProperties(rule.properties);
+      let properties = rule.properties.isEmpty()
+        ? null
+        : this.createJSONFromRuleProperties(rule.properties);
       return {
         class: rule.definition.name,
         selector: rule.selector,
@@ -82,6 +87,7 @@ class RuleUtils {
   ): ?{ [string]: RulePropertyJSON } {
     if (properties != null) {
       return properties
+        .filter(property => RulePropertyUtils.isValid(property))
         .map(property => this.createJSONFromRuleProperty(property))
         .filter(Boolean)
         .toJSON();
@@ -91,15 +97,26 @@ class RuleUtils {
   static createJSONFromRuleProperty(property: RuleProperty): ?RulePropertyJSON {
     if (property != null && property.selector != null) {
       return {
-        ...(property.attribute != null && property.attribute != 'content'
-          ? { attribute: property.attribute }
+        ...((property.attribute || property.definition.defaultAttribute) !=
+          null &&
+        (property.attribute || property.definition.defaultAttribute) !=
+          'content' &&
+        (property.attribute || property.definition.defaultAttribute) !=
+          'textContent'
+          ? {
+            attribute:
+                property.attribute || property.definition.defaultAttribute,
+          }
+          : {}),
+        ...((property.type || property.definition.defaultType) ==
+        RulePropertyTypes.DATETIME
+          ? { dateTimeFormat: property.format }
           : {}),
         selector: property.selector,
         type:
-          property.attribute == 'content'
-            ? RulePropertyTypes.ELEMENT
-            : property.definition.supportedTypes.first() ||
-              RulePropertyTypes.STRING,
+          property.type != null
+            ? property.type
+            : property.definition.defaultType,
       };
     }
   }
@@ -149,9 +166,10 @@ class RuleUtils {
         selector: rulePropertyJSON.selector,
         attribute: rulePropertyJSON.attribute,
         format: rulePropertyJSON.dateTimeFormat,
+        type: rulePropertyJSON.type,
       });
     }
   }
 }
 
-export default RuleUtils;
+export default RuleExporter;

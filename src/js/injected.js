@@ -15,10 +15,29 @@ window.addEventListener('load', () => {
   function getAttributes(element) {
     let attributes = [...element.attributes]
       .filter(attr => !['class', 'id', 'style'].includes(attr.name))
-      .map(attr => ({ name: attr.name, value: attr.value }));
+      .map(attr => ({
+        name: attr.name,
+        value: attr.value,
+        type:
+          attr.name == 'datetime'
+            ? 'date' // RulePropertyTypes.DATETIME
+            : attr.name == 'width' || attr.name == 'height'
+              ? 'int' // RulePropertyTypes.INTEGER'
+              : 'string', // RulePropertyTypes.STRING
+      }));
 
-    attributes.push({ name: 'content', value: element.textContent });
-    attributes.push({ name: 'textContent', value: element.textContent });
+    attributes.push({
+      name: 'content',
+      value: element.textContent,
+      type: 'element', // RulePropertyTypes.ELEMENT,
+    });
+
+    attributes.push({
+      name: 'textContent',
+      value: element.textContent,
+      type: 'string', //RulePropertyTypes.STRING,
+    });
+
     return attributes;
   }
 

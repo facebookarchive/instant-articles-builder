@@ -65,6 +65,15 @@ class SelectorPicker extends React.Component<Props, State> {
     this.disableMouseMoveTracking();
   }
 
+  componentDidUpdate(prevProps: Props, prevState: State) {
+    if (
+      this.props.editor.focusedField != this.props.field &&
+      prevProps.editor.focusedField == this.props.field
+    ) {
+      this.refs.selectorInput.blur();
+    }
+  }
+
   handleMouseMove = (event: MouseEvent) => {
     if (this.isFinding()) {
       this.configureLine();
@@ -142,6 +151,7 @@ class SelectorPicker extends React.Component<Props, State> {
             value={this.props.field.selector}
             onChange={this.handleSelectorChanged}
             onFocus={this.handleFocus}
+            ref="selectorInput"
           />
           <button
             ref="targetButton"
