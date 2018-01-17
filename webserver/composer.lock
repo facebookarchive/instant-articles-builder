@@ -4,12 +4,12 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "93f16b5aad0e20458a947c3ee3d1bd50",
-    "content-hash": "adab0ca0cb4397e8bfb5a8f91161306f",
+    "hash": "db5d1f0d219cd2100be7daba783b4460",
+    "content-hash": "2abea282c13c6b67ab5d74add2134284",
     "packages": [
         {
             "name": "facebook/facebook-instant-articles-sdk-php",
-            "version": "v1.7.1",
+            "version": "v1.8.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/facebook-instant-articles-sdk-php.git",
