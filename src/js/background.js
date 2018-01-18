@@ -27,7 +27,9 @@ function createWindow() {
   } = require('electron-devtools-installer');
 
   installExtension(REACT_DEVELOPER_TOOLS)
+    // eslint-disable-next-line no-console
     .then(name => console.log(`Added Extension:  ${name}`))
+    // eslint-disable-next-line no-console
     .catch(err => console.log('An error occurred: ', err));
 
   // and load the index.html of the app.

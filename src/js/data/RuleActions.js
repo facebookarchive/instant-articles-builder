@@ -10,7 +10,6 @@
 
 const RulesEditorDispatcher = require('./RulesEditorDispatcher.js');
 import type { Rule } from '../models/Rule';
-import type { RuleProperty } from '../models/RuleProperty';
 import type { Field } from '../models/Field';
 
 import RuleActionTypes from './RuleActionTypes.js';

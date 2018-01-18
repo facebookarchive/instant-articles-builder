@@ -8,7 +8,7 @@
  * @flow
  */
 
-import { Record, Map, Seq } from 'immutable';
+import { Record, Map } from 'immutable';
 import { RuleDefinitionFactory } from './RuleDefinition.js';
 import { RulePropertyFactory } from './RuleProperty';
 import { RulePropertyUtils } from './RuleProperty';

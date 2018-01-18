@@ -6,9 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { OrderedMap, List } from 'immutable';
 import RuleStore from '../RuleStore';
-import RuleActionTypes from '../RuleActionTypes';
 import RuleActions from '../RuleActions';
 import { RuleFactory } from '../../models/Rule';
 

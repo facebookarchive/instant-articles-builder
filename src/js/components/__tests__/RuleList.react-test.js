@@ -14,7 +14,6 @@ const Enzyme = require('enzyme');
 const { mount } = Enzyme;
 
 const React = require('react');
-const RuleList = require('../RuleList.react.js');
 
 // Rules that are always included in the exported file
 const defaultExportedRules = [{ class: 'TextNodeRule' }];
@@ -24,8 +23,6 @@ const RULE_HEADER_SELECTOR = 'h2.rule-header';
 import { RuleDefinitionFactory } from '../../models/RuleDefinition';
 import { RulePropertyDefinitionFactory } from '../../models/RulePropertyDefinition';
 import RuleDefinitionActions from '../../data/RuleDefinitionActions';
-import type { Rule } from '../../models/Rule';
-import type { RuleDefinition } from '../../models/RuleDefinition';
 import { Map } from 'immutable';
 import AppContainer from '../../containers/AppContainer.react';
 
@@ -339,8 +336,4 @@ function testImportedFileResult(inputRules, importedRules, expectCallback) {
 
   // Trigger the verification callback passing the mounted component
   expectCallback(component);
-}
-
-function inputRulesToMap(inputRules) {
-  return new Map(inputRules.map(inputRule => [inputRule.class, inputRule]));
 }

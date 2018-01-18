@@ -12,10 +12,6 @@ const React = require('react');
 
 import RuleActions from '../data/RuleActions';
 import EditorActions from '../data/EditorActions';
-import type { Rule } from '../models/Rule';
-import { RuleFactory } from '../models/Rule';
-import { RulePropertyFactory } from '../models/RuleProperty';
-import type { RuleProperty } from '../models/RuleProperty';
 import type { Props as BaseProps } from '../containers/AppContainer.react';
 import type { Field } from '../models/Field';
 

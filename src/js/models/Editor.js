@@ -9,8 +9,6 @@
  */
 
 import { Map, Record } from 'immutable';
-import type { Rule } from './Rule';
-import type { RuleProperty } from './RuleProperty';
 import type { Attribute } from '../models/Attribute';
 import type { Field } from './Field';
 import type { RecordOf, RecordFactory } from 'immutable';

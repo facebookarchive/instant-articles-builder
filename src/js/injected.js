@@ -44,7 +44,6 @@ window.addEventListener('load', () => {
   let previousHoveredElement;
   let selectingElement = false;
   let selectingMultipleElements = false;
-  let selectedElementSubscriberWindow;
 
   document.addEventListener('mouseover', handleMouseOver, false);
   document.addEventListener('click', handleClick, false);
@@ -53,11 +52,6 @@ window.addEventListener('load', () => {
     if (event.method == 'highlightElements') {
       document.body.classList.remove(
         'facebook-instant-articles-sdk-rules-editor-highlight-mode'
-      );
-      let elements = highlightElements(
-        event.selector,
-        event.source,
-        !!event.multiple
       );
     } else if (event.method == 'selectElement') {
       selectingElement = true;
