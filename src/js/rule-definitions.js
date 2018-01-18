@@ -231,5 +231,31 @@ ruleDefinitions.push(
     }),
   })
 );
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'ImageRule',
+    displayName: 'Image',
+    placeholder: 'Example: img',
+    properties: Map({
+      'image.url': RulePropertyDefinitionFactory({
+        name: 'image.url',
+        displayName: 'URL',
+        placeholder: 'Example: img',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'src',
+        required: true,
+      }),
+      'image.caption': RulePropertyDefinitionFactory({
+        name: 'image.caption',
+        displayName: 'Caption',
+        placeholder: 'Example: img',
+        supportedTypes: Set([RulePropertyTypes.ELEMENT]),
+        defaultType: RulePropertyTypes.ELEMENT,
+        defaultAttribute: 'content',
+      }),
+    }),
+  })
+);
 
 module.exports = ruleDefinitions;
