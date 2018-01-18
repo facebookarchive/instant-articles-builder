@@ -20,7 +20,13 @@ import type { Rule } from '../models/Rule';
 import type { Field } from '../models/Field';
 import type { RuleActionType } from './RuleActionTypes.js';
 
-type Action = { type: RuleActionType, rule?: Rule, field?: Field };
+type Action = {
+  type: RuleActionType,
+  rule?: Rule,
+  field?: Field,
+  oldIndex?: number,
+  newIndex?: number
+};
 export type State = Immutable.Map<string, Rule>;
 
 class RuleStore extends ReduceStore<State> {
@@ -29,7 +35,7 @@ class RuleStore extends ReduceStore<State> {
   }
 
   getInitialState() {
-    return Immutable.Map();
+    return Immutable.OrderedMap();
   }
 
   reduce(state: State, action: Action): State {
@@ -64,6 +70,29 @@ class RuleStore extends ReduceStore<State> {
 
       case RuleActionTypes.REMOVE_ALL_RULES:
         return this.getInitialState();
+
+      case RuleActionTypes.CHANGE_ORDER:
+        const oldIndex = action.oldIndex;
+        const newIndex = action.newIndex;
+        if (oldIndex == null || newIndex == null) {
+          return state;
+        }
+        const lowerIndex = Math.min(oldIndex, newIndex);
+        const upperIndex = Math.max(oldIndex, newIndex);
+
+        return state.sortBy(rule => {
+          let index = [...state.keys()].indexOf(rule.guid);
+          if (index < lowerIndex || index > upperIndex) {
+            return index;
+          }
+          if (index == oldIndex) {
+            return newIndex;
+          }
+          if (oldIndex > newIndex) {
+            return index + 1;
+          }
+          return index - 1;
+        });
 
       default:
         return state;

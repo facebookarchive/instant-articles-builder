@@ -18,6 +18,11 @@ import { RuleFactory } from '../models/Rule';
 import RuleExporter from '../utils/RuleExporter';
 import type { Rule } from '../models/Rule';
 import type { Props } from '../containers/AppContainer.react';
+import {
+  SortableContainer,
+  SortableElement,
+  arrayMove,
+} from 'react-sortable-hoc';
 
 const dialogDefaultPath = 'rules.json';
 const dialogFilter = {
@@ -25,6 +30,24 @@ const dialogFilter = {
   extensions: ['json'],
 };
 const importExportEncoding = 'utf8';
+
+const SortableItem = SortableElement((props: any) => <RulePicker {...props} />);
+
+const SortableList = SortableContainer((props: any) => {
+  return (
+    <ul>
+      {props.items.map((rule, index) => (
+        <SortableItem
+          {...props}
+          key={rule.guid}
+          index={index}
+          rule={rule}
+          value={rule}
+        />
+      ))}
+    </ul>
+  );
+});
 
 class RuleList extends React.Component<Props> {
   constructor(props: Props) {
@@ -91,6 +114,16 @@ class RuleList extends React.Component<Props> {
     RuleActions.removeAllRules();
   };
 
+  handleSortEnd = ({
+    oldIndex,
+    newIndex,
+  }: {
+    oldIndex: number,
+    newIndex: number
+  }) => {
+    RuleActions.changeOrder(oldIndex, newIndex);
+  };
+
   componentDidUpdate(prevProps: Props) {
     if (prevProps.rules.count() < this.props.rules.count()) {
       this.refs.scrollable.scrollTop = 99999;
@@ -142,11 +175,12 @@ class RuleList extends React.Component<Props> {
         </form>
 
         <div className="scrollable" ref="scrollable">
-          {this.props.rules
-            .valueSeq()
-            .map(rule => (
-              <RulePicker {...this.props} key={rule.guid} rule={rule} />
-            ))}
+          <SortableList
+            {...this.props}
+            pressDelay={200}
+            items={this.props.rules.valueSeq()}
+            onSortEnd={this.handleSortEnd}
+          />
         </div>
       </div>
     );
