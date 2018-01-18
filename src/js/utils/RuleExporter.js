@@ -80,6 +80,7 @@ class RuleExporter {
         ...(properties != null ? { properties } : {}),
       };
     }
+    return null;
   }
 
   static createJSONFromRuleProperties(
@@ -92,6 +93,7 @@ class RuleExporter {
         .filter(Boolean)
         .toJSON();
     }
+    return null;
   }
 
   static createJSONFromRuleProperty(property: RuleProperty): ?RulePropertyJSON {
@@ -119,6 +121,7 @@ class RuleExporter {
             : property.definition.defaultType,
       };
     }
+    return null;
   }
 
   static createRuleFromJSON(
@@ -135,6 +138,7 @@ class RuleExporter {
         ),
       });
     }
+    return null;
   }
 
   static createRulePropertiesFromJSON(
@@ -169,6 +173,7 @@ class RuleExporter {
         type: rulePropertyJSON.type,
       });
     }
+    return null;
   }
 }
 

@@ -11,11 +11,8 @@
 const Immutable = require('immutable');
 const RulesEditorDispatcher = require('./RulesEditorDispatcher.js');
 
-import EditorActions from './EditorActions';
 import { ReduceStore } from 'flux/utils';
 import RuleActionTypes from './RuleActionTypes.js';
-import { RuleFactory } from '../models/Rule';
-import { RulePropertyFactory } from '../models/RuleProperty';
 import type { Rule } from '../models/Rule';
 import type { Field } from '../models/Field';
 import type { RuleActionType } from './RuleActionTypes.js';

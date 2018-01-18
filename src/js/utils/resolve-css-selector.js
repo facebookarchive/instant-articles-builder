@@ -270,10 +270,8 @@ function getScore(candidate) {
  * @returns {string} A full path CSS selector for the given element in the document.
  */
 var resolveAbsoluteCSSSelector = function(element) {
-  var document = element.ownerDocument;
-
   if (!(element instanceof Element)) {
-    return;
+    return null;
   }
   let path = [];
   while (element.nodeType === Node.ELEMENT_NODE) {
@@ -282,8 +280,8 @@ var resolveAbsoluteCSSSelector = function(element) {
       selector = '#' + element.id;
     } else {
       let foundSameNodeNameSibling = false;
-      let sib = element,
-        nth = 1;
+      let sib = element;
+      let nth = 1;
       while (
         sib.nodeType === Node.ELEMENT_NODE &&
         (sib = sib.previousElementSibling)

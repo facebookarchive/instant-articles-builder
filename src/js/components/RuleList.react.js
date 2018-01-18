@@ -16,13 +16,8 @@ const Fs = require('fs');
 
 import { RuleFactory } from '../models/Rule';
 import RuleExporter from '../utils/RuleExporter';
-import type { Rule } from '../models/Rule';
 import type { Props } from '../containers/AppContainer.react';
-import {
-  SortableContainer,
-  SortableElement,
-  arrayMove,
-} from 'react-sortable-hoc';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 
 const dialogDefaultPath = 'rules.json';
 const dialogFilter = {

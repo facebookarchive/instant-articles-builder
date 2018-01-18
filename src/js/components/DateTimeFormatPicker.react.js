@@ -11,7 +11,6 @@
 const React = require('react');
 const classNames = require('classnames');
 const moment = require('moment');
-import type { Attribute } from '../models/Attribute';
 import type { RuleProperty } from '../models/RuleProperty';
 import type { Props as BaseProps } from '../containers/AppContainer.react';
 import RuleActions from '../data/RuleActions';

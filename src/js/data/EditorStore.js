@@ -11,10 +11,7 @@
 import { ReduceStore } from 'flux/utils';
 const RulesEditorDispatcher = require('./RulesEditorDispatcher.js');
 
-import { Record, Map } from 'immutable';
-import type { RecordOf, RecordFactory } from 'immutable';
-import type { RuleProperty } from '../models/RuleProperty';
-import type { Rule } from '../models/Rule';
+import { Map } from 'immutable';
 import type { Field } from '../models/Field';
 
 import EditorActionTypes from './EditorActionTypes.js';
