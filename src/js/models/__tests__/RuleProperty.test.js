@@ -8,7 +8,6 @@
 
 import { RulePropertyUtils } from '../RuleProperty';
 import { RulePropertyFactory } from '../RuleProperty';
-import { RulePropertyDefinitionFactory } from '../RulePropertyDefinition';
 import RulePropertyTypes from '../RulePropertyTypes';
 
 describe('RulePropertyUtils', () => {

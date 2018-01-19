@@ -11,7 +11,6 @@
 import { Map, Set } from 'immutable';
 import RulePropertyTypes from './models/RulePropertyTypes.js';
 import type { RuleDefinition } from './models/RuleDefinition';
-import type { RulePropertyDefinition } from './models/RulePropertyDefinition';
 import { RuleDefinitionFactory } from './models/RuleDefinition';
 import { RulePropertyDefinitionFactory } from './models/RulePropertyDefinition';
 import { RulePropertyFactory } from './models/RuleProperty';

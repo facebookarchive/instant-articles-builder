@@ -229,6 +229,7 @@ class Browser extends React.Component<Props, State> {
       );
       this.webview.addEventListener('dom-ready', this.highlightElements);
       this.webview.addEventListener('dom-ready', this.resetProgress);
+      // eslint-disable-next-line no-console
       this.webview.addEventListener('error', console.log.bind(console));
       this.webview.addEventListener(
         'ipc-message',

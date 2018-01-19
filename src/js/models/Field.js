@@ -8,9 +8,6 @@
  * @flow
  */
 
-import { Record } from 'immutable';
-import { RuleFactory } from './Rule';
-import { RulePropertyFactory } from './RuleProperty';
 import type { Rule } from './Rule';
 import type { RuleProperty } from './RuleProperty';
 
