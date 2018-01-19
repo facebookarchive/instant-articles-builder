@@ -27,7 +27,7 @@ window.addEventListener('load', () => {
       }));
 
     attributes.push({
-      name: 'content',
+      name: 'innerContent',
       value: element.textContent,
       type: 'element', // RulePropertyTypes.ELEMENT,
     });

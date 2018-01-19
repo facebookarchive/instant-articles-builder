@@ -100,7 +100,7 @@ class RuleExporter {
         ...((property.attribute || property.definition.defaultAttribute) !=
           null &&
         (property.attribute || property.definition.defaultAttribute) !=
-          'content' &&
+          'innerContent' &&
         (property.attribute || property.definition.defaultAttribute) !=
           'textContent'
           ? {
