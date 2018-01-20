@@ -53,6 +53,7 @@ window.addEventListener('load', () => {
       document.body.classList.remove(
         'facebook-instant-articles-sdk-rules-editor-highlight-mode'
       );
+      highlightElements(event.selector, event.source, !!event.multiple);
     } else if (event.method == 'selectElement') {
       selectingElement = true;
       selectingMultipleElements = !!event.multiple;
