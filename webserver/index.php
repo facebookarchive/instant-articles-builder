@@ -12,6 +12,7 @@ function exception_error_handler($errno, $errstr, $errfile, $errline ) {
 set_error_handler("exception_error_handler");
 
 $error = null;
+$warnings = [];
 
 try {
   // Read the URL parameter
@@ -37,6 +38,7 @@ try {
   //----------
   $instant_article = InstantArticle::create();
   $transformer->transformString($instant_article, $content);
+  $warnings = $transformer->getWarnings();
 }
 catch (Exception $e) {
   $error = $e->getMessage();
@@ -99,5 +101,21 @@ Rules used
 
 <?php if (isset($rules)) { echo json_encode(json_decode($rules), JSON_PRETTY_PRINT); } ?>
 
+
+<?php
+if (count($warnings) > 0) {
+?>
+========
+Warnings
+========
+
+<?php foreach ($warnings as $warning) {
+ echo "- $warning\n";
+}
+?>
+
+<?php
+}
+?>
 
 -->
