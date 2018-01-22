@@ -4,21 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "db5d1f0d219cd2100be7daba783b4460",
-    "content-hash": "2abea282c13c6b67ab5d74add2134284",
+    "content-hash": "7368cd347334fa8b3b6a3db4ef48b062",
     "packages": [
         {
             "name": "facebook/facebook-instant-articles-sdk-php",
-            "version": "v1.8.0",
+            "version": "v1.8.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/facebook-instant-articles-sdk-php.git",
-                "reference": "7108507566f5b5052e6011085027df613e07cc5b"
+                "reference": "658d0d0a7fd1eae977c0cf9da5ce901be27b3d97"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/facebook-instant-articles-sdk-php/zipball/7108507566f5b5052e6011085027df613e07cc5b",
-                "reference": "7108507566f5b5052e6011085027df613e07cc5b",
+                "url": "https://api.github.com/repos/facebook/facebook-instant-articles-sdk-php/zipball/658d0d0a7fd1eae977c0cf9da5ce901be27b3d97",
+                "reference": "658d0d0a7fd1eae977c0cf9da5ce901be27b3d97",
                 "shasum": ""
             },
             "require": {
@@ -57,7 +56,7 @@
                 "instant",
                 "sdk"
             ],
-            "time": "2018-01-16 17:49:34"
+            "time": "2018-01-22T18:13:51+00:00"
         },
         {
             "name": "facebook/graph-sdk",
@@ -115,7 +114,7 @@
                 "facebook",
                 "sdk"
             ],
-            "time": "2017-08-16 17:28:07"
+            "time": "2017-08-16T17:28:07+00:00"
         },
         {
             "name": "symfony/css-selector",
@@ -168,7 +167,7 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2018-01-03 07:36:31"
+            "time": "2018-01-03T07:36:31+00:00"
         }
     ],
     "packages-dev": [],
