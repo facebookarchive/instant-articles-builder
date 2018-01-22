@@ -256,5 +256,19 @@ ruleDefinitions.push(
     }),
   })
 );
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'PassThroughRule',
+    displayName: 'Pass Through',
+    placeholder: 'Example: div.foo',
+  })
+);
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'IgnoreRule',
+    displayName: 'Ignore',
+    placeholder: 'Example: div.bar',
+  })
+);
 
 module.exports = ruleDefinitions;
