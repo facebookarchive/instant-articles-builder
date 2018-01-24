@@ -60,3 +60,5 @@ typings/
 # VS Code Users
 .vscode/
 
+# Build output
+out/
