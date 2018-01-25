@@ -232,6 +232,24 @@ ruleDefinitions.push(
 );
 ruleDefinitions.push(
   RuleDefinitionFactory({
+    name: 'RelatedItemRule',
+    displayName: 'Related Item',
+    placeholder: 'Example: li',
+    properties: Map({
+      'related.url': RulePropertyDefinitionFactory({
+        name: 'related.url',
+        displayName: 'URL',
+        placeholder: 'Example: a',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'href',
+        required: true,
+      }),
+    }),
+  })
+);
+ruleDefinitions.push(
+  RuleDefinitionFactory({
     name: 'ImageRule',
     displayName: 'Image',
     placeholder: 'Example: img',
