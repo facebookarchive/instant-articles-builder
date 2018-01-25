@@ -72,8 +72,8 @@ ruleDefinitions.push(
         required: true,
         unique: true,
       }),
-      'article.url': RulePropertyDefinitionFactory({
-        name: 'article.url',
+      'article.canonical': RulePropertyDefinitionFactory({
+        name: 'article.canonical',
         displayName: 'Article URL',
         placeholder: 'Example: link[rel=canonical]',
         defaultAttribute: 'href',
