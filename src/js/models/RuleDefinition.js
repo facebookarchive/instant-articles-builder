@@ -11,9 +11,12 @@
 import { Record, Map } from 'immutable';
 import type { RecordOf, RecordFactory } from 'immutable';
 import type { RulePropertyDefinition } from './RulePropertyDefinition';
+import type { RuleCategory } from './RuleCategories';
+import RuleCategories from './RuleCategories';
 
 type RuleDefinitionRecord = {
   name: string,
+  category: RuleCategory,
   displayName: string,
   placeholder: string,
   properties: Map<string, RulePropertyDefinition>,
@@ -24,6 +27,7 @@ export const RuleDefinitionFactory: RecordFactory<
   RuleDefinitionRecord
 > = Record({
   name: '',
+  category: RuleCategories.BASIC,
   displayName: '',
   placeholder: '',
   properties: Map(),
