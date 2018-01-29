@@ -42,7 +42,6 @@ ruleDefinitions.push(
         supportedTypes: Set([RulePropertyTypes.DATETIME]),
         defaultType: RulePropertyTypes.DATETIME,
         unique: true,
-        required: true,
       }),
       'author.name': RulePropertyDefinitionFactory({
         name: 'author.name',
