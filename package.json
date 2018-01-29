@@ -5,43 +5,12 @@
   "description": "App to help creating transformer rules for the Facebook Instant Articles SDK.",
   "license": "SEE LICENSE IN ./LICENSE",
   "main": "src/js/background.js",
-  "devDependencies": {
-    "babel-eslint": "^8.0.2",
-    "babel-plugin-transform-class-properties": "^6.24.1",
-    "babel-plugin-transform-object-rest-spread": "^6.26.0",
-    "babel-preset-es2015": "~6.24.1",
-    "babel-preset-react": "~6.24.1",
-    "babel-register": "^6.26.0",
-    "babelify": "~7.3.0",
-    "browserify": "~13.0.0",
-    "classnames": "^2.2.5",
-    "devtron": "^1.4.0",
-    "electron": "1.7.9",
-    "electron-devtools-installer": "^2.2.1",
-    "enzyme": "^3.2.0",
-    "enzyme-adapter-react-15": "^1.0.5",
-    "eslint": "^4.11.0",
-    "eslint-config-fbjs": "^2.0.0",
-    "eslint-plugin-babel": "^4.1.2",
-    "eslint-plugin-flowtype": "^2.39.1",
-    "eslint-plugin-jsx-a11y": "^6.0.2",
-    "eslint-plugin-react": "^7.4.0",
-    "eslint-plugin-relay": "0.0.19",
-    "gulp-connect-php": "^1.0.1",
-    "husky": "^0.14.3",
-    "immutable-devtools": "0.0.7",
-    "jest-cli": "^21.2.1",
-    "lint-staged": "^4.3.0",
-    "moment": "^2.18.1",
-    "prettier-eslint-cli": "^4.4.0",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "react-test-renderer": "^15.6.2"
-  },
   "scripts": {
-    "start": "electron .",
+    "start": "electron-forge start",
     "precommit": "lint-staged",
-    "test": "jest"
+    "test": "jest",
+    "package": "electron-forge package",
+    "make": "electron-forge make"
   },
   "lint-staged": {
     "src/**/*.{js,json,css}": [
@@ -59,13 +28,83 @@
     "instant articles",
     "react"
   ],
+  "devDependencies": {
+    "jest-cli": "^21.2.1",
+    "babel-eslint": "^8.0.2",
+    "eslint": "^4.11.0",
+    "eslint-config-fbjs": "^2.0.0",
+    "eslint-plugin-babel": "^4.1.2",
+    "eslint-plugin-flowtype": "^2.39.1",
+    "eslint-plugin-jsx-a11y": "^6.0.2",
+    "eslint-plugin-react": "^7.4.0",
+    "eslint-plugin-relay": "0.0.19",
+    "electron-forge": "^4.2.0",
+    "electron-prebuilt-compile": "1.7.9",
+    "prettier-eslint-cli": "^4.4.0",
+    "immutable-devtools": "0.0.7",
+    "lint-staged": "^4.3.0"
+  },
   "dependencies": {
+    "electron-compile": "^6.4.2",
     "electron-debug": "^1.4.0",
+    "babel-plugin-transform-async-to-generator": "^6.24.1",
+    "babel-plugin-transform-class-properties": "^6.24.1",
+    "babel-plugin-transform-object-rest-spread": "^6.26.0",
+    "babel-preset-env": "^1.6.1",
+    "babel-preset-es2015": "~6.24.1",
+    "babel-preset-react": "^6.24.1",
+    "babel-register": "^6.26.0",
+    "babelify": "~7.3.0",
+    "browserify": "~13.0.0",
+    "classnames": "^2.2.5",
+    "devtron": "^1.4.0",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-15": "^1.0.5",
+    "husky": "^0.14.3",
+    "moment": "^2.18.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "electron-devtools-installer": "^2.2.1",
+    "gulp-connect-php": "^1.0.1",
+    "electron-squirrel-startup": "^1.0.0",
     "flux": "^3.1.3",
     "immutable": "^4.0.0-rc.9",
     "react-sortable-hoc": "^0.6.8"
   },
   "jest": {
     "watchman": false
+  },
+  "config": {
+    "forge": {
+      "make_targets": {
+        "win32": [
+          "squirrel"
+        ],
+        "darwin": [
+          "zip"
+        ],
+        "linux": [
+          "deb",
+          "rpm"
+        ]
+      },
+      "electronPackagerConfig": {
+        "packageManager": "yarn",
+        "icon": "./src/img/logo-1024.icns"
+      },
+      "electronWinstallerConfig": {
+        "name": "facebook_instant_articles_sdk_rules_editor"
+      },
+      "electronInstallerDebian": {},
+      "electronInstallerRedhat": {},
+      "github_repository": {
+        "owner": "",
+        "name": ""
+      },
+      "windowsStoreConfig": {
+        "packageName": "",
+        "name": "Facebook Instant Articles Rules Editor"
+      }
+    }
   }
 }
