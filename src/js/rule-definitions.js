@@ -306,5 +306,46 @@ ruleDefinitions.push(
     placeholder: 'Example: div.bar',
   })
 );
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'SlideshowRule',
+    displayName: 'Slideshow (Container)',
+    placeholder: 'Example: div.slideshow',
+  })
+);
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'SlideshowImageRule',
+    displayName: 'Slideshow Image',
+    placeholder: 'Example: div.img',
+    properties: Map({
+      'image.url': RulePropertyDefinitionFactory({
+        name: 'image.url',
+        displayName: 'Image URL',
+        placeholder: 'Example: img',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'src',
+        required: true,
+      }),
+      'caption.title': RulePropertyDefinitionFactory({
+        name: 'caption.title',
+        displayName: 'Caption (Title)',
+        placeholder: 'Example: p.caption',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'textContent',
+      }),
+      'caption.credit': RulePropertyDefinitionFactory({
+        name: 'caption.credit',
+        displayName: 'Caption (Credit)',
+        placeholder: 'Example: p.credit',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'textContent',
+      }),
+    }),
+  })
+);
 
 module.exports = ruleDefinitions;
