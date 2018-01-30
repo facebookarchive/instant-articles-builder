@@ -11,7 +11,7 @@
 /**
  * This can be used as a enum.
  */
-const RuleCategories = {
+const RuleCategories: { [string]: RuleCategory } = {
   BASIC: 'Basic',
   TEXT: 'Text',
   MEDIA: 'Media',
