@@ -75,6 +75,7 @@ class EditorStore extends ReduceStore<Editor> {
         if (action.categories != null) {
           return state.set('categories', action.categories);
         }
+        return state;
 
       default:
         return state;

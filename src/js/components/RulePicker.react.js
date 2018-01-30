@@ -14,7 +14,6 @@ const SelectorPicker = require('./SelectorPicker.react');
 const classNames = require('classnames');
 const RuleActions = require('../data/RuleActions');
 
-import { Label, Icon } from 'semantic-ui-react';
 import type { Rule } from '../models/Rule';
 import type { Props as BaseProps } from '../containers/AppContainer.react';
 import { RuleUtils } from '../models/Rule';
@@ -60,7 +59,11 @@ class RulePicker extends React.Component<Props, State> {
           ),
         })}
       >
-        <h2 className="rule-header" onClick={this.handleToggle}>
+        <h2
+          className="rule-header"
+          role="presentation"
+          onClick={this.handleToggle}
+        >
           {toggler} {this.props.rule.definition.displayName}
         </h2>
 

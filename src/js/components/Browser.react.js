@@ -279,7 +279,7 @@ class Browser extends React.Component<Props, State> {
             src={this.state.url}
             preload="../js/injected.js"
           />
-          <div className="tab" onClick={this.togglePreview}>
+          <div className="tab" role="presentation" onClick={this.togglePreview}>
             <span>{this.state.showPreview ? '>' : '<'}</span>
           </div>
           <webview
