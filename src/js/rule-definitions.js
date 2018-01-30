@@ -47,7 +47,7 @@ ruleDefinitions.push(
         name: 'author.name',
         displayName: 'Author(s)',
         placeholder: 'Example: span.author',
-        defaultAttribute: 'contentString',
+        defaultAttribute: 'textContent',
         supportedTypes: Set([RulePropertyTypes.STRING]),
         defaultType: RulePropertyTypes.STRING,
         required: true,
