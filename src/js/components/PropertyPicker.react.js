@@ -128,8 +128,7 @@ class PropertyPicker extends React.Component<Props> {
           )}{' '}
           {this.props.property.definition.displayName}
         </label>
-
-        <label className="sub-label">Selector</label>
+        <label className="sub-label selector-label">Selector</label>
         <SelectorPicker {...this.props} field={this.props.property} />
         {attributePicker}
       </div>

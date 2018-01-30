@@ -55,7 +55,10 @@ class App extends React.Component<Props> {
       <div id="wrapper">
         <header>
           <img src="../img/logo-48.png" />
-          <h1>Rules Editor</h1>
+          <h1>
+            <span className="fb">Facebook</span> Instant Articles |{' '}
+            <span className="app-name">Rules Editor</span>
+          </h1>
         </header>
         <div id="content-wrapper">
           <main id="content">

@@ -14,6 +14,9 @@ const React = require('react');
 const RuleDefinitionActions = require('./data/RuleDefinitionActions');
 const ruleDefinitions = require('./rule-definitions');
 
+import basicRules from './basic-rules';
+import RuleExporter from './utils/RuleExporter';
+
 // Register all rule definitions on the store
 ruleDefinitions.map(ruleDefinition =>
   RuleDefinitionActions.addRuleDefinition(ruleDefinition)
