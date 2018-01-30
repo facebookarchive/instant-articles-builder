@@ -353,5 +353,30 @@ ruleDefinitions.push(
     }),
   })
 );
-
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'VideoRule',
+    displayName: 'Video',
+    placeholder: 'Example: video',
+    properties: Map({
+      'video.url': RulePropertyDefinitionFactory({
+        name: 'video.url',
+        displayName: 'URL',
+        placeholder: 'Example: video',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'src',
+        required: true,
+      }),
+      'video.type': RulePropertyDefinitionFactory({
+        name: 'video.type',
+        displayName: 'Content Type',
+        placeholder: 'Example: video',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'type',
+      }),
+    }),
+  })
+);
 module.exports = ruleDefinitions;
