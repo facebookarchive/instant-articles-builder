@@ -347,5 +347,30 @@ ruleDefinitions.push(
     }),
   })
 );
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'InteractiveRule',
+    displayName: 'Embed',
+    placeholder: 'Example: div.embed',
+    properties: Map({
+      'interactive.iframe': RulePropertyDefinitionFactory({
+        name: 'interactive.iframe',
+        displayName: 'Embed Contents',
+        placeholder: 'Example: img',
+        supportedTypes: Set([RulePropertyTypes.ELEMENT]),
+        defaultType: RulePropertyTypes.ELEMENT,
+        defaultAttribute: 'content',
+      }),
+      'interactive.url': RulePropertyDefinitionFactory({
+        name: 'interactive.url',
+        displayName: 'Embed URL (iframe)',
+        placeholder: 'Example: iframe',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'src',
+      }),
+    }),
+  })
+);
 
 module.exports = ruleDefinitions;
