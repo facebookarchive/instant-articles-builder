@@ -54,9 +54,16 @@ class RulePicker extends React.Component<Props, State> {
           'selectors-form': true,
           collapsed: !!this.state.collapsed,
           valid: RuleUtils.isValid(this.props.rule),
+          hidden: !this.props.editor.categories.contains(
+            this.props.rule.definition.category
+          ),
         })}
       >
-        <h2 className="rule-header" onClick={this.handleToggle}>
+        <h2
+          className="rule-header"
+          role="presentation"
+          onClick={this.handleToggle}
+        >
           {toggler} {this.props.rule.definition.displayName}
         </h2>
 

@@ -10,6 +10,7 @@
 
 import { Map, Set } from 'immutable';
 import RulePropertyTypes from './models/RulePropertyTypes.js';
+import RuleCategories from './models/RuleCategories';
 import type { RuleDefinition } from './models/RuleDefinition';
 import { RuleDefinitionFactory } from './models/RuleDefinition';
 import { RulePropertyDefinitionFactory } from './models/RulePropertyDefinition';
@@ -20,6 +21,7 @@ const ruleDefinitions: RuleDefinition[] = [];
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'GlobalRule',
+    category: RuleCategories.BASIC,
     placeholder: 'Example: html',
     displayName: 'Article Structure',
     unique: true,
@@ -91,6 +93,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'ItalicRule',
+    category: RuleCategories.TEXT,
     displayName: 'Italic Text',
     placeholder: 'Example: i',
   })
@@ -98,6 +101,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'CaptionRule',
+    category: RuleCategories.MEDIA,
     displayName: 'Caption',
     placeholder: 'Example: article',
     properties: Map({
@@ -115,6 +119,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'AnchorRule',
+    category: RuleCategories.TEXT,
     displayName: 'Link',
     placeholder: 'Example: a',
     properties: Map({
@@ -141,6 +146,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'EmphasizedRule',
+    category: RuleCategories.TEXT,
     displayName: 'Emphasized Text',
     placeholder: 'Example: em',
   })
@@ -148,6 +154,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'BoldRule',
+    category: RuleCategories.TEXT,
     displayName: 'Bold Text',
     placeholder: 'Example: b, strong',
   })
@@ -155,6 +162,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'ParagraphRule',
+    category: RuleCategories.TEXT,
     displayName: 'Paragraph',
     placeholder: 'Example: p',
   })
@@ -162,6 +170,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'ListItemRule',
+    category: RuleCategories.TEXT,
     displayName: 'List Item',
     placeholder: 'Example: li',
   })
@@ -169,6 +178,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'SponsorRule',
+    category: RuleCategories.BASIC,
     displayName: 'Sponsor(s)',
     placeholder: 'Example: ul.op-sponsors',
     properties: Map({
@@ -187,6 +197,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'ListElementRule',
+    category: RuleCategories.TEXT,
     displayName: 'List',
     placeholder: 'Example: ol, ul',
   })
@@ -194,6 +205,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'BlockquoteRule',
+    category: RuleCategories.TEXT,
     displayName: 'Block Quotation',
     placeholder: 'Example: blockquote',
   })
@@ -201,6 +213,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'H1Rule',
+    category: RuleCategories.TEXT,
     displayName: 'Title, Header (h1)',
     placeholder: 'Example: title, h1',
   })
@@ -208,6 +221,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'H2Rule',
+    category: RuleCategories.TEXT,
     displayName: 'Sub-title, Header (h2)',
     placeholder: 'Example: h2',
   })
@@ -215,6 +229,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'RelatedArticlesRule',
+    category: RuleCategories.WIDGETS,
     displayName: 'Related Articles',
     placeholder: 'Example: ul.op-related-articles',
     properties: Map({
@@ -232,6 +247,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'RelatedItemRule',
+    category: RuleCategories.WIDGETS,
     displayName: 'Related Item',
     placeholder: 'Example: li',
     properties: Map({
@@ -250,6 +266,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'ImageRule',
+    category: RuleCategories.MEDIA,
     displayName: 'Image',
     placeholder: 'Example: img',
     properties: Map({
@@ -276,6 +293,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'PassThroughRule',
+    category: RuleCategories.ADVANCED,
     displayName: 'Pass Through',
     placeholder: 'Example: div.foo',
   })
@@ -283,6 +301,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'IgnoreRule',
+    category: RuleCategories.ADVANCED,
     displayName: 'Ignore',
     placeholder: 'Example: div.bar',
   })

@@ -20,7 +20,7 @@ import RulePropertyTypes from '../models/RulePropertyTypes';
 import { RuleUtils } from '../models/Rule';
 import { RulePropertyUtils } from '../models/RuleProperty';
 
-type JSONFormat = {
+export type JSONFormat = {
   rules: RuleJSON[]
 };
 

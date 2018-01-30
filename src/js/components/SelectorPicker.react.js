@@ -138,7 +138,7 @@ class SelectorPicker extends React.Component<Props, State> {
     ) : null;
 
     return (
-      <div>
+      <div className="field">
         <div className="selector-picker">
           <input
             type="text"

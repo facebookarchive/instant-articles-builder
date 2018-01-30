@@ -8,8 +8,10 @@
  * @flow
  */
 
-import { Map, Record } from 'immutable';
+import { Map, Set, Record } from 'immutable';
 import type { Attribute } from '../models/Attribute';
+import type { RuleCategory } from './RuleCategories';
+import RuleCategories from './RuleCategories';
 import type { Field } from './Field';
 import type { RecordOf, RecordFactory } from 'immutable';
 
@@ -17,7 +19,8 @@ type EditorRecord = {
   elementAttributes: Map<string, Map<string, Attribute>>,
   elementCounts: Map<string, number>,
   focusedField: ?Field,
-  finding: boolean
+  finding: boolean,
+  categories: Set<RuleCategory>
 };
 
 export const EditorFactory: RecordFactory<EditorRecord> = Record({
@@ -25,6 +28,7 @@ export const EditorFactory: RecordFactory<EditorRecord> = Record({
   elementCounts: Map(),
   focusedField: null,
   finding: false,
+  categories: Set([RuleCategories.BASIC]),
 });
 
 export type Editor = RecordOf<EditorRecord> & EditorFactory;

@@ -11,7 +11,7 @@
 import { ReduceStore } from 'flux/utils';
 const RulesEditorDispatcher = require('./RulesEditorDispatcher.js');
 
-import { Map } from 'immutable';
+import { Map, Set } from 'immutable';
 import type { Field } from '../models/Field';
 
 import EditorActionTypes from './EditorActionTypes.js';
@@ -19,13 +19,15 @@ import { EditorFactory } from '../models/Editor';
 import type { Attribute } from '../models/Attribute';
 import type { EditorActionType } from './EditorActionTypes.js';
 import type { Editor } from '../models/Editor';
+import type { RuleCategory } from '../models/RuleCategories';
 
 type Action = {
   type: EditorActionType,
   field?: Field,
   elementAttributes?: Map<string, Attribute>,
   elementCount: ?number,
-  selector: ?string
+  selector: ?string,
+  categories: ?Set<RuleCategory>
 };
 
 class EditorStore extends ReduceStore<Editor> {
@@ -68,6 +70,12 @@ class EditorStore extends ReduceStore<Editor> {
           );
         }
         return state.set('finding', false);
+
+      case EditorActionTypes.FILTER_RULES:
+        if (action.categories != null) {
+          return state.set('categories', action.categories);
+        }
+        return state;
 
       default:
         return state;
