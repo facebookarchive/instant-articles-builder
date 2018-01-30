@@ -106,7 +106,6 @@ h1 {
 }
 
 .field-line input.date-time-format {
-  width: 265px;
   border-radius: 5px;
   border: 1px solid #ccc;
   position: relative;
@@ -434,7 +433,7 @@ webview {
 .selectors-form.valid {
   border: 1px solid #3b5998;
 }
-.selectors-form .selector-picker,
+.selectors-form .field,
 .selectors-form .attributes,
 .selector-label {
   padding: 0 5px !important;
