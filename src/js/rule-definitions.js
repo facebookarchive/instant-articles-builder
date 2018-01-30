@@ -306,5 +306,96 @@ ruleDefinitions.push(
     placeholder: 'Example: div.bar',
   })
 );
-
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'SlideshowRule',
+    displayName: 'Slideshow (Container)',
+    placeholder: 'Example: div.slideshow',
+  })
+);
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'SlideshowImageRule',
+    displayName: 'Slideshow Image',
+    placeholder: 'Example: div.img',
+    properties: Map({
+      'image.url': RulePropertyDefinitionFactory({
+        name: 'image.url',
+        displayName: 'Image URL',
+        placeholder: 'Example: img',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'src',
+        required: true,
+      }),
+      'caption.title': RulePropertyDefinitionFactory({
+        name: 'caption.title',
+        displayName: 'Caption (Title)',
+        placeholder: 'Example: p.caption',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'textContent',
+      }),
+      'caption.credit': RulePropertyDefinitionFactory({
+        name: 'caption.credit',
+        displayName: 'Caption (Credit)',
+        placeholder: 'Example: p.credit',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'textContent',
+      }),
+    }),
+  })
+);
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'InteractiveRule',
+    displayName: 'Embed',
+    placeholder: 'Example: div.embed',
+    properties: Map({
+      'interactive.iframe': RulePropertyDefinitionFactory({
+        name: 'interactive.iframe',
+        displayName: 'Embed Contents',
+        placeholder: 'Example: img',
+        supportedTypes: Set([RulePropertyTypes.ELEMENT]),
+        defaultType: RulePropertyTypes.ELEMENT,
+        defaultAttribute: 'content',
+      }),
+      'interactive.url': RulePropertyDefinitionFactory({
+        name: 'interactive.url',
+        displayName: 'Embed URL (iframe)',
+        placeholder: 'Example: iframe',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'src',
+      }),
+    }),
+  })
+);
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'VideoRule',
+    displayName: 'Video',
+    placeholder: 'Example: video',
+    properties: Map({
+      'video.url': RulePropertyDefinitionFactory({
+        name: 'video.url',
+        displayName: 'URL',
+        placeholder: 'Example: video',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'src',
+        required: true,
+      }),
+      'video.type': RulePropertyDefinitionFactory({
+        name: 'video.type',
+        displayName: 'Content Type',
+        placeholder: 'Example: video',
+        supportedTypes: Set([RulePropertyTypes.STRING]),
+        defaultType: RulePropertyTypes.STRING,
+        defaultAttribute: 'type',
+      }),
+    }),
+  })
+);
 module.exports = ruleDefinitions;
