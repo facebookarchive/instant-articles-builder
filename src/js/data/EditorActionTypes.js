@@ -14,6 +14,7 @@ const EditorActionTypes = {
   START_FINDING: 'START_FINDING',
   STOP_FINDING: 'STOP_FINDING',
   FOUND: 'FOUND',
+  FILTER_RULES: 'FILTER_RULES',
 };
 
 export type EditorActionType = $Values<typeof EditorActionTypes>;

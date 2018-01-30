@@ -12,10 +12,11 @@
  * This can be used as a enum.
  */
 const RuleCategories = {
-  BASIC: 'basic',
-  TEXT: 'text',
-  MEDIA: 'media',
-  HEADER: 'header',
+  BASIC: 'Basic',
+  TEXT: 'Text',
+  MEDIA: 'Media',
+  ADVANCED: 'Advanced',
+  WIDGETS: 'Widgets',
 };
 
 export type RuleCategory = $Values<typeof RuleCategories>;

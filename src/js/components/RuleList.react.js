@@ -14,10 +14,32 @@ const RuleActions = require('../data/RuleActions');
 const { remote: { dialog: Dialog } } = require('electron');
 const Fs = require('fs');
 
+import { Set } from 'immutable';
+import RuleCategories from '../models/RuleCategories';
+import { Dropdown, Label, Icon } from 'semantic-ui-react';
 import { RuleFactory } from '../models/Rule';
 import RuleExporter from '../utils/RuleExporter';
 import type { Props } from '../containers/AppContainer.react';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
+import EditorActions from '../data/EditorActions';
+import type { RuleCategory } from '../models/RuleCategories';
+
+function getLabelIcon(category: RuleCategory): string {
+  switch (category) {
+    case RuleCategories.ADVANCED:
+      return 'settings';
+    case RuleCategories.BASIC:
+      return 'check circle';
+    case RuleCategories.TEXT:
+      return 'font';
+    case RuleCategories.MEDIA:
+      return 'video';
+    case RuleCategories.WIDGETS:
+      return 'browser';
+    default:
+      '';
+  }
+}
 
 const dialogDefaultPath = 'rules.json';
 const dialogFilter = {
@@ -47,6 +69,9 @@ const SortableList = SortableContainer((props: any) => {
 class RuleList extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
+
+    // Load basic rules
+    this.handleNew();
   }
 
   loadFromExportedData = (data: string) => {
@@ -101,12 +126,23 @@ class RuleList extends React.Component<Props> {
       );
       if (ruleDefinition != null) {
         RuleActions.addRule(RuleFactory({ definition: ruleDefinition }));
+        EditorActions.filterRules(
+          this.props.editor.categories.add(ruleDefinition.category)
+        );
       }
     }
   };
 
   handleNew = (event: Event) => {
-    RuleActions.removeAllRules();
+    // Load basic rules
+    Fs.readFile(
+      'src/js/basic-rules.json',
+      importExportEncoding,
+      (error, data) => {
+        this.loadFromExportedData(data);
+      }
+    );
+    EditorActions.filterRules(Set([RuleCategories.BASIC]));
   };
 
   handleSortEnd = ({
@@ -117,6 +153,10 @@ class RuleList extends React.Component<Props> {
     newIndex: number
   }) => {
     RuleActions.changeOrder(oldIndex, newIndex);
+  };
+
+  handleChangeFilters = (event, data) => {
+    EditorActions.filterRules(Set(data.value));
   };
 
   componentDidUpdate(prevProps: Props) {
@@ -147,28 +187,63 @@ class RuleList extends React.Component<Props> {
             💾 Save
           </button>
         </div>
-        <form className="selectors-form">
-          <select
-            className="rule-selector"
-            onChange={this.handleAddRule}
-            value=""
-          >
-            <option value="" disabled={true}>
-              + Add a new Rule...
-            </option>
-            <optgroup>
+        <label>
+          <Icon name="filter" />Filter Rules:
+        </label>
+        <Dropdown
+          multiple
+          labeled
+          fluid
+          selection
+          closeOnChange={true}
+          options={Object.values(RuleCategories).map(category => ({
+            text: category,
+            value: category,
+            icon: getLabelIcon(category),
+          }))}
+          renderLabel={item => ({
+            content: item.text,
+            icon: item.icon,
+          })}
+          text="Pick at least 1 category"
+          value={this.props.editor.categories.toArray()}
+          onChange={this.handleChangeFilters}
+        />
+        <hr />
+        <label>
+          <Icon name="list" />Rules:
+        </label>
+        <select
+          className="rule-selector"
+          onChange={this.handleAddRule}
+          value=""
+        >
+          <option value="" disabled={true}>
+            + Add a new rule...
+          </option>
+          <optgroup label="-----------------------------------" />
+          {Object.values(RuleCategories).map(category => (
+            <optgroup key={category} label={category + ' rules'}>
               {this.props.ruleDefinitions
                 .sortBy(defintion => defintion.displayName)
                 .valueSeq()
+                .filter(definition => definition.category == category)
                 .map(ruleDefinition => (
-                  <option key={ruleDefinition.name} value={ruleDefinition.name}>
+                  <option
+                    key={ruleDefinition.name}
+                    value={ruleDefinition.name}
+                    disabled={
+                      !this.props.editor.categories.contains(
+                        ruleDefinition.category
+                      )
+                    }
+                  >
                     {ruleDefinition.displayName}
                   </option>
                 ))}
             </optgroup>
-          </select>
-        </form>
-
+          ))}
+        </select>
         <div className="scrollable" ref="scrollable">
           <SortableList
             {...this.props}

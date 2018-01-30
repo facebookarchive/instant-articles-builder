@@ -229,7 +229,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'RelatedArticlesRule',
-    category: RuleCategories.BASIC,
+    category: RuleCategories.WIDGETS,
     displayName: 'Related Articles',
     placeholder: 'Example: ul.op-related-articles',
     properties: Map({
@@ -247,7 +247,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'RelatedItemRule',
-    category: RuleCategories.BASIC,
+    category: RuleCategories.WIDGETS,
     displayName: 'Related Item',
     placeholder: 'Example: li',
     properties: Map({
@@ -293,7 +293,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'PassThroughRule',
-    category: RuleCategories.BASIC,
+    category: RuleCategories.ADVANCED,
     displayName: 'Pass Through',
     placeholder: 'Example: div.foo',
   })
@@ -301,7 +301,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'IgnoreRule',
-    category: RuleCategories.BASIC,
+    category: RuleCategories.ADVANCED,
     displayName: 'Ignore',
     placeholder: 'Example: div.bar',
   })

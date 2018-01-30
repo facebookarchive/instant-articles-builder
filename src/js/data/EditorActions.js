@@ -9,9 +9,10 @@
  */
 
 const RulesEditorDispatcher = require('./RulesEditorDispatcher.js');
-import { Map } from 'immutable';
+import { Map, Set } from 'immutable';
 import type { Attribute } from '../models/Attribute';
 import type { Field } from '../models/Field';
+import type { RuleCategory } from '../models/RuleCategories';
 import EditorActionTypes from './EditorActionTypes.js';
 
 class EditorActions {
@@ -45,6 +46,12 @@ class EditorActions {
       type: EditorActionTypes.FOUND,
       elementAttributes,
       elementCount,
+    });
+  }
+  static filterRules(categories: Set<RuleCategory>) {
+    RulesEditorDispatcher.dispatch({
+      type: EditorActionTypes.FILTER_RULES,
+      categories,
     });
   }
 }
