@@ -16,7 +16,7 @@ const Fs = require('fs');
 
 import { Set } from 'immutable';
 import RuleCategories from '../models/RuleCategories';
-import { Dropdown, Label, Icon } from 'semantic-ui-react';
+import { Dropdown, Icon } from 'semantic-ui-react';
 import { RuleFactory } from '../models/Rule';
 import RuleExporter from '../utils/RuleExporter';
 import type { Props } from '../containers/AppContainer.react';
@@ -37,7 +37,7 @@ function getLabelIcon(category: RuleCategory): string {
     case RuleCategories.WIDGETS:
       return 'browser';
     default:
-      '';
+      return '';
   }
 }
 
