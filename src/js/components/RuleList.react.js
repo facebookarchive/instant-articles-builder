@@ -133,7 +133,7 @@ class RuleList extends React.Component<Props> {
     }
   };
 
-  handleNew = (event: Event) => {
+  handleNew = () => {
     // Load basic rules
     Fs.readFile(
       'src/js/basic-rules.json',
@@ -155,7 +155,7 @@ class RuleList extends React.Component<Props> {
     RuleActions.changeOrder(oldIndex, newIndex);
   };
 
-  handleChangeFilters = (event, data) => {
+  handleChangeFilters = (event: Event, data: { value: string[] }) => {
     EditorActions.filterRules(Set(data.value));
   };
 
@@ -196,11 +196,13 @@ class RuleList extends React.Component<Props> {
           fluid
           selection
           closeOnChange={true}
-          options={Object.values(RuleCategories).map(category => ({
-            text: category,
-            value: category,
-            icon: getLabelIcon(category),
-          }))}
+          options={Object.values(RuleCategories).map(
+            (category: RuleCategory) => ({
+              text: category,
+              value: category,
+              icon: getLabelIcon(category),
+            })
+          )}
           renderLabel={item => ({
             content: item.text,
             icon: item.icon,
@@ -222,7 +224,7 @@ class RuleList extends React.Component<Props> {
             + Add a new rule...
           </option>
           <optgroup label="-----------------------------------" />
-          {Object.values(RuleCategories).map(category => (
+          {Object.values(RuleCategories).map((category: RuleCategory) => (
             <optgroup key={category} label={category + ' rules'}>
               {this.props.ruleDefinitions
                 .sortBy(defintion => defintion.displayName)
