@@ -317,6 +317,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'SlideshowRule',
+    category: RuleCategories.MEDIA,
     displayName: 'Slideshow (Container)',
     placeholder: 'Example: div.slideshow',
   })
@@ -324,6 +325,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'SlideshowImageRule',
+    category: RuleCategories.MEDIA,
     displayName: 'Slideshow Image',
     placeholder: 'Example: div.img',
     properties: Map({
@@ -358,6 +360,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'InteractiveRule',
+    category: RuleCategories.MEDIA,
     displayName: 'Embed',
     placeholder: 'Example: div.embed',
     properties: Map({
@@ -383,6 +386,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'VideoRule',
+    category: RuleCategories.MEDIA,
     displayName: 'Video',
     placeholder: 'Example: video',
     properties: Map({
