@@ -230,7 +230,7 @@ ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'RelatedArticlesRule',
     category: RuleCategories.WIDGETS,
-    displayName: 'Related Articles',
+    displayName: 'Related Articles (In-line)',
     placeholder: 'Example: ul.op-related-articles',
     properties: Map({
       'related.title': RulePropertyDefinitionFactory({
@@ -242,6 +242,14 @@ ruleDefinitions.push(
         defaultAttribute: 'title',
       }),
     }),
+  })
+);
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'FooterRelatedArticlesRule',
+    category: RuleCategories.WIDGETS,
+    displayName: 'Related Articles (Footer)',
+    placeholder: 'Example: ul.op-related-articles',
   })
 );
 ruleDefinitions.push(
@@ -309,6 +317,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'SlideshowRule',
+    category: RuleCategories.MEDIA,
     displayName: 'Slideshow (Container)',
     placeholder: 'Example: div.slideshow',
   })
@@ -316,6 +325,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'SlideshowImageRule',
+    category: RuleCategories.MEDIA,
     displayName: 'Slideshow Image',
     placeholder: 'Example: div.img',
     properties: Map({
@@ -350,6 +360,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'InteractiveRule',
+    category: RuleCategories.MEDIA,
     displayName: 'Embed',
     placeholder: 'Example: div.embed',
     properties: Map({
@@ -375,6 +386,7 @@ ruleDefinitions.push(
 ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'VideoRule',
+    category: RuleCategories.MEDIA,
     displayName: 'Video',
     placeholder: 'Example: video',
     properties: Map({
@@ -396,6 +408,14 @@ ruleDefinitions.push(
         defaultAttribute: 'type',
       }),
     }),
+  })
+);
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'FooterRule',
+    category: RuleCategories.BASIC,
+    displayName: 'Footer',
+    placeholder: 'Example: footer',
   })
 );
 module.exports = ruleDefinitions;
