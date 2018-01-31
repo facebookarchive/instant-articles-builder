@@ -410,4 +410,12 @@ ruleDefinitions.push(
     }),
   })
 );
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'FooterRule',
+    category: RuleCategories.BASIC,
+    displayName: 'Footer',
+    placeholder: 'Example: footer',
+  })
+);
 module.exports = ruleDefinitions;
