@@ -230,7 +230,7 @@ ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'RelatedArticlesRule',
     category: RuleCategories.WIDGETS,
-    displayName: 'Related Articles',
+    displayName: 'Related Articles (In-line)',
     placeholder: 'Example: ul.op-related-articles',
     properties: Map({
       'related.title': RulePropertyDefinitionFactory({
@@ -242,6 +242,14 @@ ruleDefinitions.push(
         defaultAttribute: 'title',
       }),
     }),
+  })
+);
+ruleDefinitions.push(
+  RuleDefinitionFactory({
+    name: 'FooterRelatedArticlesRule',
+    category: RuleCategories.WIDGETS,
+    displayName: 'Related Articles (Footer)',
+    placeholder: 'Example: ul.op-related-articles',
   })
 );
 ruleDefinitions.push(
