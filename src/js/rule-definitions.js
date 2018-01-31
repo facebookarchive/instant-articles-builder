@@ -295,6 +295,14 @@ ruleDefinitions.push(
         defaultType: RulePropertyTypes.ELEMENT,
         defaultAttribute: 'content',
       }),
+      'image.credit': RulePropertyDefinitionFactory({
+        name: 'image.credit',
+        displayName: 'Credit',
+        placeholder: 'Example: cite',
+        supportedTypes: Set([RulePropertyTypes.ELEMENT]),
+        defaultType: RulePropertyTypes.ELEMENT,
+        defaultAttribute: 'content',
+      }),
     }),
   })
 );
