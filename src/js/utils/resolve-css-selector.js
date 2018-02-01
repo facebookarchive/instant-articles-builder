@@ -89,7 +89,7 @@ function resolveCSSSelector(element, multiple, contextSelector) {
 
   // If none was found, return the absolute selector
   if (filteredCandidates.length === 0) {
-    return [resolveAbsoluteCSSSelector(element)];
+    return [resolveAbsoluteCSSSelector(element, contextSelector)];
   }
 
   // Rank candidates
@@ -293,12 +293,15 @@ function getScore(candidate) {
  * @param {(DOMElement)} element
  * @returns {string} A full path CSS selector for the element in the document.
  */
-var resolveAbsoluteCSSSelector = function(element) {
+var resolveAbsoluteCSSSelector = function(element, contextSelector) {
   if (!(element instanceof Element)) {
     return null;
   }
   let path = [];
-  while (element.nodeType === Node.ELEMENT_NODE) {
+  while (
+    element.nodeType === Node.ELEMENT_NODE &&
+    !element.matches(contextSelector)
+  ) {
     let selector = element.nodeName.toLowerCase();
     if (element.id) {
       selector = '#' + element.id;
