@@ -4,20 +4,21 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "7368cd347334fa8b3b6a3db4ef48b062",
+    "hash": "ff10c2d9b70afa83875b2d8396a60eee",
+    "content-hash": "fe829a1d9c72354c36c09c0816707650",
     "packages": [
         {
             "name": "facebook/facebook-instant-articles-sdk-php",
-            "version": "v1.8.1",
+            "version": "v1.8.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/facebook-instant-articles-sdk-php.git",
-                "reference": "658d0d0a7fd1eae977c0cf9da5ce901be27b3d97"
+                "reference": "72cdc913a880bef6db2a09b2e9c4291ea33ba6e5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/facebook-instant-articles-sdk-php/zipball/658d0d0a7fd1eae977c0cf9da5ce901be27b3d97",
-                "reference": "658d0d0a7fd1eae977c0cf9da5ce901be27b3d97",
+                "url": "https://api.github.com/repos/facebook/facebook-instant-articles-sdk-php/zipball/72cdc913a880bef6db2a09b2e9c4291ea33ba6e5",
+                "reference": "72cdc913a880bef6db2a09b2e9c4291ea33ba6e5",
                 "shasum": ""
             },
             "require": {
@@ -56,7 +57,7 @@
                 "instant",
                 "sdk"
             ],
-            "time": "2018-01-22T18:13:51+00:00"
+            "time": "2018-01-30 15:09:17"
         },
         {
             "name": "facebook/graph-sdk",
@@ -114,11 +115,11 @@
                 "facebook",
                 "sdk"
             ],
-            "time": "2017-08-16T17:28:07+00:00"
+            "time": "2017-08-16 17:28:07"
         },
         {
             "name": "symfony/css-selector",
-            "version": "v2.8.33",
+            "version": "v2.8.34",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
@@ -167,7 +168,7 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2018-01-03T07:36:31+00:00"
+            "time": "2018-01-03 07:36:31"
         }
     ],
     "packages-dev": [],
