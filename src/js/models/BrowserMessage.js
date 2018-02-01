@@ -29,7 +29,8 @@ export type BrowserMessageType = $Values<typeof BrowserMessageTypes>;
  */
 export type FetchAttributesMessage = {
   type: 'fetch_attributes',
-  selector: string
+  selector: string,
+  contextSelector: string
 };
 
 /**
@@ -64,7 +65,8 @@ export type ElementSelectedMessage = {
  */
 export type HighlightElementMessage = {
   type: 'highlight_element',
-  selector: string
+  selector: string,
+  contextSelector: string
 };
 
 /**

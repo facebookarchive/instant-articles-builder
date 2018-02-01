@@ -28,11 +28,15 @@ function receiveMessage(message: BrowserMessage): void {
   switch (message.type) {
     case BrowserMessageTypes.HIGHLIGHT_ELEMENT:
       WebviewStateMachine.state = WebviewStates.DEFAULT;
-      WebviewUtils.highlightElementsBySelector(message.selector);
+      WebviewUtils.highlightElementsBySelector(
+        message.selector,
+        message.contextSelector
+      );
       break;
 
     case BrowserMessageTypes.SELECT_ELEMENT:
       WebviewUtils.clearHighlights();
+      WebviewStateMachine.contextSelector = message.selector;
       if (message.multiple) {
         WebviewStateMachine.state = WebviewStates.SELECTING_MULTIPLE;
       } else {
@@ -46,25 +50,30 @@ function receiveMessage(message: BrowserMessage): void {
       break;
 
     case BrowserMessageTypes.FETCH_ATTRIBUTES:
-      fetchAttributes(message.selector);
+      fetchAttributes(message.selector, message.contextSelector);
       break;
   }
 }
 
-function fetchAttributes(selector: string) {
+function fetchAttributes(selector: string, contextSelector: string) {
   if (selector == '') {
     return;
   }
-  const elements = document.querySelectorAll(selector);
-  const count = elements.length;
-  const attributes = WebviewUtils.getAttributes(elements.item(0));
+  const contextElements = document.querySelectorAll(contextSelector);
+  for (let context of contextElements) {
+    const elements = context.querySelectorAll(selector);
+    const count = elements.length;
+    if (count > 0) {
+      const attributes = WebviewUtils.getAttributes(elements.item(0));
 
-  ipcRenderer.sendToHost('message', {
-    type: BrowserMessageTypes.ATTRIBUTES_RETRIEVED,
-    selector,
-    count,
-    attributes,
-  });
+      ipcRenderer.sendToHost('message', {
+        type: BrowserMessageTypes.ATTRIBUTES_RETRIEVED,
+        selector,
+        count,
+        attributes,
+      });
+    }
+  }
 }
 
 //
@@ -81,11 +90,13 @@ function onChangeState(oldState: WebviewState, newState: WebviewState) {
   switch (newState) {
     case WebviewStates.SELECTING_ELEMENT:
     case WebviewStates.SELECTING_MULTIPLE:
+      WebviewUtils.startSelecting(WebviewStateMachine.contextSelector);
       document.addEventListener('click', handleSelectElement);
       document.addEventListener('mouseover', hightlightOnHover);
       break;
 
     case WebviewStates.DEFAULT:
+      WebviewUtils.stopSelecting();
       document.removeEventListener('click', handleSelectElement);
       document.removeEventListener('mouseover', hightlightOnHover);
       break;
@@ -96,7 +107,8 @@ function handleSelectElement(event: MouseEvent) {
   // Resolve the CSS selector for the selected element
   let selectors: string[] = resolveCSSSelector(
     event.target,
-    WebviewStateMachine.state === WebviewStates.SELECTING_MULTIPLE
+    WebviewStateMachine.state === WebviewStates.SELECTING_MULTIPLE,
+    WebviewStateMachine.contextSelector
   );
 
   ipcRenderer.sendToHost('message', {
@@ -106,7 +118,10 @@ function handleSelectElement(event: MouseEvent) {
 
   const selector = selectors[0];
   if (selector != null) {
-    WebviewUtils.highlightElementsBySelector(selector);
+    WebviewUtils.highlightElementsBySelector(
+      selector,
+      WebviewStateMachine.contextSelector
+    );
   }
 
   WebviewStateMachine.state = WebviewStates.DEFAULT;

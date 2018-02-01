@@ -39,7 +39,7 @@ const BaseRulePropertyDefinitionFactory: RecordFactory<
   defaultAttribute: null,
   supportedTypes: Set(),
   required: false,
-  unique: false,
+  unique: true,
   defaultProperty: null,
   defaultType: RulePropertyTypes.STRING,
 });

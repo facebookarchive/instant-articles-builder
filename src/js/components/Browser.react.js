@@ -20,6 +20,7 @@ import RuleActions from '../data/RuleActions';
 import type { Props } from '../containers/AppContainer.react';
 import type { BrowserMessage } from '../models/BrowserMessage';
 import { BrowserMessageTypes } from '../models/BrowserMessage';
+import { RuleUtils } from '../models/Rule';
 
 type State = {
   url: string,
@@ -152,24 +153,53 @@ class Browser extends React.Component<Props, State> {
     // Uncomment to debug the injected script
     this.webview.openDevTools();
     if (this.props.editor.focusedField != null) {
-      let findMultipleElements = !this.props.editor.focusedField.definition
-        .unique;
-      let selector = this.props.editor.focusedField.selector;
+      let field = this.props.editor.focusedField;
+      let findMultipleElements = !field.definition.unique;
+      let selector = field.selector;
+
+      // Calculate context for selecting elements
+      let context = 'html';
+      if (field.fieldType === 'RuleProperty' && field.rule != null) {
+        let ruleGuid = field.rule.guid;
+        for (let rule of this.props.rules.valueSeq()) {
+          if (rule.guid === ruleGuid) {
+            context = rule.selector;
+          }
+        }
+      }
+      if (field.fieldType === 'Rule') {
+        for (let rule of this.props.rules.valueSeq()) {
+          if (
+            rule.definition.name === 'GlobalRule' &&
+            RuleUtils.isValid(rule)
+          ) {
+            const selector = rule.properties.getIn([
+              'article.body',
+              'selector',
+            ]);
+            if (selector != null && selector != '') {
+              context = selector;
+            }
+          }
+        }
+      }
 
       if (this.props.editor.finding) {
         this.webview.send('message', {
           type: BrowserMessageTypes.SELECT_ELEMENT,
-          selector: 'html',
+          selector: context,
           multiple: findMultipleElements,
         });
       } else {
         this.webview.send('message', {
           type: BrowserMessageTypes.HIGHLIGHT_ELEMENT,
           selector: selector,
+          contextSelector: context,
         });
         this.webview.send('message', {
           type: BrowserMessageTypes.FETCH_ATTRIBUTES,
           selector: selector,
+          contextSelector: context,
         });
       }
     } else {
