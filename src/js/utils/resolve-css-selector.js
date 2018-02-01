@@ -7,8 +7,10 @@
  */
 
 /**
- * The maximum depth to explore on the DOMTree when creating candidate selectors for the algorithm.
- * The time and space complexity of this algorithm grows exponentially with this number.
+ * The maximum depth to explore on the DOMTree when creating candidate selectors
+ * for the algorithm.
+ * The time and space complexity of this algorithm grows exponentially with
+ * this number.
  *
  * @constant
  * @type {number}
@@ -35,23 +37,32 @@ const MAX_CANDIDATES = 512;
  * @default
  */
 const FEATURE_WEIGHTS = {
-  leafHasID: -1, // IDs are more likely unique across all articles, let's prioritize them
-  leafHasClass: -2, // classes are fine, but not guaranteed to be unique in other articles
-  leafHasTagName: -4, // simple tags look nice, but are unlikely to be unique across articles
-  endsWithNumber: -8, // selectors ending with numbers might contain article-specific ID numbers we want to avoid
-  numberOfComponents: -16, // longer selectors are bad
-  trunkScore: 0.5, // Better leaf is better than better trunk (ex: 'header .post-title' is better than '#article h1')
+  // IDs are more likely unique across all articles, let's prioritize them
+  leafHasID: -1,
+  // classes are fine, but not guaranteed to be unique in other articles
+  leafHasClass: -2,
+  // simple tags look nice, but are unlikely to be unique across articles
+  leafHasTagName: -4,
+  // selectors ending with numbers might contain article-specific
+  // ID numbers we want to avoid
+  endsWithNumber: -8,
+  // longer selectors are bad
+  numberOfComponents: -16,
+  // Better leaf is better than better trunk
+  // (ex: 'header .post-title' is better than '#article h1')
+  trunkScore: 0.5,
 };
 
 /**
- * Heuristicaly finds the simplest CSS selector that matches the provided element within the article.
- * If no simple selector is found, uses {@link resolveAbsoluteCSSSelector} instead.
+ * Heuristicaly finds the simplest CSS selector that matches the provided
+ * element within the article.
+ * If no simple selector is found, uses {@link resolveAbsoluteCSSSelector}.
  *
  * @exports resolveCSSSelector
  * @see {@link getScore}
  * @param {(DOMElement)} element
  * @param {boolean} multiple Whether to allow multiple elements being matched
- * @returns {string} The simplest unique selector found for the given element
+ * @returns {List<string>} Selectors for the given element ordered by score
  */
 function resolveCSSSelector(element, multiple) {
   // Generate candidates
@@ -63,7 +74,8 @@ function resolveCSSSelector(element, multiple) {
   let filteredCandidates = [];
 
   if (!multiple) {
-    // Allow only candidates that return a single element and matching the target element
+    // Allow only candidates that return a single element
+    // and matching the target element
     filteredCandidates = candidates.filter(candidate =>
       isUnique(candidate, element)
     );
@@ -76,14 +88,14 @@ function resolveCSSSelector(element, multiple) {
 
   // If none was found, return the absolute selector
   if (filteredCandidates.length === 0) {
-    return resolveAbsoluteCSSSelector(element);
+    return [resolveAbsoluteCSSSelector(element)];
   }
 
   // Rank candidates
   let rankedCandidates = rankCandidates(filteredCandidates);
 
   // Returns the highest ranked candidate
-  return rankedCandidates[0];
+  return rankedCandidates;
 }
 
 /**
@@ -105,10 +117,10 @@ function isUnique(selector, element) {
 /**
  * Generate candidate CSS selectors for the provided element.
  * - These selectors are not guaranteed to match the element uniquely
- * - The number of candidates generated grows exponentially relative to chosen the depth
+ * - The number of candidates generated grows exponentially with depth
  *
  * @param {(DOMElement)} element
- * @param {number} depth How many levels to explore upwards in the DOM tree (1-indexed)
+ * @param {number} depth Levels to explore upwards in the DOM tree (1-indexed)
  * @return {string[]} A list of candidate CSS selectors
  */
 function generateCandidates(element, depth) {
@@ -130,7 +142,7 @@ function generateCandidatesRecursive(element, currentLevel, lastLevel) {
     return [];
   }
 
-  let classes = element.getAttribute('class').split(/\s+/);
+  let classes = element.classList;
   let tagName = element.tagName.toLowerCase();
   let id = element.getAttribute('id');
 
@@ -169,7 +181,8 @@ function generateCandidatesRecursive(element, currentLevel, lastLevel) {
     candidates.add(selector);
   }
 
-  // empty selector candidate (creating selectors with ancestors that omit the intermediate elements)
+  // empty selector candidate (creating selectors with ancestors
+  // that omit the intermediate elements)
   if (currentLevel > 0 && currentLevel < lastLevel) {
     candidates.add('');
   }
@@ -200,7 +213,7 @@ function generateCandidatesRecursive(element, currentLevel, lastLevel) {
  *
  * @see {@link getScore}
  * @param {string[]} candidates The list of candidate CSS selectors
- * @returns {string[]} The list of candidate CSS selectors sorted by the calculated score
+ * @returns {string[]} The list of candidate CSS selectors sorted by score
  */
 function rankCandidates(candidates) {
   let scoredCandidates = candidates.map(candidate => ({
@@ -214,12 +227,13 @@ function rankCandidates(candidates) {
 
 /**
  * Calculates a score for the simplicity of the selector.
- * The ideal selector should rely as least as possible on the current page structure, so it still matches
- * the intended element on different articles from the same site.
+ * The ideal selector should rely as least as possible on the current page
+ * structure, so it still matches the intended element on different articles
+ * from the same site.
  *
  * @see {@link FEATURE_WEIGHTS}
  * @param {string[]} candidates The list of candidate CSS selectors
- * @returns {string[]} The list of candidate CSS selectors sorted by the calculated score
+ * @returns {string[]} The list of candidate CSS selectors sorted by score
  */
 function getScore(candidate) {
   // Ends recursion on empty candidate
@@ -262,12 +276,14 @@ function getScore(candidate) {
 }
 
 /**
- * Gets a CSS selector witht the absolute path to the element starting on the first ancestor with an ID.
- * - The returned selector always matches a single element, unless IDs are incorrectly duplicated on the page
+ * Gets a CSS selector witht the absolute path to the element starting on the
+ * first ancestor with an ID.
+ * - The returned selector always matches a single element, unless IDs are
+ *   incorrectly duplicated on the page
  * - The returned selector is likely to be very dependent on the page structure
  *
  * @param {(DOMElement)} element
- * @returns {string} A full path CSS selector for the given element in the document.
+ * @returns {string} A full path CSS selector for the element in the document.
  */
 var resolveAbsoluteCSSSelector = function(element) {
   if (!(element instanceof Element)) {
