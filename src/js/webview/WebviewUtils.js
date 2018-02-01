@@ -13,8 +13,34 @@ import type { AttributeRecord } from '../models/Attribute';
 
 const highlightClass = 'facebook-instant-articles-sdk-rules-editor-highlight';
 const hoverClass = 'facebook-instant-articles-sdk-rules-editor-hover';
+const contextClass = 'facebook-instant-articles-sdk-rules-editor-context';
+const selectingClass = 'facebook-instant-articles-sdk-rules-editor-selecting';
 
 export class WebviewUtils {
+  static startSelecting(contextSelector: string): void {
+    let body = document.body;
+    if (body == null) {
+      return;
+    }
+    if (contextSelector == '') {
+      return;
+    }
+    body.classList.add(selectingClass);
+    // Add class to the new highlighted elements
+    let elements = document.querySelectorAll(contextSelector);
+    elements.forEach(function(element) {
+      element.classList.add(contextClass);
+    });
+  }
+
+  static stopSelecting(): void {
+    // Remove class form existing highlighted elements
+    let oldHighlightedElements = document.querySelectorAll(`.${contextClass}`);
+    oldHighlightedElements.forEach(function(element) {
+      element.classList.remove(contextClass);
+    });
+  }
+
   static clearHighlights(): void {
     // Remove class form existing highlighted elements
     let oldHighlightedElements = document.querySelectorAll(
@@ -26,20 +52,26 @@ export class WebviewUtils {
     });
   }
 
-  static highlightElementsBySelector(selector: string): void {
+  static highlightElementsBySelector(
+    selector: string,
+    contextSelector: string
+  ): void {
     WebviewUtils.clearHighlights();
     if (selector == '') {
       return;
     }
     // Add class to the new highlighted elements
-    let elements = document.querySelectorAll(selector);
-    var className = highlightClass;
-    elements.forEach(function(element) {
-      element.classList.add(className);
-    });
+    let contextElements = document.querySelectorAll(contextSelector);
+    for (let context of contextElements) {
+      let elements = context.querySelectorAll(selector);
+      elements.forEach(function(element) {
+        element.classList.add(highlightClass);
+      });
+    }
   }
 
   static hoverElement(element: Element): void {
+    WebviewUtils.clearHighlights();
     element.classList.add(hoverClass);
   }
 
@@ -50,6 +82,9 @@ export class WebviewUtils {
    * @returns {Attribute[]} the attribute list
    */
   static getAttributes(element: Element): AttributeRecord[] {
+    if (element == null) {
+      return [];
+    }
     let attributes = [...element.attributes]
       .filter(attr => !['class', 'id', 'style'].includes(attr.name))
       .map(attr => ({

@@ -60,11 +60,12 @@ const FEATURE_WEIGHTS = {
  *
  * @exports resolveCSSSelector
  * @see {@link getScore}
- * @param {(DOMElement)} element
+ * @param {Element} element
  * @param {boolean} multiple Whether to allow multiple elements being matched
+ * @param {string} contextSelector The context selector
  * @returns {List<string>} Selectors for the given element ordered by score
  */
-function resolveCSSSelector(element, multiple) {
+function resolveCSSSelector(element, multiple, contextSelector) {
   // Generate candidates
   let candidates = generateCandidates(element, MAX_DEPTH);
 
@@ -77,7 +78,7 @@ function resolveCSSSelector(element, multiple) {
     // Allow only candidates that return a single element
     // and matching the target element
     filteredCandidates = candidates.filter(candidate =>
-      isUnique(candidate, element)
+      isUnique(candidate, element, contextSelector)
     );
   } else {
     // Allow all candidates that match the target element
@@ -99,19 +100,26 @@ function resolveCSSSelector(element, multiple) {
 }
 
 /**
- * @returns {boolean} Whether the selector matches only the provided element.
+ * @returns {boolean} Whether the selector is unique in each context node.
  *
  * @param {string} selector
  * @param {(DOMElement)} element
  */
-function isUnique(selector, element) {
+function isUnique(selector, element, contextSelector) {
   if (!selector) {
     return false;
   }
-  return (
-    document.querySelectorAll(selector).length === 1 &&
-    element.matches(selector)
-  );
+  let contextElements = document.querySelectorAll(contextSelector);
+  let foundInOneContext = false;
+  for (let context of contextElements) {
+    if (context.querySelectorAll(selector).length > 1) {
+      return false;
+    }
+    if (context.querySelectorAll(selector).length == 1) {
+      foundInOneContext = true;
+    }
+  }
+  return foundInOneContext;
 }
 
 /**

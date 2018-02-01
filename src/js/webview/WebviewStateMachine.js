@@ -22,11 +22,20 @@ export type WebviewStateChangeListener = (
 ) => void;
 
 let state: WebviewState = WebviewStates.DEFAULT;
+let contextSelector: string = 'html';
 let listeners: WebviewStateChangeListener[] = [];
 
 export class WebviewStateMachine {
   static onChange(listener: WebviewStateChangeListener) {
     listeners.push(listener);
+  }
+
+  static set contextSelector(newContextSelector: string) {
+    contextSelector = newContextSelector;
+  }
+
+  static get contextSelector(): string {
+    return contextSelector;
   }
 
   static set state(newState: WebviewState) {
