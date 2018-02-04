@@ -5,6 +5,7 @@ include('vendor/autoload.php');
 use Facebook\InstantArticles\Transformer\Transformer;
 use Facebook\InstantArticles\Elements\InstantArticle;
 use Facebook\InstantArticles\Elements\Header;
+use Facebook\InstantArticles\AMP\AMPArticle;
 
 function exception_error_handler($errno, $errstr, $errfile, $errline ) {
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
@@ -38,7 +39,20 @@ try {
   //----------
   $instant_article = InstantArticle::create();
   $transformer->transformString($instant_article, $content);
+
   $warnings = $transformer->getWarnings();
+
+  $properties = array(
+    'styles-folder' => __DIR__.'/' // Where the styles are stored
+  );
+
+  $amp_article = AMPArticle::create($instant_article, $properties)->render();
+
+  if ($amp_article) {
+    echo $amp_article;
+    die();
+  }
+
 }
 catch (Exception $e) {
   $error = $e->getMessage();
