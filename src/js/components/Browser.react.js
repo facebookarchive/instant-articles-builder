@@ -150,8 +150,11 @@ class Browser extends React.Component<Props, State> {
   };
 
   highlightElements = () => {
+<<<<<<< HEAD
     // Uncomment to debug the injected script
     // this.webview.openDevTools();
+=======
+>>>>>>> Show AMP-rendered preview instead of source
     if (this.props.editor.focusedField != null) {
       let field = this.props.editor.focusedField;
       let findMultipleElements = !field.definition.unique;
@@ -212,7 +215,7 @@ class Browser extends React.Component<Props, State> {
   renderPreview = debounce(() => {
     if (this.preview != null) {
       let newURL =
-        'view-source:http://127.0.0.1:8105/index.php?url=' +
+        'http://127.0.0.1:8105/index.php?url=' +
         encodeURIComponent(this.state.displayURL) +
         '&rules=' +
         encodeURIComponent(
