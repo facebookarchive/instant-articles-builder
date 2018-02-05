@@ -10,17 +10,16 @@
 
 const React = require('react');
 const fs = require('fs');
-const debounce = require('../utils/debounce.js');
 const homeURL = `file:///${__dirname}/../../html/home.html`;
 
 import { Map } from 'immutable';
-import RuleExporter from '../utils/RuleExporter';
 import EditorActions from '../data/EditorActions';
 import RuleActions from '../data/RuleActions';
 import type { Props } from '../containers/AppContainer.react';
 import type { BrowserMessage } from '../models/BrowserMessage';
 import { BrowserMessageTypes } from '../models/BrowserMessage';
 import { RuleUtils } from '../models/Rule';
+import Preview from './Preview.react';
 
 type State = {
   url: string,
@@ -77,6 +76,7 @@ class Browser extends React.Component<Props, State> {
   };
 
   syncURL = (e: any) => {
+    this.setState({ url: e.url });
     this.setState({ displayURL: e.url });
   };
 
@@ -97,13 +97,6 @@ class Browser extends React.Component<Props, State> {
           ? prevState.progress + (1 - prevState.progress) / 10
           : 0,
     }));
-  };
-
-  previewLoading = () => {
-    this.preview.classList.add('loading');
-  };
-  previewFinishedLoading = () => {
-    this.preview.classList.remove('loading');
   };
 
   urlTyped = (e: any) => {
@@ -212,33 +205,12 @@ class Browser extends React.Component<Props, State> {
     }
   };
 
-  renderPreview = debounce(() => {
-    if (this.preview != null) {
-      let newURL =
-        'http://127.0.0.1:8105/index.php?url=' +
-        encodeURIComponent(this.state.displayURL) +
-        '&rules=' +
-        encodeURIComponent(
-          JSON.stringify(RuleExporter.export(this.props.rules))
-        ) +
-        '&timestamp=' +
-        performance.now();
-      if (this.preview && this.preview.src != newURL) {
-        this.preview.src = newURL;
-      }
-    }
-  }, 1000);
-
   componentDidUpdate(prevProps: Props, prevState: State) {
     if (
       prevProps.editor.focusedField != this.props.editor.focusedField ||
       prevProps.editor.finding != this.props.editor.finding
     ) {
       this.highlightElements();
-    }
-
-    if (!this.props.rules.equals(prevProps.rules)) {
-      this.renderPreview();
     }
   }
 
@@ -257,7 +229,7 @@ class Browser extends React.Component<Props, State> {
       this.webview.addEventListener('did-start-loading', this.startProgress);
       this.webview.addEventListener('did-stop-loading', this.resetProgress);
       this.webview.addEventListener('did-navigate', this.startProgress);
-      this.webview.addEventListener('did-navigate', this.renderPreview);
+      //this.webview.addEventListener('did-navigate', this.renderPreview);
       this.webview.addEventListener('did-navigate', this.syncURL);
       this.webview.addEventListener(
         'did-get-response-details',
@@ -271,11 +243,6 @@ class Browser extends React.Component<Props, State> {
         'ipc-message',
         event => this.receiveMessage(event.args[0]),
         false
-      );
-      this.preview.addEventListener('did-start-loading', this.previewLoading);
-      this.preview.addEventListener(
-        'did-stop-loading',
-        this.previewFinishedLoading
       );
     }
   }
@@ -318,15 +285,10 @@ class Browser extends React.Component<Props, State> {
           <div className="tab" role="presentation" onClick={this.togglePreview}>
             <span>{this.state.showPreview ? '>' : '<'}</span>
           </div>
-          <webview
-            ref={preview => {
-              if (preview) {
-                (preview: any).nodeintegration = true;
-                this.preview = preview;
-              }
-            }}
-            className={this.state.showPreview ? '' : 'hidden'}
-            id="preview"
+          <Preview
+            {...this.props}
+            hidden={!this.state.showPreview}
+            url={this.state.url}
           />
         </div>
       </div>

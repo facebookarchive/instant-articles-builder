@@ -20,14 +20,26 @@ try {
   //----------------------
   $url = $_GET['url'];
   $rules = $_GET['rules'];
+  $preview = $_GET['preview'];
 
   if (!$url || !$rules) {
     die('Invalid parameters');
   }
 
+  if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
+    invalidIA($preview);
+  }
+
+  $context_options = stream_context_create(array(
+    "ssl"=>array(
+        "verify_peer"=>false,
+        "verify_peer_name"=>false,
+    ),
+  ));
+
   // Fetch the URL
   //--------------
-  $content = file_get_contents($url);
+  $content = file_get_contents($url, false, $context_options);
 
 
   // Load rules
@@ -42,94 +54,53 @@ try {
 
   $warnings = $transformer->getWarnings();
 
-  $properties = array(
-    'styles-folder' => __DIR__.'/' // Where the styles are stored
-  );
+  if ($preview == "true") {
+    $properties = array(
+      'styles-folder' => __DIR__.'/' // Where the styles are stored
+    );
 
-  $amp_article = AMPArticle::create($instant_article, $properties)->render();
+    if ($instant_article->isValid()) {
+      $amp_article = AMPArticle::create($instant_article, $properties)->render();
 
-  if ($amp_article) {
-    echo $amp_article;
-    die();
+      if ($amp_article) {
+        echo $amp_article;
+        die();
+      }
+    }
+    else {
+      invalidIA($preview == "true");
+    }
   }
-
+  else {
+    echo $instant_article->render(null, true);
+  }
 }
 catch (Exception $e) {
-  $error = $e->getMessage();
-  $stacktrace = $e->getTraceAsString();
+  echo $e->getMessage();
+  echo $stacktrace = $e->getTraceAsString();
+  die();
 }
-// Output
 
-
-
-
-
-// --------------
-// Template below
-// --------------
-?>
-<!--
-
-=================================
-Converted Instant Article Preview
-=================================
-
-# Transfomed URL: <?php if (isset($url)) { echo $url; } ?>
-
-
+function invalidIA($preview) {
+  ?>
+<?php if ($preview): ?>
+<p>
+  Open an article and fully configure the <em>Article Structure</em> rule to see the preview
+</p>
+<style>
+  body {
+    display: flex;
+    align-items: center;
+    font-family: sans-serif;
+    color: #ccc;
+  }
+  p {
+    max-width: 300px;
+    margin: auto;
+    text-align: center;
+  }
+</style>
+<?php endif; ?>
 <?php
-if ($error) {
-?>
-======================================
-Transformation failed due to an error:
-======================================
-
-# Error: <?php echo $error; ?>
-
-
-===========
-Stacktrace:
-===========
-
-<?php echo $stacktrace ?>
-
-
-<?php
+  die();
 }
-else {
-?>
-
--->
-
-<?php  echo $instant_article->render(null, true); ?>
-
-
-<!--
-
-<?php
-}
-?>
-==========
-Rules used
-==========
-
-<?php if (isset($rules)) { echo json_encode(json_decode($rules), JSON_PRETTY_PRINT); } ?>
-
-
-<?php
-if (count($warnings) > 0) {
-?>
-========
-Warnings
-========
-
-<?php foreach ($warnings as $warning) {
- echo "- $warning\n";
-}
-?>
-
-<?php
-}
-?>
-
--->
