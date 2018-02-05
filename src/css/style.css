@@ -527,6 +527,15 @@ input:focus {
 button {
   cursor: pointer;
 }
+.grow {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0 !important;
+}
+.grow.active {
+  display: flex !important;
+}
 .webviews {
   display: flex;
   flex-direction: row;
@@ -558,17 +567,19 @@ button {
   font-weight: lighter;
   color: #999;
 }
-.webviews > #preview {
+.preview {
+  display: flex;
   flex-grow: 1;
+  flex-direction: column;
   border: 1px solid #ccc;
   border-left: none;
+  padding: 10px;
 }
-
-.webviews > #preview.hidden {
-  display: none;
+.preview webview {
+  flex-grow: 1;
+  width: 100%;
 }
-
-.webviews > #preview.loading {
+.preview.loading {
   opacity: 0.1;
 }
 
