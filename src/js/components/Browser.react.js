@@ -143,11 +143,6 @@ class Browser extends React.Component<Props, State> {
   };
 
   highlightElements = () => {
-<<<<<<< HEAD
-    // Uncomment to debug the injected script
-    // this.webview.openDevTools();
-=======
->>>>>>> Show AMP-rendered preview instead of source
     if (this.props.editor.focusedField != null) {
       let field = this.props.editor.focusedField;
       let findMultipleElements = !field.definition.unique;
