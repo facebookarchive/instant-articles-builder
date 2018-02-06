@@ -13,7 +13,7 @@ import type { RecordOf, RecordFactory } from 'immutable';
 import type { RulePropertyType } from './RulePropertyTypes';
 import RulePropertyTypes from './RulePropertyTypes';
 
-type AttributeRecord = {
+export type AttributeRecord = {
   name: string,
   value: string,
   type: RulePropertyType

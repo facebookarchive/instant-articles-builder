@@ -168,7 +168,12 @@ class RuleExporter {
       return RulePropertyFactory({
         definition: rulePropertyDefinition,
         selector: rulePropertyJSON.selector,
-        attribute: rulePropertyJSON.attribute,
+        attribute:
+          rulePropertyJSON.attribute != null
+            ? rulePropertyJSON.attribute
+            : rulePropertyJSON.type === RulePropertyTypes.STRING
+              ? 'textContent'
+              : 'innerContent',
         format: rulePropertyJSON.dateTimeFormat,
         type: rulePropertyJSON.type,
       });

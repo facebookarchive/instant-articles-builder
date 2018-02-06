@@ -13,13 +13,14 @@ const fs = require('fs');
 const debounce = require('../utils/debounce.js');
 const homeURL = `file:///${__dirname}/../../html/home.html`;
 
+import { Map } from 'immutable';
 import RuleExporter from '../utils/RuleExporter';
 import EditorActions from '../data/EditorActions';
 import RuleActions from '../data/RuleActions';
-import type { Attribute } from '../models/Attribute';
-import { Map } from 'immutable';
-import { AttributeFactory } from '../models/Attribute';
 import type { Props } from '../containers/AppContainer.react';
+import type { BrowserMessage } from '../models/BrowserMessage';
+import { BrowserMessageTypes } from '../models/BrowserMessage';
+import { RuleUtils } from '../models/Rule';
 
 type State = {
   url: string,
@@ -42,24 +43,23 @@ class Browser extends React.Component<Props, State> {
     };
   }
 
-  receiveMessage = (event: any) => {
-    if (event.message == 'attributes') {
-      // Attributes retrieved
-      const elementAttributes: Map<string, Attribute> = Map(
-        event.value.attributes.map(attribute => [
-          attribute.name,
-          AttributeFactory(attribute),
-        ])
+  receiveMessage = (message: BrowserMessage) => {
+    if (message.type === BrowserMessageTypes.ATTRIBUTES_RETRIEVED) {
+      const attributesMap = Map(
+        message.attributes.reduce((map, attr) => {
+          map[attr.name] = attr;
+          return map;
+        }, {})
       );
-      const elementCount = event.value.count;
-      EditorActions.found(elementAttributes, elementCount);
-    } else if (event.message == 'DOM') {
-      // Selector retrieved
-      const selector = event.value.resolvedCssSelector;
+      EditorActions.found(attributesMap, message.count);
+    }
+    if (message.type === BrowserMessageTypes.ELEMENT_SELECTED) {
       EditorActions.stopFinding();
       if (this.props.editor.focusedField != null) {
         let field = this.props.editor.focusedField;
-        RuleActions.editField(field.set('selector', selector));
+        RuleActions.editField(
+          field.set('selector', message.selectors[0] || '')
+        );
       }
     }
   };
@@ -153,25 +153,58 @@ class Browser extends React.Component<Props, State> {
     // Uncomment to debug the injected script
     // this.webview.openDevTools();
     if (this.props.editor.focusedField != null) {
-      let findMultipleElements = !this.props.editor.focusedField.definition
-        .unique;
-      let selector = this.props.editor.focusedField.selector;
+      let field = this.props.editor.focusedField;
+      let findMultipleElements = !field.definition.unique;
+      let selector = field.selector;
 
-      if (!this.props.editor.finding) {
+      // Calculate context for selecting elements
+      let context = 'html';
+      if (field.fieldType === 'RuleProperty' && field.rule != null) {
+        let ruleGuid = field.rule.guid;
+        for (let rule of this.props.rules.valueSeq()) {
+          if (rule.guid === ruleGuid) {
+            context = rule.selector;
+          }
+        }
+      }
+      if (field.fieldType === 'Rule') {
+        for (let rule of this.props.rules.valueSeq()) {
+          if (
+            rule.definition.name === 'GlobalRule' &&
+            RuleUtils.isValid(rule)
+          ) {
+            const selector = rule.properties.getIn([
+              'article.body',
+              'selector',
+            ]);
+            if (selector != null && selector != '') {
+              context = selector;
+            }
+          }
+        }
+      }
+
+      if (this.props.editor.finding) {
         this.webview.send('message', {
-          method: 'highlightElements',
-          selector: selector,
+          type: BrowserMessageTypes.SELECT_ELEMENT,
+          selector: context,
           multiple: findMultipleElements,
         });
       } else {
         this.webview.send('message', {
-          method: 'selectElement',
-          multiple: findMultipleElements,
+          type: BrowserMessageTypes.HIGHLIGHT_ELEMENT,
+          selector: selector,
+          contextSelector: context,
+        });
+        this.webview.send('message', {
+          type: BrowserMessageTypes.FETCH_ATTRIBUTES,
+          selector: selector,
+          contextSelector: context,
         });
       }
     } else {
       this.webview.send('message', {
-        method: 'clear',
+        type: BrowserMessageTypes.CLEAR_HIGHLIGHTS,
       });
     }
   };
