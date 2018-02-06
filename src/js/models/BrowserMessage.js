@@ -70,7 +70,7 @@ export type HighlightElementMessage = {
 };
 
 /**
- * HighlightElementMessage
+ * ClearHighlightsMessage
  */
 export type ClearHighlightsMessage = {
   type: 'clear_highlights'

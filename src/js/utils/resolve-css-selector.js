@@ -112,10 +112,11 @@ function isUnique(selector, element, contextSelector) {
   let contextElements = document.querySelectorAll(contextSelector);
   let foundInOneContext = false;
   for (let context of contextElements) {
-    if (context.querySelectorAll(selector).length > 1) {
+    let elements = context.querySelectorAll(selector);
+    if (elements.length > 1) {
       return false;
     }
-    if (context.querySelectorAll(selector).length == 1) {
+    if (elements.length == 1) {
       foundInOneContext = true;
     }
   }
