@@ -14,6 +14,7 @@ const RuleList = require('./RuleList.react.js');
 const EditorActions = require('../data/EditorActions');
 
 import type { Props } from '../containers/AppContainer.react';
+import { NUX } from './NUX.react';
 
 class App extends React.Component<Props> {
   constructor(props: Props) {
@@ -54,7 +55,8 @@ class App extends React.Component<Props> {
     return (
       <div id="wrapper">
         <header>
-          <img src="../img/logo-48.png" />
+          <NUX {...this.props} />
+          <img src="../img/logo-nobg.png" width="48" height="48" />
           <h1>
             <span className="fb">Facebook</span> Instant Articles |{' '}
             <span className="app-name">Rules Editor</span>
