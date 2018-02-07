@@ -157,7 +157,7 @@ h1 {
 
 .tools {
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   flex-shrink: 0;
 }
 .tools .button {
@@ -166,10 +166,22 @@ h1 {
   border-radius: 0;
   flex-grow: 1;
   cursor: pointer;
-  border: 1px solid transparent;
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  color: rgba(0, 0, 0, 0.87);
+  background: rgb(248, 248, 248);
+  margin: 0;
+  border-right-width: 0;
+}
+.tools .button:first-child {
+  border-radius: 5px 0 0 5px;
+}
+.tools .button:last-child {
+  border-radius: 0px 5px 5px 0px;
+  border-right-width: 1px;
 }
 .tools .button:hover {
-  border-color: #ccc;
+  background-color: #3b5998;
+  color: #fff;
 }
 .tools .button:active,
 .tools .button:focus {
