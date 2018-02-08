@@ -13,6 +13,7 @@ import { Button, Icon } from 'semantic-ui-react';
 import type { Props } from '../containers/AppContainer.react';
 import RuleExporter from '../utils/RuleExporter';
 import App from './App.react';
+import { shell } from 'electron';
 
 const baseURL =
   'https://github.com/facebook/facebook-instant-articles-rules-editor' +
@@ -56,6 +57,15 @@ ${JSON.stringify(RuleExporter.export(this.props.rules), null, 2)}
     return `${baseURL}&body=${body}`;
   };
 
+  openBugReport = () => {
+    let url = this.getBugReportURL();
+    if (!shell.openExternal(url)) {
+      // If the window is not open use the in-app browser.
+      // This can happen on Windows if the url is too long.
+      window.open(url);
+    }
+  };
+
   render() {
     return (
       <Button
@@ -63,8 +73,7 @@ ${JSON.stringify(RuleExporter.export(this.props.rules), null, 2)}
         className="report-bug"
         color="facebook"
         as="a"
-        target="_blank"
-        href={this.getBugReportURL()}
+        onClick={this.openBugReport}
       >
         <Icon name="bug" /> Report a Bug
       </Button>

@@ -19,6 +19,7 @@ import { helpURL } from './NUX.react';
 import Fs from 'fs';
 import RuleExporter from '../utils/RuleExporter';
 import RuleCategories from '../models/RuleCategories';
+import { shell } from 'electron';
 
 const importExportEncoding = 'utf8';
 
@@ -411,7 +412,11 @@ export class NUXTour extends React.Component<Props> {
             <div>
               <p>You now know the basic features of the Rules Editor!</p>
               <p>
-                <a target="_blank" href={helpURL}>
+                <a
+                  tabIndex="0"
+                  role="button"
+                  onClick={() => shell.openExternal(helpURL)}
+                >
                   <Icon name="info circle" /> Read the full documentation to
                   learn more.
                 </a>

@@ -664,3 +664,6 @@ button {
 .cancel-tour:hover {
   color: #db2828;
 }
+a:hover {
+  cursor: pointer !important;
+}

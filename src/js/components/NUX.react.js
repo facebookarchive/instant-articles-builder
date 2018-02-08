@@ -8,6 +8,7 @@
  * @flow
  */
 
+import { shell } from 'electron';
 import React from 'react';
 import { Button, Checkbox, Icon, Modal, Image } from 'semantic-ui-react';
 import type { Props } from '../containers/AppContainer.react';
@@ -96,7 +97,11 @@ export class NUX extends React.Component<Props, State> {
             </code>
           </p>
           <p>
-            <a target="_blank" href={helpURL}>
+            <a
+              tabIndex="0"
+              role="button"
+              onClick={() => shell.openExternal(helpURL)}
+            >
               <Icon name="info circle" /> Read the full documentation to learn
               more.
             </a>
