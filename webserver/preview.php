@@ -10,24 +10,21 @@ use Facebook\InstantArticles\AMP\AMPArticle;
 function exception_error_handler($errno, $errstr, $errfile, $errline ) {
     throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
 }
-set_error_handler("exception_error_handler");
 
-$error = null;
-$warnings = [];
+set_error_handler("exception_error_handler");
 
 try {
   // Read the URL parameter
   //----------------------
   $url = $_GET['url'];
   $rules = $_GET['rules'];
-  $preview = $_GET['preview'];
 
   if (!$url || !$rules) {
     die('Invalid parameters');
   }
 
   if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
-    invalidIA($preview);
+    invalidIA();
   }
 
   $context_options = stream_context_create(array(
@@ -54,25 +51,20 @@ try {
 
   $warnings = $transformer->getWarnings();
 
-  if ($preview == "true") {
-    $properties = array(
-      'styles-folder' => __DIR__.'/' // Where the styles are stored
-    );
+  $properties = array(
+    'styles-folder' => __DIR__.'/' // Where the styles are stored
+  );
 
-    if ($instant_article->isValid()) {
-      $amp_article = AMPArticle::create($instant_article, $properties)->render();
+  if ($instant_article->isValid()) {
+    $amp_article = AMPArticle::create($instant_article, $properties)->render();
 
-      if ($amp_article) {
-        echo $amp_article;
-        die();
-      }
-    }
-    else {
-      invalidIA($preview == "true");
+    if ($amp_article) {
+      echo $amp_article;
+      die();
     }
   }
   else {
-    echo $instant_article->render(null, true);
+    invalidIA($preview == "true");
   }
 }
 catch (Exception $e) {
@@ -83,24 +75,23 @@ catch (Exception $e) {
 
 function invalidIA($preview) {
   ?>
-<?php if ($preview): ?>
-<p>
-  Open an article and fully configure the <em>Article Structure</em> rule to see the preview
-</p>
-<style>
-  body {
-    display: flex;
-    align-items: center;
-    font-family: sans-serif;
-    color: #ccc;
-  }
-  p {
-    max-width: 300px;
-    margin: auto;
-    text-align: center;
-  }
-</style>
-<?php endif; ?>
-<?php
+  <p>
+    Open an article and fully configure the <em>Article Structure</em>
+    rule to see the preview of your Instant Article here.
+  </p>
+  <style>
+    body {
+      display: flex;
+      align-items: center;
+      font-family: sans-serif;
+      color: #ccc;
+    }
+    p {
+      max-width: 300px;
+      margin: auto;
+      text-align: center;
+    }
+  </style>
+  <?php
   die();
 }
