@@ -57,7 +57,7 @@ class SelectorPicker extends React.Component<Props, State> {
     this.configureLine();
   }
 
-  componentWillUnmount() {
+  componentDidUnmount() {
     this.disableMouseMoveTracking();
   }
 

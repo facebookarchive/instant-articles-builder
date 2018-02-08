@@ -25,7 +25,7 @@ class App extends React.Component<Props> {
     document.addEventListener('keyup', this.cancelOnEscape);
     document.addEventListener('click', this.blurOnClickOut);
   }
-  componentWillUnmount() {
+  componentDidUnmount() {
     document.removeEventListener('keyup', this.cancelOnEscape);
     document.removeEventListener('click', this.blurOnClickOut);
   }
