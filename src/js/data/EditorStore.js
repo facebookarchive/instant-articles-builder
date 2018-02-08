@@ -27,7 +27,8 @@ type Action = {
   elementAttributes?: Map<string, Attribute>,
   elementCount: ?number,
   selector: ?string,
-  categories: ?Set<RuleCategory>
+  categories: ?Set<RuleCategory>,
+  url: ?string
 };
 
 class EditorStore extends ReduceStore<Editor> {
@@ -74,6 +75,18 @@ class EditorStore extends ReduceStore<Editor> {
       case EditorActionTypes.FILTER_RULES:
         if (action.categories != null) {
           return state.set('categories', action.categories);
+        }
+        return state;
+
+      case EditorActionTypes.START_TOUR:
+        return state.set('takeTour', true);
+
+      case EditorActionTypes.STOP_TOUR:
+        return state.set('takeTour', false);
+
+      case EditorActionTypes.LOAD_URL:
+        if (action.url) {
+          return state.set('url', action.url);
         }
         return state;
 

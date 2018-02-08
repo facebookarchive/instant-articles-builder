@@ -10,7 +10,6 @@
 
 const React = require('react');
 const fs = require('fs');
-const homeURL = `file:///${__dirname}/../../html/home.html`;
 
 import { Map } from 'immutable';
 import EditorActions from '../data/EditorActions';
@@ -20,9 +19,9 @@ import type { BrowserMessage } from '../models/BrowserMessage';
 import { BrowserMessageTypes } from '../models/BrowserMessage';
 import { RuleUtils } from '../models/Rule';
 import Preview from './Preview.react';
+import { homeURL } from '../models/Editor';
 
 type State = {
-  url: string,
   displayURL: string,
   showPreview: boolean,
   progress: number
@@ -35,7 +34,6 @@ class Browser extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      url: homeURL,
       displayURL: '',
       showPreview: true,
       progress: 0,
@@ -75,8 +73,8 @@ class Browser extends React.Component<Props, State> {
     this.setState(prevState => ({ showPreview: !prevState.showPreview }));
   };
 
-  syncURL = (e: any) => {
-    this.setState({ url: e.url });
+  syncURL = (e: { url: string }) => {
+    EditorActions.loadURL(e.url);
     this.setState({ displayURL: e.url });
   };
 
@@ -110,7 +108,7 @@ class Browser extends React.Component<Props, State> {
     } else if (!/^https?:\/\//i.test(url)) {
       url = 'http://' + url;
     }
-    this.setState({ url: url });
+    EditorActions.loadURL(url);
     this.webview.focus();
     e.preventDefault();
     return false;
@@ -274,17 +272,13 @@ class Browser extends React.Component<Props, State> {
               }
             }}
             id="webview"
-            src={this.state.url}
+            src={this.props.editor.url}
             preload="../js/injected.js"
           />
           <div className="tab" role="presentation" onClick={this.togglePreview}>
             <span>{this.state.showPreview ? '>' : '<'}</span>
           </div>
-          <Preview
-            {...this.props}
-            hidden={!this.state.showPreview}
-            url={this.state.url}
-          />
+          <Preview {...this.props} hidden={!this.state.showPreview} />
         </div>
       </div>
     );

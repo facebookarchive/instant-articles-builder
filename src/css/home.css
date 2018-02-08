@@ -43,3 +43,6 @@ li span {
   font-size: 0.5em;
   text-align: center;
 }
+img.logo {
+  opacity: 0.3;
+}

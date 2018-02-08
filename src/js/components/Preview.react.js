@@ -15,7 +15,8 @@ import RuleExporter from '../utils/RuleExporter';
 import type { BaseProps } from '../containers/AppContainer.react';
 import { Loader, Dimmer, Form, Tab } from 'semantic-ui-react';
 
-type Props = BaseProps & { url: string, hidden: boolean };
+type Props = BaseProps & { hidden: boolean };
+
 type State = {
   previewLoading: boolean,
   sourceLoading: boolean
@@ -50,7 +51,7 @@ class Preview extends React.Component<Props, State> {
   sourceSrc = () => {
     return (
       'view-source:http://127.0.0.1:8105/source.php?url=' +
-      encodeURIComponent(this.props.url) +
+      encodeURIComponent(this.props.editor.url) +
       '&rules=' +
       encodeURIComponent(
         JSON.stringify(RuleExporter.export(this.props.rules))
@@ -61,7 +62,7 @@ class Preview extends React.Component<Props, State> {
   previewSrc = () => {
     return (
       'http://127.0.0.1:8105/preview.php?url=' +
-      encodeURIComponent(this.props.url) +
+      encodeURIComponent(this.props.editor.url) +
       '&rules=' +
       encodeURIComponent(
         JSON.stringify(RuleExporter.export(this.props.rules))

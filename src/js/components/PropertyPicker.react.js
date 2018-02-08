@@ -101,6 +101,9 @@ class PropertyPicker extends React.Component<Props> {
         </div>
       ) : null;
 
+    const propertyClass =
+      'property-' + this.props.property.definition.name.replace('.', '-');
+
     return (
       <div
         className={classNames({
@@ -116,6 +119,7 @@ class PropertyPicker extends React.Component<Props> {
           multiple: !this.props.property.definition.unique,
           required: this.props.property.definition.required,
           valid: RulePropertyUtils.isValid(this.props.property),
+          [propertyClass]: true,
         })}
       >
         <label>
