@@ -19,9 +19,6 @@ import { NUXTour } from './NUXTour.react';
 import { BugReporter } from './BugReporter.react';
 
 class App extends React.Component<Props> {
-  // App cersion
-  static version: string = '0.1.0';
-
   constructor(props: Props) {
     super(props);
   }

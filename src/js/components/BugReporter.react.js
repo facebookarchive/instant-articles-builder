@@ -12,7 +12,7 @@ import React from 'react';
 import { Button, Icon } from 'semantic-ui-react';
 import type { Props } from '../containers/AppContainer.react';
 import RuleExporter from '../utils/RuleExporter';
-import App from './App.react';
+import { version } from '../version';
 import { shell } from 'electron';
 
 const baseURL =
@@ -40,7 +40,7 @@ export class BugReporter extends React.Component<Props> {
 *
 
 # Environment Info
-**VERSION**: \`${App.version}\`
+**VERSION**: \`${version}\`
 **URL**: \`${this.props.editor.url}\`
 **RULES**:
 \`\`\`json
