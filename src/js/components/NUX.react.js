@@ -53,7 +53,7 @@ export class NUX extends React.Component<Props, State> {
         onClose={this.handleClose}
         dimmer="blurring"
         size="small"
-        closeIcon
+        closeOnDimmerClick={false}
         className="nux-modal"
       >
         <Modal.Header className="nux-header">
@@ -104,6 +104,9 @@ export class NUX extends React.Component<Props, State> {
             className="nux-checkbox
           "
           />
+          <Button onClick={this.handleClose} icon>
+            <Icon name="close" /> Dismiss
+          </Button>
           <Button
             color="facebook"
             onClick={this.handleClose}
