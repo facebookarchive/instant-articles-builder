@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+const electron = require('electron');
 const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
@@ -21,7 +22,7 @@ let win;
 
 function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow({ width: 1280, height: 720 });
+  win = new BrowserWindow(electron.screen.getPrimaryDisplay().workAreaSize);
 
   const {
     default: installExtension,
