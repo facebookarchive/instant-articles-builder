@@ -643,3 +643,24 @@ button {
   position: absolute;
   right: 0px;
 }
+.joyride-tooltip {
+  padding: 0;
+}
+.joyride-tooltip__main {
+  margin: 0;
+  padding: 0;
+}
+.joyride-tooltip .ui.segments {
+  border: none;
+  box-shadow: none;
+}
+.cancel-tour {
+  display: block;
+  float: left;
+  cursor: pointer;
+  transition: color 0.3s;
+  line-height: 37px;
+}
+.cancel-tour:hover {
+  color: #db2828;
+}

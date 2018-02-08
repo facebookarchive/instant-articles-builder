@@ -88,7 +88,14 @@ class RuleList extends React.Component<Props> {
   };
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.rules.count() < this.props.rules.count()) {
+    if (
+      prevProps.rules.count() < this.props.rules.count() &&
+      this.props.rules
+        .filter(rule =>
+          this.props.editor.categories.has(rule.definition.category)
+        )
+        .count() > 1
+    ) {
       this.refs.scrollable.scrollTop = 99999;
     }
   }
@@ -97,30 +104,32 @@ class RuleList extends React.Component<Props> {
     return (
       <div className="rule-list">
         <FileTools {...this.props} />
-        <label>
-          <Icon name="filter" />Filter Rules:
-        </label>
-        <Dropdown
-          multiple
-          labeled
-          fluid
-          selection
-          closeOnChange={true}
-          options={Object.values(RuleCategories).map(
-            (category: RuleCategory) => ({
-              text: category,
-              value: category,
-              icon: getLabelIcon(category),
-            })
-          )}
-          renderLabel={item => ({
-            content: item.text,
-            icon: item.icon,
-          })}
-          text="Pick at least 1 category"
-          value={this.props.editor.categories.toArray()}
-          onChange={this.handleChangeFilters}
-        />
+        <div className="rule-filters">
+          <label>
+            <Icon name="filter" />Filter Rules:
+          </label>
+          <Dropdown
+            multiple
+            labeled
+            fluid
+            selection
+            closeOnChange={true}
+            options={Object.values(RuleCategories).map(
+              (category: RuleCategory) => ({
+                text: category,
+                value: category,
+                icon: getLabelIcon(category),
+              })
+            )}
+            renderLabel={item => ({
+              content: item.text,
+              icon: item.icon,
+            })}
+            text="Pick at least 1 category"
+            value={this.props.editor.categories.toArray()}
+            onChange={this.handleChangeFilters}
+          />
+        </div>
         <hr />
         <label>
           <Icon name="list" />Rules:

@@ -15,6 +15,7 @@ const EditorActions = require('../data/EditorActions');
 
 import type { Props } from '../containers/AppContainer.react';
 import { NUX } from './NUX.react';
+import { NUXTour } from './NUXTour.react';
 import { Button, Icon } from 'semantic-ui-react';
 
 const bugReportURL =
@@ -59,12 +60,13 @@ class App extends React.Component<Props> {
   render() {
     return (
       <div id="wrapper">
+        <NUXTour {...this.props} />
         <header>
           <div className="header-buttons">
             <NUX {...this.props} />
             <Button
               icon
-              className="nux-open"
+              className="report-bug"
               color="facebook"
               as="a"
               target="_blank"

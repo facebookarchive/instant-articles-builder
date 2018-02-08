@@ -12,10 +12,11 @@ import React from 'react';
 import { Button, Checkbox, Icon, Modal, Image } from 'semantic-ui-react';
 import type { Props } from '../containers/AppContainer.react';
 import settings from 'electron-settings';
+import EditorActions from '../data/EditorActions';
 
 type State = { modalOpen: boolean, skip: boolean };
 
-const helpURL =
+export const helpURL =
   'https://developers.facebook.com/docs/instant-articles/rules-editor';
 
 export class NUX extends React.Component<Props, State> {
@@ -35,6 +36,11 @@ export class NUX extends React.Component<Props, State> {
   handleClose = () => this.setState({ modalOpen: false });
 
   handleOpen = () => this.setState({ modalOpen: true });
+
+  handleTakeTour = () => {
+    this.setState({ modalOpen: false });
+    EditorActions.startTour();
+  };
 
   render() {
     return (
@@ -109,7 +115,7 @@ export class NUX extends React.Component<Props, State> {
           </Button>
           <Button
             color="facebook"
-            onClick={this.handleClose}
+            onClick={this.handleTakeTour}
             icon
             labelPosition="right"
           >
