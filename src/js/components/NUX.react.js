@@ -92,7 +92,7 @@ export class NUX extends React.Component<Props, State> {
           <p>
             <code>
               &lt;meta property="ia:rules_url"
-              value="path/to/your/rules-file.json"/&gt;
+              content="path/to/your/rules-file.json"/&gt;
             </code>
           </p>
           <p>
