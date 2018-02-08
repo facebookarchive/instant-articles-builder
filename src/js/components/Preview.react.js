@@ -8,13 +8,12 @@
  * @flow
  */
 
-const React = require('react');
-const debounce = require('../utils/debounce.js');
+import React from 'react';
 
 import classNames from 'classnames';
 import RuleExporter from '../utils/RuleExporter';
 import type { BaseProps } from '../containers/AppContainer.react';
-import { Loader, Dimmer, Form, Input, Tab } from 'semantic-ui-react';
+import { Loader, Dimmer, Form, Tab } from 'semantic-ui-react';
 
 type Props = BaseProps & { url: string, hidden: boolean };
 type State = {
@@ -83,7 +82,6 @@ class Preview extends React.Component<Props, State> {
           <Form.Field className="grow">
             <Tab
               className="grow"
-              // onTabChange={this.handleTabChange}
               panes={[
                 {
                   menuItem: 'Preview',
