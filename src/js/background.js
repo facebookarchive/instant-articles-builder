@@ -11,6 +11,8 @@ const path = require('path');
 const url = require('url');
 const php = require('gulp-connect-php');
 
+const phpServer = new php();
+
 require('electron-debug')({ showDevTools: false });
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -47,6 +49,8 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     win = null;
+
+    phpServer.closeServer();
   });
 }
 
@@ -76,7 +80,7 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 // php ruleZ
 
-php.server({
+phpServer.server({
   port: 8105,
   base: path.resolve(__dirname) + '/../../webserver',
 });
