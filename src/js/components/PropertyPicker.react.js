@@ -12,168 +12,125 @@ const React = require('react');
 const classNames = require('classnames');
 const DateTimeFormatPicker = require('./DateTimeFormatPicker.react.js');
 const SelectorPicker = require('./SelectorPicker.react.js');
+import type { RuleProperty } from '../models/RuleProperty';
+import RulePropertyTypes from '../models/RulePropertyTypes';
+import RuleActions from '../data/RuleActions';
+import { RulePropertyUtils } from '../models/RuleProperty';
 
-const DATE_TIME_TYPE = 'DateTime';
+import type { Props as BaseProps } from '../containers/AppContainer.react';
 
-import type { Attribute } from '../types/Attribute';
-import type { AttributeChangedArgs } from '../types/AttributeChangedArgs';
-import type { DateTimeFormatChangedArgs } from '../types/DateTimeFormatChangedArgs';
-import type { SelectorChangedArgs } from '../types/SelectorChangedArgs';
-import type { SelectorFindArgs } from '../types/SelectorFindArgs';
-
-type Props = {
-  active: boolean,
-  attributes: Array<Attribute>,
-  className?: string,
-  count?: ?number,
-  dateTimeFormat: string,
-  defaultAttribute: string,
-  finding: boolean,
-  label: string,
-  multiple: boolean,
-  name: string,
-  onAttributeChanged: AttributeChangedArgs => void,
-  onDateTimeFormatChanged: DateTimeFormatChangedArgs => void,
-  onFind: SelectorFindArgs => void,
-  onFocus: SelectorChangedArgs => void,
-  onSelectorChanged: SelectorChangedArgs => void,
-  placeholder: string,
-  selector: ?string,
-  selectedAttribute: Attribute
-};
+type Props = BaseProps & { property: RuleProperty };
 
 class PropertyPicker extends React.Component<Props> {
-  handleSelectedAttributeChanged = (event: Event) => {
+  handleAttributeChange = (event: Event) => {
     const selectElement = event.target;
     if (selectElement instanceof HTMLSelectElement) {
-      const selectedOptionElement =
-        selectElement.children[selectElement.selectedIndex];
-      this.props.onAttributeChanged({
-        propertyName: this.props.name,
-        propertySelector: this.props.selector,
-        attribute: {
-          name: selectElement.value,
-          value:
-            selectedOptionElement.getAttribute('data-attribute-value') || '',
-        },
-      });
-    }
-  };
-
-  handleDateTimeFormatChanged = (format: string) => {
-    if (this.props.onDateTimeFormatChanged) {
-      this.props.onDateTimeFormatChanged({
-        propertyName: this.props.name,
-        format: format,
-      });
-    }
-  };
-
-  componentWillReceiveProps(nextProps: Props) {
-    let defaultAttribute = this.props.defaultAttribute;
-    if (nextProps.attributes.length > 0 && this.props.attributes.length === 0) {
-      this.props.onAttributeChanged({
-        propertyName: this.props.name,
-        propertySelector: this.props.selector,
-        attribute:
-          this.props.defaultAttribute &&
-          nextProps.attributes.filter(a => a.name === defaultAttribute).length >
-            0
-            ? nextProps.attributes.filter(a => a.name === defaultAttribute)[0]
-            : nextProps.attributes[0],
-      });
-    }
-  }
-
-  render() {
-    let classes = classNames(this.props.className, {
-      'field-line': true,
-      active: !!this.props.active,
-      finding: !!this.props.finding,
-      'single-element-found': this.props.count === 1,
-      'multiple-elements-found': this.props.count && this.props.count > 1,
-      multiple: this.props.multiple,
-    });
-
-    let warning = null;
-
-    if (this.props.count && this.props.count > 1) {
-      warning = this.props.multiple ? (
-        <div className="notice">
-          The current selector matches {this.props.count} elements.
-        </div>
-      ) : (
-        <div className="warning">
-          Warning: the current selector matches {this.props.count} elements, but
-          only the first one will be used.
-        </div>
+      RuleActions.editField(
+        this.props.property
+          .set('attribute', selectElement.value)
+          .update('type', type => {
+            const attributes = this.props.editor.elementAttributes.get(
+              this.props.property.selector
+            );
+            if (attributes == null) {
+              return type;
+            }
+            const attribute = attributes.get(selectElement.value);
+            if (attribute == null) {
+              return type;
+            }
+            return attribute.type;
+          })
       );
     }
+  };
 
-    const dateTimeFormatPicker =
-      this.props.type === DATE_TIME_TYPE ? (
-        <DateTimeFormatPicker
-          name={this.props.name + '-format'}
-          expectedDateTime={
-            this.props.selectedAttribute
-              ? this.props.selectedAttribute.value
-              : null
-          }
-          format={this.props.dateTimeFormat}
-          onFormatChanged={this.handleDateTimeFormatChanged}
-        />
+  render() {
+    let property = this.props.property;
+    let attributes = null;
+
+    // Look for the attributes for the current selector on the global attribute store
+    if (property.selector) {
+      attributes = this.props.editor.elementAttributes.get(property.selector);
+    }
+
+    const dateTimeFormatPicker = property.definition.supportedTypes.includes(
+      RulePropertyTypes.DATETIME
+    ) ? (
+        <DateTimeFormatPicker {...this.props} />
       ) : null;
 
-    return (
-      <div className={classes}>
-        <label htmlFor={this.props.name}>
-          {this.props.label}
-          <span />
-        </label>
-        <label htmlFor={this.props.name} className="sub-label">
-          Selector
-        </label>
-        <SelectorPicker
-          name={this.props.name}
-          placeholder={this.props.placeholder}
-          selector={this.props.selector}
-          multiple={this.props.multiple}
-          finding={this.props.finding}
-          onSelectorChanged={this.props.onSelectorChanged}
-          onFocus={this.props.onFocus}
-          onFind={this.props.onFind}
-        />
-
-        {warning}
-
-        <div
-          className="attributes"
-          style={this.props.attributes.length == 0 ? { display: 'none' } : {}}
-        >
-          <label htmlFor={this.props.name} className="sub-label">
-            Attribute
-          </label>
-          <select onChange={this.handleSelectedAttributeChanged}>
-            {this.props.attributes &&
-              this.props.attributes.map(attribute => (
+    const attributePicker =
+      attributes != null || property.attribute != null ? (
+        <div className="attributes">
+          <label className="sub-label">Attribute</label>
+          <select
+            value={property.attribute || property.definition.defaultAttribute}
+            onChange={this.handleAttributeChange}
+          >
+            {property.attribute != null &&
+            (attributes == null || !attributes.has(property.attribute)) ? (
                 <option
-                  value={attribute.name}
-                  data-attribute-value={attribute.value}
-                  key={attribute.name}
-                  selected={
-                    (!!this.props.selectedAttribute &&
-                      attribute.name == this.props.selectedAttribute.name) ||
-                    attribute.name == this.props.defaultAttribute
-                      ? 'selected'
-                      : ''
-                  }
+                  value={property.attribute}
+                  data-attribute-value={property.attribute}
+                  key={property.attribute}
                 >
-                  {attribute.name}: "{attribute.value.trim()}"
+                  {property.attribute}
                 </option>
-              ))}
+              ) : null}
+            {attributes != null
+              ? attributes
+                .valueSeq()
+                .filter(attribute =>
+                  this.props.property.definition.supportedTypes.includes(
+                    attribute.type
+                  )
+                )
+                .map(attribute => (
+                  <option
+                    value={attribute.name}
+                    data-attribute-value={attribute.value}
+                    key={attribute.name}
+                  >
+                    {attribute.name}: "{attribute.value.trim()}"
+                  </option>
+                ))
+              : null}
           </select>
           {dateTimeFormatPicker}
         </div>
+      ) : null;
+
+    return (
+      <div
+        className={classNames({
+          'field-line': true,
+          'single-element-found':
+            this.props.editor.elementCounts.get(this.props.property.selector) ==
+            1,
+          'multiple-elements-found':
+            (this.props.editor.elementCounts.get(
+              this.props.property.selector
+            ) || 0) > 1,
+          active: this.props.editor.focusedField == this.props.property,
+          multiple: !this.props.property.definition.unique,
+          required: this.props.property.definition.required,
+          valid: RulePropertyUtils.isValid(this.props.property),
+        })}
+      >
+        <label>
+          {RulePropertyUtils.isValid(this.props.property) ? (
+            <span>✔</span>
+          ) : this.props.property.definition.required ? (
+            <span>✘</span>
+          ) : (
+            <span>•</span>
+          )}{' '}
+          {this.props.property.definition.displayName}
+        </label>
+        <label className="sub-label selector-label">Selector</label>
+        <SelectorPicker {...this.props} field={this.props.property} />
+        {attributePicker}
       </div>
     );
   }

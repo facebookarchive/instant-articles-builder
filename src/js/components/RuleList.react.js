@@ -10,402 +10,86 @@
 
 const React = require('react');
 const RulePicker = require('./RulePicker.react.js');
-
-const FindSelectorTypes = require('../types/FindSelectorTypes.js');
-const NameUtils = require('../utils/name-utils.js');
-const RuleUtils = require('../utils/rule-utils.js');
-
-const { dialog: Dialog } = require('electron').remote;
+const RuleActions = require('../data/RuleActions');
+const { remote: { dialog: Dialog } } = require('electron');
 const Fs = require('fs');
 
-import type { AvailableRule } from '../types/AvailableRule';
-import type { Attribute } from '../types/Attribute';
-import type { InputRule } from '../types/InputRule';
-import type { PropertySettings } from '../types/PropertySettings';
-import type { RemoveRuleArgs } from '../types/RemoveRuleArgs';
-import type { RuleAttributeChangedArgs } from '../types/RuleAttributeChangedArgs';
-import type { RuleChangedArgs } from '../types/RuleChangedArgs';
-import type { RuleDateTimeFormatChangedArgs } from '../types/RuleDateTimeFormatChangedArgs';
-import type { RuleSelectorChangedArgs } from '../types/RuleSelectorChangedArgs';
-import type { RuleSelectorFindArgs } from '../types/RuleSelectorFindArgs';
+import { Set } from 'immutable';
+import RuleCategories from '../models/RuleCategories';
+import { Dropdown, Icon } from 'semantic-ui-react';
+import { RuleFactory } from '../models/Rule';
+import RuleExporter from '../utils/RuleExporter';
+import type { Props } from '../containers/AppContainer.react';
+import { SortableContainer, SortableElement } from 'react-sortable-hoc';
+import EditorActions from '../data/EditorActions';
+import type { RuleCategory } from '../models/RuleCategories';
 
-type Props = {
-  findAttributeName: ?string,
-  onFind: (name: string, multiple: boolean) => void,
-  onSelectorChanged: (selector: ?string, multiple: ?boolean) => void,
-  onRulesJSONChanged: (rulesJSON: string) => void,
-  resolvedCssSelector: ?string,
-  rules: Array<InputRule>,
-  selectedElementAttributes: Array<Attribute>,
-  selectedElementCount: ?number
+function getLabelIcon(category: RuleCategory): string {
+  switch (category) {
+    case RuleCategories.ADVANCED:
+      return 'settings';
+    case RuleCategories.BASIC:
+      return 'check circle';
+    case RuleCategories.TEXT:
+      return 'font';
+    case RuleCategories.MEDIA:
+      return 'video';
+    case RuleCategories.WIDGETS:
+      return 'browser';
+    default:
+      return '';
+  }
+}
+
+const dialogDefaultPath = 'rules.json';
+const dialogFilter = {
+  name: 'JSON',
+  extensions: ['json'],
 };
+const importExportEncoding = 'utf8';
 
-type State = {
-  activeFindType?: number,
-  activePropertyName?: string,
-  activeRuleKey?: string,
-  allAvailableRules: Array<AvailableRule>,
-  maxRuleKey: number,
-  rulesSettings: Map<string, RuleSettingsType>
-};
+const SortableItem = SortableElement((props: any) => <RulePicker {...props} />);
 
-type RuleSettingsType = {
-  class: string,
-  displayName?: string,
-  properties: Map<string, PropertySettings>,
-  selector: ?string
-};
+const SortableList = SortableContainer((props: any) => {
+  return (
+    <ul>
+      {props.items.map((rule, index) => (
+        <SortableItem
+          {...props}
+          key={rule.guid}
+          index={index}
+          rule={rule}
+          value={rule}
+        />
+      ))}
+    </ul>
+  );
+});
 
-type OutputRuleType = {
-  class: string,
-  selector: ?string,
-  properties: Object
-};
-
-type OutputPropertyType = {
-  attribute: string,
-  dateTimeFormat?: string,
-  selector: string
-};
-
-class RuleList extends React.Component<Props, State> {
+class RuleList extends React.Component<Props> {
   constructor(props: Props) {
     super(props);
 
-    const visibleRulesSettings: Map<string, RuleSettingsType> = new Map();
-    let allAvailableRules = [];
-
-    if (props.rules) {
-      allAvailableRules = props.rules
-        .map((inputRule, ruleIndex) => {
-          if (inputRule.showByDefault) {
-            const currentRuleSettings = this.getRuleSettingsFromInputRule(
-              inputRule
-            );
-            visibleRulesSettings.set(ruleIndex.toString(), currentRuleSettings);
-          }
-          return {
-            displayName: NameUtils.getInputRuleDisplayName(inputRule),
-            index: ruleIndex,
-          };
-        })
-        .sort(
-          (a, b) =>
-            a.displayName > b.displayName
-              ? 1
-              : a.displayName < b.displayName ? -1 : 0
-        );
-    }
-
-    this.state = {
-      rulesSettings: visibleRulesSettings,
-      maxRuleKey: props.rules.length - 1,
-      allAvailableRules: allAvailableRules,
-    };
+    // Load basic rules
+    this.handleNew();
   }
 
-  getRuleSettings(ruleKey: string): ?RuleSettingsType {
-    return this.state.rulesSettings.get(ruleKey);
-  }
-
-  getActiveRuleSettings(): ?RuleSettingsType {
-    return this.state.activeRuleKey
-      ? this.getRuleSettings(this.state.activeRuleKey)
-      : null;
-  }
-
-  getActivePropertySettings(): ?PropertySettings {
-    return this.state.activeRuleKey && this.state.activePropertyName
-      ? this.getPropertySettings(
-        this.state.activeRuleKey,
-        this.state.activePropertyName
-      )
-      : null;
-  }
-
-  getPropertySettings(
-    ruleKey: string,
-    propertyName: string
-  ): ?PropertySettings {
-    const ruleSettings = this.getRuleSettings(ruleKey);
-    return ruleSettings ? ruleSettings.properties.get(propertyName) : null;
-  }
-
-  getRuleSettingsFromInputRule(inputRule: InputRule): RuleSettingsType {
-    const {
-      defaultSelector: selector,
-      properties: inputRuleProperties,
-      ...reducedInputRule
-    } = inputRule;
-    const ruleSettings: RuleSettingsType = {
-      ...reducedInputRule,
-      selector,
-      properties: new Map(),
-    };
-
-    if (!ruleSettings.displayName) {
-      ruleSettings.displayName = NameUtils.getInputRuleDisplayName(inputRule);
-    }
-
-    if (inputRuleProperties) {
-      inputRuleProperties.forEach(property => {
-        ruleSettings.properties.set(property.name, {
-          ...property,
-          attributes: [],
-        });
-      });
-    }
-
-    return ruleSettings;
-  }
-
-  handleRulePickerRuleChanged = (e: RuleChangedArgs) => {
-    const inputRule = this.props.rules[e.selectedInputRuleIndex];
-    const newRuleSettings = this.getRuleSettingsFromInputRule(inputRule);
-
-    const rulesSettings: Map<string, RuleSettingsType> = new Map(
-      this.state.rulesSettings
-    );
-    rulesSettings.set(e.ruleKey, newRuleSettings);
-
-    this.setState({
-      rulesSettings: rulesSettings,
-    });
-  };
-
-  handleRulePickerSelectorChanged = (e: RuleSelectorChangedArgs) => {
-    const selector = e.selector;
-    const ruleSettings = this.getRuleSettings(e.ruleKey);
-    const newRuleSettings = {
-      ...ruleSettings,
-      selector,
-    };
-
-    const rulesSettings: Map<string, RuleSettingsType> = new Map(
-      this.state.rulesSettings
-    );
-    rulesSettings.set(e.ruleKey, newRuleSettings);
-
-    this.setState({
-      rulesSettings: rulesSettings,
-    });
-
-    this.props.onSelectorChanged(e.selector, e.multiple);
-  };
-
-  handleRulePickerPropertySelectorChanged = (e: RuleSelectorChangedArgs) => {
-    const ruleSettings = this.getRuleSettings(e.ruleKey);
-    if (!ruleSettings) {
-      return;
-    }
-
-    const propertySettings = this.getPropertySettings(e.ruleKey, e.name);
-    // Only update if we have a new selector (we could be selecting a different
-    // text box)
-    if (propertySettings && propertySettings.selector !== e.selector) {
-      const newPropertySettings = {
-        ...propertySettings,
-        selector: e.selector,
-        // Clear attributes, they will get populated by browser
-        attributes: [],
-        count: 0,
-      };
-      ruleSettings.properties.set(e.name, newPropertySettings);
-    }
-
-    // TODO: State should be immutable
-    this.setState({
-      activeRuleKey: e.ruleKey,
-      activePropertyName: e.name,
-      rulesSettings: this.state.rulesSettings,
-    });
-
-    this.onSelectorChanged(ruleSettings.selector, e.selector, e.multiple);
-  };
-
-  onSelectorChanged(
-    ruleSelector: ?string,
-    propertySelector: string,
-    multiple: boolean
-  ) {
-    // Create new selector based on selector of the parent rule
-    // Note: Assumes rules cannot be nested
-    const scopedSelector =
-      ruleSelector && propertySelector
-        ? ruleSelector + ' ' + propertySelector
-        : propertySelector;
-    this.props.onSelectorChanged(scopedSelector, multiple);
-  }
-
-  handleRulePickerAttributeChanged = (e: RuleAttributeChangedArgs) => {
-    const propertySettings = this.getPropertySettings(
-      e.ruleKey,
-      e.propertyName
-    );
-    if (!propertySettings) {
-      return;
-    }
-
-    propertySettings.selectedAttribute = e.attribute;
-
-    // TODO: State should be immutable
-    this.setState({
-      rulesSettings: this.state.rulesSettings,
-    });
-  };
-
-  handleRulePickerDateTimeFormatChanged = (
-    e: RuleDateTimeFormatChangedArgs
-  ) => {
-    let propertySettings = this.getPropertySettings(e.ruleKey, e.propertyName);
-    if (!propertySettings) {
-      return;
-    }
-
-    propertySettings.dateTimeFormat = e.format;
-
-    // TODO: State should be immutable
-    this.setState({
-      rulesSettings: this.state.rulesSettings,
-    });
-  };
-
-  handleRulePickerRemove = (e: RemoveRuleArgs) => {
-    const rulesSettings = new Map(this.state.rulesSettings);
-    rulesSettings.delete(e.ruleKey);
-
-    this.setState({
-      rulesSettings: rulesSettings,
-    });
-  };
-
-  handleRulePickerFind = (e: RuleSelectorFindArgs) => {
-    this.setState({
-      activeRuleKey: e.ruleKey,
-      activePropertyName: e.name,
-      activeFindType: e.findType,
-    });
-    this.props.onFind(e.name, e.multiple);
-  };
-
-  handleAddRule = (e: Event) => {
-    const newRuleKey = this.state.maxRuleKey + 1;
-    const newRuleSettings = {
-      class: '',
-      selector: '',
-      properties: new Map(),
-    };
-
-    const rulesSettings: Map<string, RuleSettingsType> = new Map(
-      this.state.rulesSettings
-    );
-    rulesSettings.set(newRuleKey.toString(), newRuleSettings);
-
-    this.setState({
-      rulesSettings: rulesSettings,
-      maxRuleKey: newRuleKey,
-    });
-
-    e.preventDefault();
-  };
-
-  componentWillReceiveProps(nextProps: Props) {
-    if (
-      nextProps.selectedElementAttributes !==
-        this.props.selectedElementAttributes &&
-      this.state.activeFindType !== FindSelectorTypes.RULE
-    ) {
-      // TODO: State should be immutable
-      // Update the attributes for the item that have the selector
-      const activePropertySettings = this.getActivePropertySettings();
-
-      if (activePropertySettings) {
-        activePropertySettings.attributes = nextProps.selectedElementAttributes;
-        activePropertySettings.count = nextProps.selectedElementCount;
-
-        this.setState({
-          rulesSettings: this.state.rulesSettings,
-        });
-      }
-    }
-
-    if (nextProps.resolvedCssSelector !== this.props.resolvedCssSelector) {
-      // TODO: State should be immutable
-      // Update the selector for the item that changed
-      if (this.state.activeFindType === FindSelectorTypes.PROPERTY) {
-        const activePropertySettings = this.getActivePropertySettings();
-        if (activePropertySettings) {
-          activePropertySettings.selector = nextProps.resolvedCssSelector;
-        }
-      } else if (this.state.activeFindType === FindSelectorTypes.RULE) {
-        const activeRuleSettings = this.getActiveRuleSettings();
-        if (activeRuleSettings) {
-          activeRuleSettings.selector = nextProps.resolvedCssSelector;
-        }
-      }
-
-      this.setState({
-        rulesSettings: this.state.rulesSettings,
-      });
-    }
-  }
-
-  componentDidMount = () => {
-    this.props.onRulesJSONChanged(
-      JSON.stringify(this.exportRulesJSON(this.state))
-    );
-  };
-
-  componentDidUpdate = (prevProps: Props, prevState: State) => {
-    let oldJSON = JSON.stringify(this.exportRulesJSON(prevState));
-    let newJSON = JSON.stringify(this.exportRulesJSON(this.state));
-    if (newJSON != oldJSON) {
-      this.props.onRulesJSONChanged(newJSON);
-    }
-  };
-
-  exportRulesJSON = (providedState?: State) => {
-    const state = providedState ? providedState : this.state;
-    const exportedRules: Array<OutputRuleType> = [];
-    [...state.rulesSettings].forEach(([ruleKey, ruleSettings]) => {
-      const exportedRuleSettings: OutputRuleType = {
-        ...ruleSettings,
-        properties: {},
-      };
-      exportedRules.push(exportedRuleSettings);
-
-      [...ruleSettings.properties].forEach(([propertyName, property]) => {
-        if (property.selector && property.selectedAttribute) {
-          const exportedProperty: OutputPropertyType = {
-            selector: property.selector,
-            attribute: property.selectedAttribute.name,
-          };
-          if (property.dateTimeFormat) {
-            exportedProperty.dateTimeFormat = property.dateTimeFormat;
-          }
-
-          exportedRuleSettings.properties[propertyName] = exportedProperty;
-        }
-      });
-    });
-    return RuleUtils.getUpdatedRules(exportedRules);
+  loadFromExportedData = (data: string) => {
+    RuleExporter.import(data, this.props.ruleDefinitions);
   };
 
   handleExport = (e: Event) => {
     Dialog.showSaveDialog(
       {
-        defaultPath: 'rules.json',
-        filters: [
-          {
-            name: 'JSON',
-            extensions: ['json', 'txt'],
-          },
-        ],
+        defaultPath: dialogDefaultPath,
+        filters: [dialogFilter],
       },
       fileName => {
         if (fileName) {
-          const contents = JSON.stringify(this.exportRulesJSON(), null, 2);
-          Fs.writeFile(fileName, contents, error => {
+          const contents = JSON.stringify(
+            RuleExporter.export(this.props.rules)
+          );
+          Fs.writeFile(fileName, contents, importExportEncoding, error => {
             if (error) {
               Dialog.showErrorBox('Unable to save file', error);
             }
@@ -417,56 +101,159 @@ class RuleList extends React.Component<Props, State> {
     e.preventDefault();
   };
 
+  handleImport = (e: Event) => {
+    Dialog.showOpenDialog(
+      {
+        defaultPath: dialogDefaultPath,
+        filters: [dialogFilter],
+        properties: ['openFile'],
+      },
+      (filePaths: Array<string>) => {
+        if (filePaths && filePaths.length === 1) {
+          Fs.readFile(filePaths[0], importExportEncoding, (error, data) => {
+            this.loadFromExportedData(data);
+          });
+        }
+      }
+    );
+  };
+
+  handleAddRule = (event: Event) => {
+    const selectElement = event.target;
+    if (selectElement instanceof HTMLSelectElement) {
+      const ruleDefinition = this.props.ruleDefinitions.get(
+        selectElement.value
+      );
+      if (ruleDefinition != null) {
+        RuleActions.addRule(RuleFactory({ definition: ruleDefinition }));
+        EditorActions.filterRules(
+          this.props.editor.categories.add(ruleDefinition.category)
+        );
+      }
+    }
+  };
+
+  handleNew = () => {
+    // Load basic rules
+    Fs.readFile(
+      'src/js/basic-rules.json',
+      importExportEncoding,
+      (error, data) => {
+        this.loadFromExportedData(data);
+      }
+    );
+    EditorActions.filterRules(Set([RuleCategories.BASIC]));
+  };
+
+  handleSortEnd = ({
+    oldIndex,
+    newIndex,
+  }: {
+    oldIndex: number,
+    newIndex: number
+  }) => {
+    RuleActions.changeOrder(oldIndex, newIndex);
+  };
+
+  handleChangeFilters = (event: Event, data: { value: string[] }) => {
+    EditorActions.filterRules(Set(data.value));
+  };
+
+  componentDidUpdate(prevProps: Props) {
+    if (prevProps.rules.count() < this.props.rules.count()) {
+      this.refs.scrollable.scrollTop = 99999;
+    }
+  }
+
   render() {
     return (
-      <div>
-        {[...this.state.rulesSettings].map(([ruleKey, ruleSettings]) => (
-          <RulePicker
-            // This field is required by React
-            key={ruleKey}
-            // This is the key the child components will use to identify
-            // themselves when raising events
-            ruleKey={ruleKey}
-            {...ruleSettings}
-            availableRules={this.state.allAvailableRules}
-            showEmptyRuleOption={!ruleSettings.class}
-            onRuleChanged={this.handleRulePickerRuleChanged}
-            onSelectorChanged={this.handleRulePickerSelectorChanged}
-            onPropertySelectorChanged={
-              this.handleRulePickerPropertySelectorChanged
-            }
-            onAttributeChanged={this.handleRulePickerAttributeChanged}
-            onDateTimeFormatChanged={this.handleRulePickerDateTimeFormatChanged}
-            onRemove={this.handleRulePickerRemove}
-            onFind={this.handleRulePickerFind}
-            active={this.state.activeRuleKey === ruleKey}
-            activePropertyName={this.state.activePropertyName}
-            findAttributeName={
-              this.state.activeRuleKey === ruleKey
-                ? this.props.findAttributeName
-                : null
-            }
-            finding={
-              this.state.activeRuleKey === ruleKey &&
-              this.props.findAttributeName !== null
-            }
-            findType={
-              this.state.activeRuleKey === ruleKey
-                ? this.state.activeFindType
-                : null
-            }
-          />
-        ))}
-        <button
-          className="button"
-          id="export-button"
-          onClick={this.handleExport}
+      <div className="rule-list">
+        <div className="tools">
+          <button className="button" id="new-button" onClick={this.handleNew}>
+            📄 New
+          </button>
+          <button
+            className="button"
+            id="import-button"
+            onClick={this.handleImport}
+          >
+            📂 Open
+          </button>
+          <button
+            className="button"
+            id="export-button"
+            onClick={this.handleExport}
+          >
+            💾 Save
+          </button>
+        </div>
+        <label>
+          <Icon name="filter" />Filter Rules:
+        </label>
+        <Dropdown
+          multiple
+          labeled
+          fluid
+          selection
+          closeOnChange={true}
+          options={Object.values(RuleCategories).map(
+            (category: RuleCategory) => ({
+              text: category,
+              value: category,
+              icon: getLabelIcon(category),
+            })
+          )}
+          renderLabel={item => ({
+            content: item.text,
+            icon: item.icon,
+          })}
+          text="Pick at least 1 category"
+          value={this.props.editor.categories.toArray()}
+          onChange={this.handleChangeFilters}
+        />
+        <hr />
+        <label>
+          <Icon name="list" />Rules:
+        </label>
+        <select
+          className="rule-selector"
+          onChange={this.handleAddRule}
+          value=""
         >
-          Export
-        </button>
-        <button className="button" onClick={this.handleAddRule}>
-          Add Rule
-        </button>
+          <option value="" disabled={true}>
+            + Add a new rule...
+          </option>
+          <optgroup label="-----------------------------------" />
+          {Object.values(RuleCategories).map((category: RuleCategory) => (
+            <optgroup key={category} label={category + ' rules'}>
+              {this.props.ruleDefinitions
+                .sortBy(defintion => defintion.displayName)
+                .valueSeq()
+                .filter(definition => definition.category == category)
+                .map(ruleDefinition => (
+                  <option
+                    key={ruleDefinition.name}
+                    value={ruleDefinition.name}
+                    disabled={
+                      !this.props.editor.categories.contains(
+                        ruleDefinition.category
+                      )
+                    }
+                  >
+                    {ruleDefinition.displayName}
+                  </option>
+                ))}
+            </optgroup>
+          ))}
+        </select>
+        <div className="scrollable" ref="scrollable">
+          <SortableList
+            {...this.props}
+            pressDelay={200}
+            items={this.props.rules.valueSeq()}
+            onSortEnd={this.handleSortEnd}
+          />
+        </div>
       </div>
     );
   }

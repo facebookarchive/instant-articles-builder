@@ -1,0 +1,66 @@
+{
+  "rules": [
+    {
+      "class": "GlobalRule",
+      "selector": "html"
+    },
+    {
+      "class": "BlockquoteRule",
+      "selector": "blockquote"
+    },
+    {
+      "class": "ParagraphRule",
+      "selector": "p"
+    },
+    {
+      "class": "H2Rule",
+      "selector": "h2"
+    },
+    {
+      "class": "H1Rule",
+      "selector": "h1"
+    },
+    {
+      "class": "ListElementRule",
+      "selector": "ol, ul"
+    },
+    {
+      "class": "ListItemRule",
+      "selector": "li"
+    },
+    {
+      "class": "AnchorRule",
+      "selector": "a",
+      "properties": {
+        "anchor.href": {
+          "attribute": "href",
+          "selector": "a",
+          "type": "string"
+        }
+      }
+    },
+    {
+      "class": "ItalicRule",
+      "selector": "i"
+    },
+    {
+      "class": "EmphasizedRule",
+      "selector": "em"
+    },
+    {
+      "class": "BoldRule",
+      "selector": "b, strong"
+    },
+    {
+      "class": "ImageRule",
+      "selector": "img",
+      "properties": {
+        "image.url": {
+          "attribute": "src",
+          "selector": "img",
+          "type": "string"
+        }
+      }
+    }
+  ]
+}

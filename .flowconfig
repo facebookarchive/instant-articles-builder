@@ -6,6 +6,8 @@ node_modules/react
 node_modules/react-dom
 node_modules/classnames
 node_modules/moment
+node_modules/immutable
+src/js/injected.js
 
 [libs]
 

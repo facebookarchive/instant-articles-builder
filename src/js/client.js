@@ -4,37 +4,27 @@
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
+ *
+ * @flow
  */
 
-let App = require('./components/App.react.js');
-let ReactDOM = require('react-dom');
-let React = require('react');
+const AppContainer = require('./containers/AppContainer.react');
+const ReactDOM = require('react-dom');
+const React = require('react');
+const RuleDefinitionActions = require('./data/RuleDefinitionActions');
+const ruleDefinitions = require('./rule-definitions');
 
-const InputRules = require('./global-rules-input.js');
+// Register all rule definitions on the store
+ruleDefinitions.map(ruleDefinition =>
+  RuleDefinitionActions.addRuleDefinition(ruleDefinition)
+);
 
 document.addEventListener('DOMContentLoaded', function() {
   const root = document.getElementById('root');
+  if (!root) {
+    console.error('Could not find root element');
+    return;
+  }
 
-  let rules = [];
-  InputRules.rules.forEach(inputRule => {
-    let properties = [];
-    if (inputRule.properties) {
-      Object.entries(inputRule.properties).forEach(
-        ([propertyName, propertySettings]) => {
-          properties.push({
-            ...propertySettings,
-            name: propertyName,
-          });
-        }
-      );
-    }
-
-    const rule = {
-      ...inputRule,
-      properties: properties,
-    };
-    rules.push(rule);
-  });
-
-  ReactDOM.render(<App rules={rules} />, root);
+  ReactDOM.render(<AppContainer />, root);
 });

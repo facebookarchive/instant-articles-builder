@@ -11,6 +11,8 @@ const path = require('path');
 const url = require('url');
 const php = require('gulp-connect-php');
 
+const phpServer = new php();
+
 require('electron-debug')({ showDevTools: false });
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -27,7 +29,9 @@ function createWindow() {
   } = require('electron-devtools-installer');
 
   installExtension(REACT_DEVELOPER_TOOLS)
+    // eslint-disable-next-line no-console
     .then(name => console.log(`Added Extension:  ${name}`))
+    // eslint-disable-next-line no-console
     .catch(err => console.log('An error occurred: ', err));
 
   // and load the index.html of the app.
@@ -45,6 +49,8 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     win = null;
+
+    phpServer.closeServer();
   });
 }
 
@@ -74,7 +80,7 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 // php ruleZ
 
-php.server({
-  port: 8088,
+phpServer.server({
+  port: 8105,
   base: path.resolve(__dirname) + '/../../webserver',
 });

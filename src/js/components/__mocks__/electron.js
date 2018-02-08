@@ -14,6 +14,8 @@ const electron = {
   remote: {
     // Replace the function we will use in the dialog object
     dialog: {
+      // Call directly the callback function passing a single valid file name
+      showOpenDialog: (options, callback) => callback([FILE_NAME]),
       // Call directly the callback function passing a valid file name
       showSaveDialog: (options, callback) => callback(FILE_NAME),
     },
