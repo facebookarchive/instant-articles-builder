@@ -11,6 +11,7 @@
 const React = require('react');
 const { remote: { dialog: Dialog } } = require('electron');
 const Fs = require('fs');
+const path = require('path');
 
 import { Set } from 'immutable';
 import RuleCategories from '../models/RuleCategories';
@@ -79,7 +80,7 @@ class FileTools extends React.Component<Props> {
   handleNew = () => {
     // Load basic rules
     Fs.readFile(
-      'src/js/basic-rules.json',
+      path.join(__dirname, '../basic-rules.json'),
       importExportEncoding,
       (error, data) => {
         this.loadFromExportedData(data);

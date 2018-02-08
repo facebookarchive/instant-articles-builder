@@ -8,7 +8,7 @@ use Facebook\InstantArticles\Elements\Header;
 use Facebook\InstantArticles\AMP\AMPArticle;
 
 function exception_error_handler($errno, $errstr, $errfile, $errline ) {
-    throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+  // noop
 }
 
 set_error_handler("exception_error_handler");
@@ -17,10 +17,10 @@ try {
   // Read the URL parameter
   //----------------------
   $url = $_GET['url'];
-  $rules = $_GET['rules'];
+  $rules = $_POST['rules'];
 
   if (!$url || !$rules) {
-    die('Invalid parameters');
+    invalidIA();
   }
 
   if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {

@@ -29,8 +29,9 @@ bower_components
 # node-waf configuration
 .lock-wscript
 
-# Compiled binary addons (http://nodejs.org/api/addons.html)
-build/Release
+# build output
+build/
+bin/
 
 # Dependency directories
 node_modules/
@@ -60,3 +61,5 @@ typings/
 # VS Code Users
 .vscode/
 
+# MacOS
+.DS_Store
