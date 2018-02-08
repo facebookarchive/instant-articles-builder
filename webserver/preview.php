@@ -64,7 +64,7 @@ try {
     }
   }
   else {
-    invalidIA($preview == "true");
+    invalidIA();
   }
 }
 catch (Exception $e) {
@@ -73,7 +73,7 @@ catch (Exception $e) {
   die();
 }
 
-function invalidIA($preview) {
+function invalidIA() {
   ?>
   <p>
     Open an article and fully configure the <em>Article Structure</em>
