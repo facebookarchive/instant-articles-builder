@@ -639,7 +639,7 @@ button {
   margin-top: 10px;
   display: block;
 }
-.nux-open {
+.header-buttons {
   position: absolute;
   right: 0px;
 }

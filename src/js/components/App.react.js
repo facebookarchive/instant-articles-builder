@@ -15,6 +15,11 @@ const EditorActions = require('../data/EditorActions');
 
 import type { Props } from '../containers/AppContainer.react';
 import { NUX } from './NUX.react';
+import { Button, Icon } from 'semantic-ui-react';
+
+const bugReportURL =
+  'https://github.com/facebook/facebook-instant-articles-rules-editor' +
+  '/issues/new?labels=bug';
 
 class App extends React.Component<Props> {
   constructor(props: Props) {
@@ -55,7 +60,19 @@ class App extends React.Component<Props> {
     return (
       <div id="wrapper">
         <header>
-          <NUX {...this.props} />
+          <div className="header-buttons">
+            <NUX {...this.props} />
+            <Button
+              icon
+              className="nux-open"
+              color="facebook"
+              as="a"
+              target="_blank"
+              href={bugReportURL}
+            >
+              <Icon name="bug" /> Report a Bug
+            </Button>
+          </div>
           <img src="../img/logo-nobg.png" width="48" height="48" />
           <h1>
             <span className="fb">Facebook</span> Instant Articles |{' '}
