@@ -4,25 +4,80 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "639a4a25fe24e50a6f32a6f8f6bbacf4",
-    "content-hash": "e2f3fc691bc451df3f7e3986c28738e1",
+    "hash": "5ebd88815432c882ec74abc5ae8df746",
+    "content-hash": "4928785a10f2e2ee946164464bd02c46",
     "packages": [
         {
-            "name": "facebook/facebook-instant-articles-sdk-extensions-in-php",
-            "version": "v0.2.0",
+            "name": "doctrine/instantiator",
+            "version": "1.0.5",
             "source": {
                 "type": "git",
-                "url": "https://github.com/facebook/facebook-instant-articles-sdk-extensions-in-php.git",
-                "reference": "d228dd32fcf896ac65f1723141e3c16211a06b54"
+                "url": "https://github.com/doctrine/instantiator.git",
+                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/facebook-instant-articles-sdk-extensions-in-php/zipball/d228dd32fcf896ac65f1723141e3c16211a06b54",
-                "reference": "d228dd32fcf896ac65f1723141e3c16211a06b54",
+                "url": "https://api.github.com/repos/doctrine/instantiator/zipball/8e884e78f9f0eb1329e445619e04456e64d8051d",
+                "reference": "8e884e78f9f0eb1329e445619e04456e64d8051d",
                 "shasum": ""
             },
             "require": {
-                "facebook/facebook-instant-articles-sdk-php": "^1.8.2",
+                "php": ">=5.3,<8.0-DEV"
+            },
+            "require-dev": {
+                "athletic/athletic": "~0.1.8",
+                "ext-pdo": "*",
+                "ext-phar": "*",
+                "phpunit/phpunit": "~4.0",
+                "squizlabs/php_codesniffer": "~2.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Doctrine\\Instantiator\\": "src/Doctrine/Instantiator/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Marco Pivetta",
+                    "email": "ocramius@gmail.com",
+                    "homepage": "http://ocramius.github.com/"
+                }
+            ],
+            "description": "A small, lightweight utility to instantiate objects in PHP without invoking their constructors",
+            "homepage": "https://github.com/doctrine/instantiator",
+            "keywords": [
+                "constructor",
+                "instantiate"
+            ],
+            "time": "2015-06-14 21:17:01"
+        },
+        {
+            "name": "facebook/facebook-instant-articles-sdk-extensions-in-php",
+            "version": "v0.2.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/facebook/facebook-instant-articles-sdk-extensions-in-php.git",
+                "reference": "de4470829537326987feadad6a19445c33a20383"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/facebook/facebook-instant-articles-sdk-extensions-in-php/zipball/de4470829537326987feadad6a19445c33a20383",
+                "reference": "de4470829537326987feadad6a19445c33a20383",
+                "shasum": ""
+            },
+            "require": {
+                "doctrine/instantiator": "<=1.0.5",
+                "facebook/facebook-instant-articles-sdk-php": "^1.8.3",
                 "php": "^5.4 || ^7.0"
             },
             "require-dev": {
@@ -57,7 +112,7 @@
                 "instantarticles",
                 "sdk"
             ],
-            "time": "2018-02-07 02:52:53"
+            "time": "2018-02-08 18:21:18"
         },
         {
             "name": "facebook/facebook-instant-articles-sdk-php",
