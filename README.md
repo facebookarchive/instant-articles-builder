@@ -45,4 +45,4 @@ npm test
 ```
 
 ## License
-Instant Articles Rules Editor is BSD-licensed. We also provide an additional patent grant.
+Please read the [LICENSE](https://github.com/facebook/facebook-instant-articles-rules-editor/blob/master/LICENSE) file for more information.
