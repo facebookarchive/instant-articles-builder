@@ -54,6 +54,22 @@ class EditorActions {
       categories,
     });
   }
+  static startTour() {
+    RulesEditorDispatcher.dispatch({
+      type: EditorActionTypes.START_TOUR,
+    });
+  }
+  static stopTour() {
+    RulesEditorDispatcher.dispatch({
+      type: EditorActionTypes.STOP_TOUR,
+    });
+  }
+  static loadURL(url: string) {
+    RulesEditorDispatcher.dispatch({
+      type: EditorActionTypes.LOAD_URL,
+      url,
+    });
+  }
 }
 
 module.exports = EditorActions;

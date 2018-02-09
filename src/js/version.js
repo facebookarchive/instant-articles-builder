@@ -8,5 +8,6 @@
  * @flow
  */
 
-require('babel-register');
-require('./webview/webview.js');
+// This is the Rules Editor version constant.
+// Bump this version when releasing.
+export const version = '0.1.0';

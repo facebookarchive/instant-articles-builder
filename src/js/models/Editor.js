@@ -15,12 +15,16 @@ import RuleCategories from './RuleCategories';
 import type { Field } from './Field';
 import type { RecordOf, RecordFactory } from 'immutable';
 
+export const homeURL = `file:///${__dirname}/../../html/home.html`;
+
 type EditorRecord = {
   elementAttributes: Map<string, Map<string, Attribute>>,
   elementCounts: Map<string, number>,
   focusedField: ?Field,
   finding: boolean,
-  categories: Set<RuleCategory>
+  categories: Set<RuleCategory>,
+  takeTour: boolean,
+  url: string
 };
 
 export const EditorFactory: RecordFactory<EditorRecord> = Record({
@@ -29,6 +33,8 @@ export const EditorFactory: RecordFactory<EditorRecord> = Record({
   focusedField: null,
   finding: false,
   categories: Set([RuleCategories.BASIC]),
+  takeTour: false,
+  url: homeURL,
 });
 
 export type Editor = RecordOf<EditorRecord> & EditorFactory;

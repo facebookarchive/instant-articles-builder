@@ -11,18 +11,16 @@
 const React = require('react');
 const RulePicker = require('./RulePicker.react.js');
 const RuleActions = require('../data/RuleActions');
-const { remote: { dialog: Dialog } } = require('electron');
-const Fs = require('fs');
 
 import { Set } from 'immutable';
 import RuleCategories from '../models/RuleCategories';
 import { Dropdown, Icon } from 'semantic-ui-react';
 import { RuleFactory } from '../models/Rule';
-import RuleExporter from '../utils/RuleExporter';
 import type { Props } from '../containers/AppContainer.react';
 import { SortableContainer, SortableElement } from 'react-sortable-hoc';
 import EditorActions from '../data/EditorActions';
 import type { RuleCategory } from '../models/RuleCategories';
+import FileTools from './FileTools.react';
 
 function getLabelIcon(category: RuleCategory): string {
   switch (category) {
@@ -40,13 +38,6 @@ function getLabelIcon(category: RuleCategory): string {
       return '';
   }
 }
-
-const dialogDefaultPath = 'rules.json';
-const dialogFilter = {
-  name: 'JSON',
-  extensions: ['json'],
-};
-const importExportEncoding = 'utf8';
 
 const SortableItem = SortableElement((props: any) => <RulePicker {...props} />);
 
@@ -67,57 +58,6 @@ const SortableList = SortableContainer((props: any) => {
 });
 
 class RuleList extends React.Component<Props> {
-  constructor(props: Props) {
-    super(props);
-
-    // Load basic rules
-    this.handleNew();
-  }
-
-  loadFromExportedData = (data: string) => {
-    RuleExporter.import(data, this.props.ruleDefinitions);
-  };
-
-  handleExport = (e: Event) => {
-    Dialog.showSaveDialog(
-      {
-        defaultPath: dialogDefaultPath,
-        filters: [dialogFilter],
-      },
-      fileName => {
-        if (fileName) {
-          const contents = JSON.stringify(
-            RuleExporter.export(this.props.rules)
-          );
-          Fs.writeFile(fileName, contents, importExportEncoding, error => {
-            if (error) {
-              Dialog.showErrorBox('Unable to save file', error);
-            }
-          });
-        }
-      }
-    );
-
-    e.preventDefault();
-  };
-
-  handleImport = (e: Event) => {
-    Dialog.showOpenDialog(
-      {
-        defaultPath: dialogDefaultPath,
-        filters: [dialogFilter],
-        properties: ['openFile'],
-      },
-      (filePaths: Array<string>) => {
-        if (filePaths && filePaths.length === 1) {
-          Fs.readFile(filePaths[0], importExportEncoding, (error, data) => {
-            this.loadFromExportedData(data);
-          });
-        }
-      }
-    );
-  };
-
   handleAddRule = (event: Event) => {
     const selectElement = event.target;
     if (selectElement instanceof HTMLSelectElement) {
@@ -131,18 +71,6 @@ class RuleList extends React.Component<Props> {
         );
       }
     }
-  };
-
-  handleNew = () => {
-    // Load basic rules
-    Fs.readFile(
-      'src/js/basic-rules.json',
-      importExportEncoding,
-      (error, data) => {
-        this.loadFromExportedData(data);
-      }
-    );
-    EditorActions.filterRules(Set([RuleCategories.BASIC]));
   };
 
   handleSortEnd = ({
@@ -160,7 +88,14 @@ class RuleList extends React.Component<Props> {
   };
 
   componentDidUpdate(prevProps: Props) {
-    if (prevProps.rules.count() < this.props.rules.count()) {
+    if (
+      prevProps.rules.count() < this.props.rules.count() &&
+      this.props.rules
+        .filter(rule =>
+          this.props.editor.categories.has(rule.definition.category)
+        )
+        .count() > 1
+    ) {
       this.refs.scrollable.scrollTop = 99999;
     }
   }
@@ -168,49 +103,33 @@ class RuleList extends React.Component<Props> {
   render() {
     return (
       <div className="rule-list">
-        <div className="tools">
-          <button className="button" id="new-button" onClick={this.handleNew}>
-            📄 New
-          </button>
-          <button
-            className="button"
-            id="import-button"
-            onClick={this.handleImport}
-          >
-            📂 Open
-          </button>
-          <button
-            className="button"
-            id="export-button"
-            onClick={this.handleExport}
-          >
-            💾 Save
-          </button>
+        <FileTools {...this.props} />
+        <div className="rule-filters">
+          <label>
+            <Icon name="filter" />Filter Rules:
+          </label>
+          <Dropdown
+            multiple
+            labeled
+            fluid
+            selection
+            closeOnChange={true}
+            options={Object.values(RuleCategories).map(
+              (category: RuleCategory) => ({
+                text: category,
+                value: category,
+                icon: getLabelIcon(category),
+              })
+            )}
+            renderLabel={item => ({
+              content: item.text,
+              icon: item.icon,
+            })}
+            text="Pick at least 1 category"
+            value={this.props.editor.categories.toArray()}
+            onChange={this.handleChangeFilters}
+          />
         </div>
-        <label>
-          <Icon name="filter" />Filter Rules:
-        </label>
-        <Dropdown
-          multiple
-          labeled
-          fluid
-          selection
-          closeOnChange={true}
-          options={Object.values(RuleCategories).map(
-            (category: RuleCategory) => ({
-              text: category,
-              value: category,
-              icon: getLabelIcon(category),
-            })
-          )}
-          renderLabel={item => ({
-            content: item.text,
-            icon: item.icon,
-          })}
-          text="Pick at least 1 category"
-          value={this.props.editor.categories.toArray()}
-          onChange={this.handleChangeFilters}
-        />
         <hr />
         <label>
           <Icon name="list" />Rules:

@@ -4,9 +4,17 @@
  *
  * This source code is licensed under the license found in the
  * LICENSE file in the root directory of this source tree.
- *
- * @flow
  */
 
-require('babel-register');
-require('./webview/webview.js');
+const settings = {
+  get: property => {
+    switch (property) {
+      case 'nux.skip':
+        return true;
+    }
+    return null;
+  },
+  set: () => {},
+};
+
+module.exports = settings;

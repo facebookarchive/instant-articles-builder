@@ -10,19 +10,18 @@
 
 const React = require('react');
 const fs = require('fs');
-const debounce = require('../utils/debounce.js');
-const homeURL = `file:///${__dirname}/../../html/home.html`;
 
-import RuleExporter from '../utils/RuleExporter';
+import { Map } from 'immutable';
 import EditorActions from '../data/EditorActions';
 import RuleActions from '../data/RuleActions';
-import type { Attribute } from '../models/Attribute';
-import { Map } from 'immutable';
-import { AttributeFactory } from '../models/Attribute';
 import type { Props } from '../containers/AppContainer.react';
+import type { BrowserMessage } from '../models/BrowserMessage';
+import { BrowserMessageTypes } from '../models/BrowserMessage';
+import { RuleUtils } from '../models/Rule';
+import Preview from './Preview.react';
+import { homeURL } from '../models/Editor';
 
 type State = {
-  url: string,
   displayURL: string,
   showPreview: boolean,
   progress: number
@@ -35,31 +34,29 @@ class Browser extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      url: homeURL,
       displayURL: '',
       showPreview: true,
       progress: 0,
     };
   }
 
-  receiveMessage = (event: any) => {
-    if (event.message == 'attributes') {
-      // Attributes retrieved
-      const elementAttributes: Map<string, Attribute> = Map(
-        event.value.attributes.map(attribute => [
-          attribute.name,
-          AttributeFactory(attribute),
-        ])
+  receiveMessage = (message: BrowserMessage) => {
+    if (message.type === BrowserMessageTypes.ATTRIBUTES_RETRIEVED) {
+      const attributesMap = Map(
+        message.attributes.reduce((map, attr) => {
+          map[attr.name] = attr;
+          return map;
+        }, {})
       );
-      const elementCount = event.value.count;
-      EditorActions.found(elementAttributes, elementCount);
-    } else if (event.message == 'DOM') {
-      // Selector retrieved
-      const selector = event.value.resolvedCssSelector;
+      EditorActions.found(attributesMap, message.count);
+    }
+    if (message.type === BrowserMessageTypes.ELEMENT_SELECTED) {
       EditorActions.stopFinding();
       if (this.props.editor.focusedField != null) {
         let field = this.props.editor.focusedField;
-        RuleActions.editField(field.set('selector', selector));
+        RuleActions.editField(
+          field.set('selector', message.selectors[0] || '')
+        );
       }
     }
   };
@@ -76,7 +73,8 @@ class Browser extends React.Component<Props, State> {
     this.setState(prevState => ({ showPreview: !prevState.showPreview }));
   };
 
-  syncURL = (e: any) => {
+  syncURL = (e: { url: string }) => {
+    EditorActions.loadURL(e.url);
     this.setState({ displayURL: e.url });
   };
 
@@ -99,13 +97,6 @@ class Browser extends React.Component<Props, State> {
     }));
   };
 
-  previewLoading = () => {
-    this.preview.classList.add('loading');
-  };
-  previewFinishedLoading = () => {
-    this.preview.classList.remove('loading');
-  };
-
   urlTyped = (e: any) => {
     this.setState({ displayURL: e.target.value });
   };
@@ -117,7 +108,7 @@ class Browser extends React.Component<Props, State> {
     } else if (!/^https?:\/\//i.test(url)) {
       url = 'http://' + url;
     }
-    this.setState({ url: url });
+    EditorActions.loadURL(url);
     this.webview.focus();
     e.preventDefault();
     return false;
@@ -150,48 +141,62 @@ class Browser extends React.Component<Props, State> {
   };
 
   highlightElements = () => {
-    // Uncomment to debug the injected script
-    // this.webview.openDevTools();
     if (this.props.editor.focusedField != null) {
-      let findMultipleElements = !this.props.editor.focusedField.definition
-        .unique;
-      let selector = this.props.editor.focusedField.selector;
+      let field = this.props.editor.focusedField;
+      let findMultipleElements = !field.definition.unique;
+      let selector = field.selector;
 
-      if (!this.props.editor.finding) {
+      // Calculate context for selecting elements
+      let context = 'html';
+      if (field.fieldType === 'RuleProperty' && field.rule != null) {
+        let ruleGuid = field.rule.guid;
+        for (let rule of this.props.rules.valueSeq()) {
+          if (rule.guid === ruleGuid) {
+            context = rule.selector;
+          }
+        }
+      }
+      if (field.fieldType === 'Rule') {
+        for (let rule of this.props.rules.valueSeq()) {
+          if (
+            rule.definition.name === 'GlobalRule' &&
+            RuleUtils.isValid(rule)
+          ) {
+            const selector = rule.properties.getIn([
+              'article.body',
+              'selector',
+            ]);
+            if (selector != null && selector != '') {
+              context = selector;
+            }
+          }
+        }
+      }
+
+      if (this.props.editor.finding) {
         this.webview.send('message', {
-          method: 'highlightElements',
-          selector: selector,
+          type: BrowserMessageTypes.SELECT_ELEMENT,
+          selector: context,
           multiple: findMultipleElements,
         });
       } else {
         this.webview.send('message', {
-          method: 'selectElement',
-          multiple: findMultipleElements,
+          type: BrowserMessageTypes.HIGHLIGHT_ELEMENT,
+          selector: selector,
+          contextSelector: context,
+        });
+        this.webview.send('message', {
+          type: BrowserMessageTypes.FETCH_ATTRIBUTES,
+          selector: selector,
+          contextSelector: context,
         });
       }
     } else {
       this.webview.send('message', {
-        method: 'clear',
+        type: BrowserMessageTypes.CLEAR_HIGHLIGHTS,
       });
     }
   };
-
-  renderPreview = debounce(() => {
-    if (this.preview != null) {
-      let newURL =
-        'view-source:http://127.0.0.1:8105/index.php?url=' +
-        encodeURIComponent(this.state.displayURL) +
-        '&rules=' +
-        encodeURIComponent(
-          JSON.stringify(RuleExporter.export(this.props.rules))
-        ) +
-        '&timestamp=' +
-        performance.now();
-      if (this.preview && this.preview.src != newURL) {
-        this.preview.src = newURL;
-      }
-    }
-  }, 1000);
 
   componentDidUpdate(prevProps: Props, prevState: State) {
     if (
@@ -199,10 +204,6 @@ class Browser extends React.Component<Props, State> {
       prevProps.editor.finding != this.props.editor.finding
     ) {
       this.highlightElements();
-    }
-
-    if (!this.props.rules.equals(prevProps.rules)) {
-      this.renderPreview();
     }
   }
 
@@ -221,7 +222,7 @@ class Browser extends React.Component<Props, State> {
       this.webview.addEventListener('did-start-loading', this.startProgress);
       this.webview.addEventListener('did-stop-loading', this.resetProgress);
       this.webview.addEventListener('did-navigate', this.startProgress);
-      this.webview.addEventListener('did-navigate', this.renderPreview);
+      //this.webview.addEventListener('did-navigate', this.renderPreview);
       this.webview.addEventListener('did-navigate', this.syncURL);
       this.webview.addEventListener(
         'did-get-response-details',
@@ -276,22 +277,13 @@ class Browser extends React.Component<Props, State> {
               }
             }}
             id="webview"
-            src={this.state.url}
+            src={this.props.editor.url}
             preload="../js/injected.js"
           />
           <div className="tab" role="presentation" onClick={this.togglePreview}>
             <span>{this.state.showPreview ? '>' : '<'}</span>
           </div>
-          <webview
-            ref={preview => {
-              if (preview) {
-                (preview: any).nodeintegration = true;
-                this.preview = preview;
-              }
-            }}
-            className={this.state.showPreview ? '' : 'hidden'}
-            id="preview"
-          />
+          <Preview {...this.props} hidden={!this.state.showPreview} />
         </div>
       </div>
     );

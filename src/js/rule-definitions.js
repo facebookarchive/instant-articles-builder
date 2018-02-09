@@ -33,7 +33,6 @@ ruleDefinitions.push(
         defaultAttribute: 'content',
         supportedTypes: Set([RulePropertyTypes.ELEMENT]),
         defaultType: RulePropertyTypes.ELEMENT,
-        unique: true,
         required: true,
       }),
       'article.publish': RulePropertyDefinitionFactory({
@@ -43,13 +42,12 @@ ruleDefinitions.push(
         defaultAttribute: 'datetime',
         supportedTypes: Set([RulePropertyTypes.DATETIME]),
         defaultType: RulePropertyTypes.DATETIME,
-        unique: true,
       }),
       'author.name': RulePropertyDefinitionFactory({
         name: 'author.name',
         displayName: 'Author(s)',
         placeholder: 'Example: span.author',
-        defaultAttribute: 'contentString',
+        defaultAttribute: 'textContent',
         supportedTypes: Set([RulePropertyTypes.STRING]),
         defaultType: RulePropertyTypes.STRING,
         required: true,
@@ -61,7 +59,6 @@ ruleDefinitions.push(
         defaultAttribute: 'src',
         supportedTypes: Set([RulePropertyTypes.STRING]),
         defaultType: RulePropertyTypes.STRING,
-        unique: true,
       }),
       'article.body': RulePropertyDefinitionFactory({
         name: 'article.body',
@@ -71,7 +68,6 @@ ruleDefinitions.push(
         supportedTypes: Set([RulePropertyTypes.ELEMENT]),
         defaultType: RulePropertyTypes.ELEMENT,
         required: true,
-        unique: true,
       }),
       'article.canonical': RulePropertyDefinitionFactory({
         name: 'article.canonical',
@@ -81,7 +77,6 @@ ruleDefinitions.push(
         supportedTypes: Set([RulePropertyTypes.STRING]),
         defaultType: RulePropertyTypes.STRING,
         required: true,
-        unique: true,
         defaultProperty: RulePropertyFactory({
           selector: 'link[rel=canonical]',
           attribute: 'href',

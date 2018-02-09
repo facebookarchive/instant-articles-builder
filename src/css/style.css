@@ -145,7 +145,8 @@ h1 {
   color: #3b5998;
 }
 
-.button {
+.navigation.button,
+.tools .button {
   color: #fff;
   min-width: 40px;
   height: 30px;
@@ -157,7 +158,7 @@ h1 {
 
 .tools {
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 20px;
   flex-shrink: 0;
 }
 .tools .button {
@@ -166,10 +167,22 @@ h1 {
   border-radius: 0;
   flex-grow: 1;
   cursor: pointer;
-  border: 1px solid transparent;
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  color: rgba(0, 0, 0, 0.87);
+  background: rgb(248, 248, 248);
+  margin: 0;
+  border-right-width: 0;
+}
+.tools .button:first-child {
+  border-radius: 5px 0 0 5px;
+}
+.tools .button:last-child {
+  border-radius: 0px 5px 5px 0px;
+  border-right-width: 1px;
 }
 .tools .button:hover {
-  border-color: #ccc;
+  background-color: #3b5998;
+  color: #fff;
 }
 .tools .button:active,
 .tools .button:focus {
@@ -527,6 +540,15 @@ input:focus {
 button {
   cursor: pointer;
 }
+.grow {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 0 !important;
+}
+.grow.active {
+  display: flex !important;
+}
 .webviews {
   display: flex;
   flex-direction: row;
@@ -558,17 +580,19 @@ button {
   font-weight: lighter;
   color: #999;
 }
-.webviews > #preview {
+.preview {
+  display: flex;
   flex-grow: 1;
+  flex-direction: column;
   border: 1px solid #ccc;
   border-left: none;
+  padding: 10px;
 }
-
-.webviews > #preview.hidden {
-  display: none;
+.preview webview {
+  flex-grow: 1;
+  width: 100%;
 }
-
-.webviews > #preview.loading {
+.preview.loading {
   opacity: 0.1;
 }
 
@@ -599,4 +623,47 @@ button {
 
 .hidden {
   display: none;
+}
+.nux-header {
+  background-color: #3b5998 !important;
+  color: white !important;
+}
+.nux-modal {
+  background: none !important;
+}
+.nux-header img {
+  margin-top: -4px;
+}
+.nux-checkbox {
+  float: left;
+  margin-top: 10px;
+  display: block;
+}
+.header-buttons {
+  position: absolute;
+  right: 0px;
+}
+.joyride-tooltip {
+  padding: 0;
+}
+.joyride-tooltip__main {
+  margin: 0;
+  padding: 0;
+}
+.joyride-tooltip .ui.segments {
+  border: none;
+  box-shadow: none;
+}
+.cancel-tour {
+  display: block;
+  float: left;
+  cursor: pointer;
+  transition: color 0.3s;
+  line-height: 37px;
+}
+.cancel-tour:hover {
+  color: #db2828;
+}
+a:hover {
+  cursor: pointer !important;
 }
