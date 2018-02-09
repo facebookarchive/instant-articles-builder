@@ -110,6 +110,12 @@ export class WebviewUtils {
       type: RulePropertyTypes.STRING,
     });
 
+    attributes.push({
+      name: 'dateTextContent',
+      value: element.textContent,
+      type: RulePropertyTypes.DATETIME,
+    });
+
     return attributes;
   }
 }

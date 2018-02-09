@@ -11,13 +11,14 @@
 const React = require('react');
 const classNames = require('classnames');
 const moment = require('moment');
+const phpDateTimeMomentFormat = require('../utils/phpDateTimeMomentFormat');
 import type { RuleProperty } from '../models/RuleProperty';
 import type { Props as BaseProps } from '../containers/AppContainer.react';
 import RuleActions from '../data/RuleActions';
 
 type Props = BaseProps & { property: RuleProperty };
 
-const DEFAULT_FORMAT = 'YYYY-MM-DDTHH:mm:ssZ';
+const DEFAULT_FORMAT = 'Y-m-d\\TH:i:sP';
 
 type State = {
   displayedDateTime?: ?string,
@@ -46,7 +47,7 @@ class DateTimeFormatPicker extends React.Component<Props, State> {
       return null;
     }
     let expectedDateTime = attributes.find(attr => attr.name == attribute);
-    return expectedDateTime ? expectedDateTime.value : null;
+    return expectedDateTime ? expectedDateTime.value.trim() : null;
   }
 
   inferFormat() {
@@ -55,15 +56,20 @@ class DateTimeFormatPicker extends React.Component<Props, State> {
     if (this.expectedDateTime() != null) {
       m = moment.parseZone(this.expectedDateTime());
       if (m.isValid()) {
-        format = m.creationData().format;
+        // TODO: WE DISABLE THE INFERING FOR NOW UNTIL WE FIND A WAY TO CONVERT ISO TO PHP
+        //format = m.creationData().format;
       }
     }
+    format =
+      this.props.property.format != ''
+        ? this.props.property.format
+        : DEFAULT_FORMAT;
 
     this.setState({
       moment: m,
       displayedDateTime:
         m && this.props.property.format
-          ? m.format(this.props.property.format)
+          ? m.formatPHP(this.props.property.format)
           : null,
     });
     this.formatChanged(format);
@@ -76,7 +82,23 @@ class DateTimeFormatPicker extends React.Component<Props, State> {
     }, 0);
   }
 
+  setDefaults() {
+    if (this.props.property.attribute == null) {
+      let attributes = this.props.editor
+        .get('elementAttributes')
+        .get(this.props.property.selector);
+      if (attributes) {
+        let newAttr = attributes.find(attr =>
+          this.props.property.definition.supportedTypes.includes(attr.type)
+        );
+        let property = this.props.property.set('attribute', newAttr.name);
+        RuleActions.editField(property);
+      }
+    }
+  }
+
   componentDidUpdate(prevProps: Props) {
+    this.setDefaults();
     if (this.expectedDateTime() !== this.expectedDateTime(prevProps)) {
       this.inferFormat();
     }
@@ -84,7 +106,7 @@ class DateTimeFormatPicker extends React.Component<Props, State> {
       this.setState({
         displayedDateTime:
           this.state.moment && this.props.property.format
-            ? this.state.moment.format(this.props.property.format)
+            ? this.state.moment.formatPHP(this.props.property.format)
             : null,
       });
     }
@@ -122,7 +144,12 @@ class DateTimeFormatPicker extends React.Component<Props, State> {
     return (
       <div className={classes}>
         <label className="sub-label">
-          DateTime Format String (RFC2822 or ISO)
+          DateTime Format String (<a
+            href="http://php.net/manual/en/function.date.php"
+            target="_blank"
+          >
+            PHP Date Format
+          </a>)
         </label>
         <input
           type="text"
