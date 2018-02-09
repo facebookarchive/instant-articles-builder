@@ -237,11 +237,6 @@ class Browser extends React.Component<Props, State> {
         event => this.receiveMessage(event.args[0]),
         false
       );
-      this.preview.addEventListener('did-start-loading', this.previewLoading);
-      this.preview.addEventListener(
-        'did-stop-loading',
-        this.previewFinishedLoading
-      );
     }
   }
 
