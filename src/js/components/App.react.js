@@ -64,7 +64,7 @@ class App extends React.Component<Props> {
           </div>
           <img src="../img/logo-nobg.png" width="48" height="48" />
           <h1>
-            <span className="fb">Facebook</span> Instant Articles |{' '}
+            <span className="ia">Instant Articles</span>{' '}
             <span className="app-name">Rules Editor</span>
           </h1>
         </header>
