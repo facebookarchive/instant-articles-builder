@@ -26,7 +26,7 @@ export type JSONFormat = {
 
 type RulePropertyJSON = {
   attribute: ?string,
-  dateTimeFormat?: string,
+  format?: string,
   selector: string,
   type: string
 };
@@ -104,7 +104,9 @@ class RuleExporter {
         (property.attribute || property.definition.defaultAttribute) !=
           'innerContent' &&
         (property.attribute || property.definition.defaultAttribute) !=
-          'textContent'
+          'textContent' &&
+        (property.attribute || property.definition.defaultAttribute) !=
+          'dateTextContent'
           ? {
             attribute:
                 property.attribute || property.definition.defaultAttribute,
@@ -112,7 +114,7 @@ class RuleExporter {
           : {}),
         ...((property.type || property.definition.defaultType) ==
         RulePropertyTypes.DATETIME
-          ? { dateTimeFormat: property.format }
+          ? { format: property.format }
           : {}),
         selector: property.selector,
         type:
@@ -168,8 +170,12 @@ class RuleExporter {
       return RulePropertyFactory({
         definition: rulePropertyDefinition,
         selector: rulePropertyJSON.selector,
-        attribute: rulePropertyJSON.attribute,
-        format: rulePropertyJSON.dateTimeFormat,
+        attribute:
+          rulePropertyJSON.type == RulePropertyTypes.DATETIME &&
+          rulePropertyJSON.attribute == null
+            ? 'dateTextContent'
+            : rulePropertyJSON.attribute,
+        format: rulePropertyJSON.format,
         type: rulePropertyJSON.type,
       });
     }

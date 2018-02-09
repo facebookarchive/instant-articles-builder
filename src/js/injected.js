@@ -38,6 +38,12 @@ window.addEventListener('load', () => {
       type: 'string', //RulePropertyTypes.STRING,
     });
 
+    attributes.push({
+      name: 'dateTextContent',
+      value: element.textContent,
+      type: 'date', //RulePropertyTypes.DATETIME,
+    });
+
     return attributes;
   }
 
