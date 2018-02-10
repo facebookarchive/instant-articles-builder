@@ -3,15 +3,10 @@
   "localized-strings": {
     "next": "Next",
     "previous": "Previous",
-    "tagline": "A website for testing",
+    "tagline": "Configure your Instant Articles without coding",
     "get-started": "Getting Started",
-    "Docs": "Docs",
-    "API": "API",
-    "Help": "Help",
-    "Blog": "Blog",
-    "Docusaurus": "Docusaurus",
-    "First Category": "First Category",
-    "Second Category": "Second Category"
+    "Get Started": "Get Started",
+    "Usage": "Usage"
   },
   "pages-strings": {
     "Help Translate|recruit community translators for your project": "Help Translate",
