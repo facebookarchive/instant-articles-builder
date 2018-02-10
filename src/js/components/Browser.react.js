@@ -219,7 +219,7 @@ class Browser extends React.Component<Props, State> {
   componentDidMount() {
     if (this.webview) {
       let webview = this.webview;
-      this.webview.addEventListener('did-finish-load', function() {
+      this.webview.addEventListener('dom-ready', function() {
         fs.readFile(__dirname + '/../../css/injected.css', 'utf-8', function(
           error,
           data

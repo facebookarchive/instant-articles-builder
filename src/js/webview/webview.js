@@ -16,9 +16,10 @@ import { WebviewUtils } from './WebviewUtils';
 import type { WebviewState } from './WebviewStateMachine';
 import type { BrowserMessage } from '../models/BrowserMessage';
 
-// Element filters
-import './filters/GlobalRule.article.body.filter';
+// Load Filters
 import './filters/all.selector.filter';
+import './filters/GlobalRule.article.body.filter';
+import './filters/GlobalRule.author.name.filter';
 
 //
 // Listen to messages from the Browser
@@ -114,15 +115,22 @@ function handleSelectElement(event: MouseEvent) {
     return;
   }
 
+  const fieldName = WebviewStateMachine.fieldName;
+  if (fieldName == null) {
+    return;
+  }
+
+  const contextSelector = WebviewStateMachine.contextSelector;
+
   // Filter element
   element = WebviewUtils.filterElement(element);
 
   // Resolve the CSS selector for the selected element
-  let selectors: string[] = CSSSelectorResolver.resolve(
+  const selectors: string[] = CSSSelectorResolver.resolve(
     element,
     WebviewStateMachine.state === WebviewStates.SELECTING_MULTIPLE,
-    WebviewStateMachine.contextSelector,
-    WebviewStateMachine.fieldName
+    contextSelector,
+    fieldName
   );
 
   ipcRenderer.sendToHost('message', {

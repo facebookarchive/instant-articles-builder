@@ -36,7 +36,7 @@ const MAX_CANDIDATES = 512;
  * @constant
  * @default
  */
-const FEATURE_WEIGHTS: { [string]: number } = {
+const FEATURE_WEIGHTS: FeatureWeights = {
   // IDs are more likely unique across all articles, let's prioritize them
   leafHasID: -1,
   // classes are fine, but not guaranteed to be unique in other articles
@@ -48,10 +48,34 @@ const FEATURE_WEIGHTS: { [string]: number } = {
   endsWithNumber: -8,
   // longer selectors are bad
   numberOfComponents: -16,
-  // Better leaf is better than better trunk
-  // (ex: 'header .post-title' is better than '#article h1')
+  // More components is bad, but better leaf is better than better trunk
+  // (ex: 'header .post-title' > '#article h1')
   trunkScore: 0.5,
 };
+
+export type FeatureWeights = {
+  leafHasID: number,
+  leafHasClass: number,
+  leafHasTagName: number,
+  endsWithNumber: number,
+  numberOfComponents: number,
+  trunkScore: number
+};
+export type FeatureWeightsFilter = (weights: FeatureWeights) => FeatureWeights;
+const featureWeightsFilters: Map<string, FeatureWeightsFilter> = new Map();
+
+export type SelectorsFilter = (
+  selectors: string[],
+  contextSelector: string
+) => string[];
+const selectorsFilters: Map<string, SelectorsFilter> = new Map();
+
+export type ScoreFilter = (
+  score: number,
+  selector: string,
+  contextSelector: string
+) => number;
+const scoreFilters: Map<string, ScoreFilter> = new Map();
 
 export class CSSSelectorResolver {
   /**
@@ -69,7 +93,7 @@ export class CSSSelectorResolver {
     element: Element,
     multiple: boolean,
     contextSelector: string,
-    fieldName: ?string
+    fieldName: string
   ): string[] {
     // Generate candidates
     let candidates = this.generateCandidates(element, MAX_DEPTH);
@@ -92,20 +116,31 @@ export class CSSSelectorResolver {
       );
     }
 
+    filteredCandidates = this.filterSelectors(
+      filteredCandidates,
+      fieldName,
+      contextSelector
+    );
+
     // If none was found, return the absolute selector
     if (filteredCandidates.length === 0) {
       return [this.resolveAbsolute(element, contextSelector)];
     }
 
     // Rank candidates
-    let rankedCandidates = this.rankCandidates(filteredCandidates);
+    let rankedCandidates = this.rankCandidates(
+      filteredCandidates,
+      fieldName,
+      contextSelector
+    );
 
     // Returns the highest ranked candidate
     return rankedCandidates;
   }
 
   /**
-   * @returns Whether the selector is unique in each context node.
+   * @returns Whether the selector is unique in each context node and present
+   * in at least one.
    */
   static isUnique(
     selector: string,
@@ -233,13 +268,17 @@ export class CSSSelectorResolver {
    * Rank candidate selectors by score.
    *
    * @see {@link getScore}
-   * @param {string[]} candidates The list of candidate CSS selectors
-   * @returns {string[]} The list of candidate CSS selectors sorted by score
+   * @param candidates The list of candidate CSS selectors
+   * @returns The list of candidate CSS selectors sorted by score
    */
-  static rankCandidates(candidates: string[]): string[] {
+  static rankCandidates(
+    candidates: string[],
+    fieldName: string,
+    contextSelector: string
+  ): string[] {
     let scoredCandidates = candidates.map(candidate => ({
       selector: candidate,
-      score: this.getScore(candidate),
+      score: this.getScore(candidate, fieldName, contextSelector),
     }));
     return scoredCandidates
       .sort((a, b) => b.score - a.score)
@@ -256,7 +295,11 @@ export class CSSSelectorResolver {
    * @param candidate The candidate CSS selector
    * @returns The score for that candidate selector
    */
-  static getScore(candidate: string): number {
+  static getScore(
+    candidate: string,
+    fieldName: string,
+    contextSelector: string
+  ): number {
     // Ends recursion on empty candidate
     if (!candidate) {
       return 0;
@@ -273,7 +316,7 @@ export class CSSSelectorResolver {
     // Extracts trunk
     // ex: trunk('article head h1') = 'article head'
     let trunk = components
-      .slice(0, components.length - 2)
+      .slice(0, components.length - 1)
       .join(' ')
       .trim();
 
@@ -285,14 +328,120 @@ export class CSSSelectorResolver {
       leafHasTagName: leaf.match(/^[a-zA-Z]+/) ? 1 : 0,
       endsWithNumber: leaf.match(/[0-9]+$/) ? 1 : 0,
       numberOfComponents: components.length ? components.length : 0,
-      trunkScore: this.getScore(trunk),
+      trunkScore: this.getScore(trunk, fieldName, contextSelector),
     };
+
+    let weights = this.getFeatureWeights(fieldName);
 
     // score = features * FEATURE_WEIGHTS
     let score = Object.keys(features)
-      .map(key => FEATURE_WEIGHTS[key] * features[key])
+      .map(key => weights[key] * features[key])
       .reduce((total, current) => total + current, 0);
 
+    score = this.filterScore(score, candidate, contextSelector, fieldName);
+
+    return score;
+  }
+
+  /**
+   * Register a FeatureWeightsFilter for the given fieldName being selected.
+   *
+   * The format of the fieldName is:
+   * - RuleName.propertyName for matching a single property
+   * - RuleName.selector for matching the selector field of the Rule
+   * - *.propertyName for matching propertyName on any Rule
+   * - *.selector for matching the selector of any Rule
+   *
+   * @param fieldName The name of the field
+   */
+  static addFeatureWeightsFilter(
+    filter: FeatureWeightsFilter,
+    fieldName: string
+  ): void {
+    featureWeightsFilters.set(fieldName, filter);
+  }
+
+  static getFeatureWeights(field: string): FeatureWeights {
+    if (field != null) {
+      // Try get the filter by key
+      let filter = featureWeightsFilters.get(field);
+      if (filter == null) {
+        // Try wildcard match the filters like all.propertyName
+        filter = featureWeightsFilters.get(field.replace(/^[a-z]*\./i, 'all.'));
+      }
+      if (filter != null) {
+        return filter(FEATURE_WEIGHTS);
+      }
+    }
+    return FEATURE_WEIGHTS;
+  }
+
+  /**
+   * Register a SelectorsFilter for the given fieldName being selected.
+   *
+   * The format of the fieldName is:
+   * - RuleName.propertyName for matching a single property
+   * - RuleName.selector for matching the selector field of the Rule
+   * - *.propertyName for matching propertyName on any Rule
+   * - *.selector for matching the selector of any Rule
+   *
+   * @param fieldName The name of the field
+   */
+  static addSelectorsFilter(filter: SelectorsFilter, fieldName: string): void {
+    selectorsFilters.set(fieldName, filter);
+  }
+
+  static filterSelectors(
+    selectors: string[],
+    field: string,
+    contextSelector: string
+  ): string[] {
+    if (field != null) {
+      // Try get the filter by key
+      let filter = selectorsFilters.get(field);
+      if (filter == null) {
+        // Try wildcard match the filters like all.propertyName
+        filter = selectorsFilters.get(field.replace(/^[a-z]*\./i, 'all.'));
+      }
+      if (filter != null) {
+        return filter(selectors, contextSelector);
+      }
+    }
+    return selectors;
+  }
+
+  /**
+   * Register a ScoreFilter for the given fieldName being selected.
+   *
+   * The format of the fieldName is:
+   * - RuleName.propertyName for matching a single property
+   * - RuleName.selector for matching the selector field of the Rule
+   * - *.propertyName for matching propertyName on any Rule
+   * - *.selector for matching the selector of any Rule
+   *
+   * @param fieldName The name of the field
+   */
+  static addScoreFilter(filter: ScoreFilter, fieldName: string): void {
+    scoreFilters.set(fieldName, filter);
+  }
+
+  static filterScore(
+    score: number,
+    selector: string,
+    contextSelector: string,
+    field: string
+  ): number {
+    if (field != null) {
+      // Try get the filter by key
+      let filter = scoreFilters.get(field);
+      if (filter == null) {
+        // Try wildcard match the filters like all.propertyName
+        filter = scoreFilters.get(field.replace(/^[a-z]*\./i, 'all.'));
+      }
+      if (filter != null) {
+        return filter(score, selector, contextSelector);
+      }
+    }
     return score;
   }
 
