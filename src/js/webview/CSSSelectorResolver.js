@@ -57,7 +57,7 @@ export class CSSSelectorResolver {
   /**
    * Heuristicaly finds the simplest CSS selector that matches the provided
    * element within the article.
-   * If no simple selector is found, uses {@link resolveAbsoluteCSSSelector}.
+   * If no simple selector is found, uses {@link resolveAbsolute}.
    *
    * @see {@link getScore}
    * @param multiple Whether to allow multiple elements being matched
@@ -94,7 +94,7 @@ export class CSSSelectorResolver {
 
     // If none was found, return the absolute selector
     if (filteredCandidates.length === 0) {
-      return [this.resolveAbsoluteCSSSelector(element, contextSelector)];
+      return [this.resolveAbsolute(element, contextSelector)];
     }
 
     // Rank candidates
