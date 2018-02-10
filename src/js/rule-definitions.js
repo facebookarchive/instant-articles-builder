@@ -51,6 +51,7 @@ ruleDefinitions.push(
         supportedTypes: Set([RulePropertyTypes.STRING]),
         defaultType: RulePropertyTypes.STRING,
         required: true,
+        unique: false,
       }),
       'image.url': RulePropertyDefinitionFactory({
         name: 'image.url',

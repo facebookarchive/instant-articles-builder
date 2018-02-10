@@ -8,7 +8,7 @@
  * @flow
  */
 
-import resolveCSSSelector from './resolve-css-selector';
+import { CSSSelectorResolver } from './CSSSelectorResolver';
 import { ipcRenderer } from 'electron';
 import { BrowserMessageTypes } from '../models/BrowserMessage';
 import { WebviewStateMachine, WebviewStates } from './WebviewStateMachine';
@@ -118,10 +118,11 @@ function handleSelectElement(event: MouseEvent) {
   element = WebviewUtils.filterElement(element);
 
   // Resolve the CSS selector for the selected element
-  let selectors: string[] = resolveCSSSelector(
+  let selectors: string[] = CSSSelectorResolver.resolve(
     element,
     WebviewStateMachine.state === WebviewStates.SELECTING_MULTIPLE,
-    WebviewStateMachine.contextSelector
+    WebviewStateMachine.contextSelector,
+    WebviewStateMachine.fieldName
   );
 
   ipcRenderer.sendToHost('message', {
