@@ -31,6 +31,9 @@ try {
         "verify_peer"=>false,
         "verify_peer_name"=>false,
     ),
+    'http'=>array(
+      'header'=>"User-Agent: facebookexternalhit/1.1\r\n"
+    ),
   ));
 
   // Fetch the URL
