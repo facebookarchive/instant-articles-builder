@@ -16,6 +16,10 @@ import { WebviewUtils } from './WebviewUtils';
 import type { WebviewState } from './WebviewStateMachine';
 import type { BrowserMessage } from '../models/BrowserMessage';
 
+// Element filters
+import './filters/GlobalRule.article.body.filter';
+import './filters/all.selector.filter';
+
 //
 // Listen to messages from the Browser
 //
@@ -37,6 +41,7 @@ function receiveMessage(message: BrowserMessage): void {
     case BrowserMessageTypes.SELECT_ELEMENT:
       WebviewUtils.clearHighlights();
       WebviewStateMachine.contextSelector = message.selector;
+      WebviewStateMachine.fieldName = message.fieldName;
       if (message.multiple) {
         WebviewStateMachine.state = WebviewStates.SELECTING_MULTIPLE;
       } else {
@@ -104,9 +109,17 @@ function onChangeState(oldState: WebviewState, newState: WebviewState) {
 }
 
 function handleSelectElement(event: MouseEvent) {
+  let element = event.target;
+  if (!(element instanceof Element)) {
+    return;
+  }
+
+  // Filter element
+  element = WebviewUtils.filterElement(element);
+
   // Resolve the CSS selector for the selected element
   let selectors: string[] = resolveCSSSelector(
-    event.target,
+    element,
     WebviewStateMachine.state === WebviewStates.SELECTING_MULTIPLE,
     WebviewStateMachine.contextSelector
   );
@@ -132,8 +145,8 @@ function handleSelectElement(event: MouseEvent) {
 
 function hightlightOnHover(event: MouseEvent) {
   WebviewUtils.clearHighlights();
-  let target = event.target;
-  if (target instanceof Element) {
-    WebviewUtils.hoverElement(target);
+  let element = event.target;
+  if (element instanceof Element) {
+    WebviewUtils.hoverElement(WebviewUtils.filterElement(element));
   }
 }

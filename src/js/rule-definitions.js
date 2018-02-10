@@ -289,6 +289,10 @@ ruleDefinitions.push(
         supportedTypes: Set([RulePropertyTypes.ELEMENT]),
         defaultType: RulePropertyTypes.ELEMENT,
         defaultAttribute: 'content',
+        defaultProperty: RulePropertyFactory({
+          selector: 'img',
+          attribute: 'src',
+        }),
       }),
       'image.credit': RulePropertyDefinitionFactory({
         name: 'image.credit',
@@ -340,6 +344,10 @@ ruleDefinitions.push(
         defaultType: RulePropertyTypes.STRING,
         defaultAttribute: 'src',
         required: true,
+        defaultProperty: RulePropertyFactory({
+          selector: 'img',
+          attribute: 'src',
+        }),
       }),
       'caption.title': RulePropertyDefinitionFactory({
         name: 'caption.title',
@@ -374,6 +382,10 @@ ruleDefinitions.push(
         supportedTypes: Set([RulePropertyTypes.ELEMENT]),
         defaultType: RulePropertyTypes.ELEMENT,
         defaultAttribute: 'content',
+        defaultProperty: RulePropertyFactory({
+          selector: '*',
+          attribute: 'innerContent',
+        }),
       }),
       'interactive.url': RulePropertyDefinitionFactory({
         name: 'interactive.url',
@@ -401,6 +413,10 @@ ruleDefinitions.push(
         defaultType: RulePropertyTypes.STRING,
         defaultAttribute: 'src',
         required: true,
+        defaultProperty: RulePropertyFactory({
+          selector: 'video',
+          attribute: 'src',
+        }),
       }),
       'video.type': RulePropertyDefinitionFactory({
         name: 'video.type',
@@ -408,7 +424,10 @@ ruleDefinitions.push(
         placeholder: 'Example: video',
         supportedTypes: Set([RulePropertyTypes.STRING]),
         defaultType: RulePropertyTypes.STRING,
-        defaultAttribute: 'type',
+        defaultProperty: RulePropertyFactory({
+          selector: 'video',
+          attribute: 'type',
+        }),
       }),
     }),
   })

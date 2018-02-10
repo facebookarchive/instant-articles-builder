@@ -143,6 +143,7 @@ class Browser extends React.Component<Props, State> {
   highlightElements = () => {
     if (this.props.editor.focusedField != null) {
       let field = this.props.editor.focusedField;
+      let fieldName = null;
       let findMultipleElements = !field.definition.unique;
       let selector = field.selector;
 
@@ -156,7 +157,9 @@ class Browser extends React.Component<Props, State> {
           }
         }
       }
+
       if (field.fieldType === 'Rule') {
+        fieldName = `${field.definition.name}.selector`;
         for (let rule of this.props.rules.valueSeq()) {
           if (
             rule.definition.name === 'GlobalRule' &&
@@ -171,6 +174,11 @@ class Browser extends React.Component<Props, State> {
             }
           }
         }
+      } else if (field.fieldType === 'RuleProperty') {
+        let rule = field.rule;
+        if (rule != null) {
+          fieldName = `${rule.definition.name}.${field.definition.name}`;
+        }
       }
 
       if (this.props.editor.finding) {
@@ -178,6 +186,7 @@ class Browser extends React.Component<Props, State> {
           type: BrowserMessageTypes.SELECT_ELEMENT,
           selector: context,
           multiple: findMultipleElements,
+          fieldName: fieldName,
         });
       } else {
         this.webview.send('message', {
