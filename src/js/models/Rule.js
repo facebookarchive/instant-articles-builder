@@ -53,7 +53,7 @@ export const RuleFactory = (values: $Shape<RuleRecord>): Rule => {
         return property.set('definition', definition);
       }
       if (definition.defaultProperty != null) {
-        return definition.defaultProperty;
+        return definition.defaultProperty.set('rule', rule);
       }
       return RulePropertyFactory({ rule, definition });
     })
