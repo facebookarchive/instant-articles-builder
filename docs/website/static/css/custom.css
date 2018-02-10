@@ -1,0 +1,28 @@
+/* your custom css */
+
+.imageAlignTop .blockImage {
+  max-width: 320px;
+  border-radius: 3px;
+  box-shadow: 0px 6px 25px rgba(0,0,0,0.5);
+}
+.imageAlignTop .blockImage img {
+  border-radius: 3px;
+}
+.projectTitle small a:hover {
+  cursor: pointer !important;
+}
+
+@media only screen and (min-device-width: 360px) and (max-device-width: 736px) {
+}
+
+@media only screen and (min-width: 1024px) {
+}
+
+@media only screen and (max-width: 1023px) {
+}
+
+@media only screen and (min-width: 1400px) {
+}
+
+@media only screen and (min-width: 1500px) {
+}
