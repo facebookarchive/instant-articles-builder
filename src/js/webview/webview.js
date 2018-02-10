@@ -8,7 +8,7 @@
  * @flow
  */
 
-import resolveCSSSelector from '../utils/resolve-css-selector';
+import resolveCSSSelector from './resolve-css-selector';
 import { ipcRenderer } from 'electron';
 import { BrowserMessageTypes } from '../models/BrowserMessage';
 import { WebviewStateMachine, WebviewStates } from './WebviewStateMachine';
