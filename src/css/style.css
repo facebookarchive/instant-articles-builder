@@ -14,15 +14,10 @@ html {
 }
 
 h1 {
-  font-weight: normal;
+  font-weight: lighter;
 }
-h1 .fb {
-  font-weight: normal;
+h1 .ia {
   opacity: 0.8;
-}
-h1 .app-name {
-  font-weight: normal;
-  font-style: italic;
 }
 
 body,
