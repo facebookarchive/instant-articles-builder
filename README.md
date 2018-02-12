@@ -1,6 +1,6 @@
-# Facebook Instant Articles SDK Rules Editor
+# Facebook Instant Articles Rules Editor
 
-An App to help creating transformer rules for the Facebook Instant Articles SDK.
+An App to help transforming your site articles into Facebook Instant Articles.
 
 ## Installation
 
@@ -43,3 +43,6 @@ Run the following command (on the root of the project):
 ```
 npm test
 ```
+
+## License
+Please read the [LICENSE](https://github.com/facebook/facebook-instant-articles-rules-editor/blob/master/LICENSE) file for more information.
