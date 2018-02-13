@@ -160,6 +160,9 @@ export class CSSSelectorResolver {
       if (elements.length == 1) {
         foundInOneContext = true;
       }
+      if (elements.length == 0 && context.matches(selector)) {
+        foundInOneContext = true;
+      }
     }
     return foundInOneContext;
   }

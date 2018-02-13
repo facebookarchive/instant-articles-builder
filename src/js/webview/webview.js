@@ -70,15 +70,25 @@ function fetchAttributes(selector: string, contextSelector: string) {
   for (let context of contextElements) {
     const elements = context.querySelectorAll(selector);
     const count = elements.length;
-    if (count > 0) {
-      const attributes = WebviewUtils.getAttributes(elements.item(0));
 
+    let attributes = null;
+    if (context.matches(selector)) {
+      // Handle selecting the context itself, not a child node
+      // Ex: selecting a/href as the href of a link
+      attributes = WebviewUtils.getAttributes(context);
+    } else if (count > 0) {
+      // Returns the attributes of the first matched element
+      attributes = WebviewUtils.getAttributes(elements.item(0));
+    }
+
+    if (attributes != null) {
       ipcRenderer.sendToHost('message', {
         type: BrowserMessageTypes.ATTRIBUTES_RETRIEVED,
         selector,
         count,
         attributes,
       });
+      return;
     }
   }
 }
