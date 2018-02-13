@@ -10,8 +10,7 @@
 
 const React = require('react');
 const classNames = require('classnames');
-const moment = require('moment');
-const phpDateTimeMomentFormat = require('../utils/phpDateTimeMomentFormat');
+import phpFormatMoment from '../utils/phpFormatMoment';
 import type { RuleProperty } from '../models/RuleProperty';
 import type { Props as BaseProps } from '../containers/AppContainer.react';
 import RuleActions from '../data/RuleActions';
@@ -54,11 +53,12 @@ class DateTimeFormatPicker extends React.Component<Props, State> {
     let format = '';
     let m = {};
     if (this.expectedDateTime() != null) {
-      m = moment.parseZone(this.expectedDateTime());
-      if (m.isValid()) {
-        // TODO: WE DISABLE THE INFERING FOR NOW UNTIL WE FIND A WAY TO CONVERT ISO TO PHP
-        //format = m.creationData().format;
-      }
+      m = phpFormatMoment.parseZone(this.expectedDateTime());
+      // TODO: WE DISABLE THE INFERING FOR NOW UNTIL WE FIND A WAY TO
+      // CONVERT ISO TO PHP
+      // if (m.isValid()) {
+      //   format = m.creationData().format;
+      // }
     }
     format =
       this.props.property.format != ''
