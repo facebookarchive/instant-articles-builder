@@ -40,6 +40,7 @@ export type SelectElementMessage = {
   type: 'select_element',
   multiple: boolean,
   selector: string,
+  passThroughSelectors: string[],
   fieldName: string
 };
 

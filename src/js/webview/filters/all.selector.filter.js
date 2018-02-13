@@ -16,14 +16,28 @@ import { WebviewStateMachine } from '../WebviewStateMachine';
  * the selection context (usually the article.body).
  */
 const filter = (element: Element): Element => {
+  console.log(WebviewStateMachine.passThroughSelectors);
   const contextSelector = WebviewStateMachine.contextSelector;
+  const passThroughSelectors = WebviewStateMachine.passThroughSelectors;
   let el = element;
   if (contextSelector == null) {
     return element;
   }
   while (el && el.parentElement != null) {
     if (el && el.parentElement.matches(contextSelector)) {
+      // Return immediate child of the context
       return el;
+    }
+    for (let passThroughSelector of passThroughSelectors) {
+      // Recursively navigate upwards through passThroughSelectors only
+      // until reaching the
+      if (
+        el &&
+        el.parentElement.matches(passThroughSelector) &&
+        filter(el.parentElement) === el.parentElement
+      ) {
+        return el;
+      }
     }
     el = el.parentElement;
   }

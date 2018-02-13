@@ -42,6 +42,7 @@ function receiveMessage(message: BrowserMessage): void {
     case BrowserMessageTypes.SELECT_ELEMENT:
       WebviewUtils.clearHighlights();
       WebviewStateMachine.contextSelector = message.selector;
+      WebviewStateMachine.passThroughSelectors = message.passThroughSelectors;
       WebviewStateMachine.fieldName = message.fieldName;
       if (message.multiple) {
         WebviewStateMachine.state = WebviewStates.SELECTING_MULTIPLE;
