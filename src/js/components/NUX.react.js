@@ -69,7 +69,7 @@ export class NUX extends React.Component<Props, State> {
         </Modal.Header>
         <Modal.Content>
           <p>
-            <strong>Rules Editor</strong> helps you creating rules that convert
+            <strong>Rules Editor</strong> helps you to create rules that convert
             your articles to
             <a target="_blank" href="https://instantarticles.fb.com/">
               {' '}
