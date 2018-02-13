@@ -170,16 +170,27 @@ class RuleExporter {
       return RulePropertyFactory({
         definition: rulePropertyDefinition,
         selector: rulePropertyJSON.selector,
-        attribute:
-          rulePropertyJSON.type == RulePropertyTypes.DATETIME &&
-          rulePropertyJSON.attribute == null
-            ? 'dateTextContent'
-            : rulePropertyJSON.attribute,
+        attribute: this.inferAttributeName(rulePropertyJSON),
         format: rulePropertyJSON.format,
         type: rulePropertyJSON.type,
       });
     }
     return null;
+  }
+
+  static inferAttributeName(rulePropertyJSON: RulePropertyJSON): string {
+    if (rulePropertyJSON.attribute != null) {
+      return rulePropertyJSON.attribute;
+    } else {
+      switch (rulePropertyJSON.type) {
+        case RulePropertyTypes.DATETIME:
+          return 'dateTextContent';
+        case RulePropertyTypes.STRING:
+          return 'textContent';
+        default:
+          return 'innerContent';
+      }
+    }
   }
 }
 
