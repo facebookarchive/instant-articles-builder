@@ -16,7 +16,6 @@ import { WebviewStateMachine } from '../WebviewStateMachine';
  * the selection context (usually the article.body).
  */
 const filter = (element: Element): Element => {
-  console.log(WebviewStateMachine.passThroughSelectors);
   const contextSelector = WebviewStateMachine.contextSelector;
   const passThroughSelectors = WebviewStateMachine.passThroughSelectors;
   let el = element;

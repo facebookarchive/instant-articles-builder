@@ -7,13 +7,11 @@
  */
 
 import type { Rule } from '../Rule';
-import { Map, Set } from 'immutable';
+import { Map } from 'immutable';
 import { RuleFactory } from '../Rule';
 import { RulePropertyFactory } from '../RuleProperty';
 import { RuleDefinitionFactory } from '../RuleDefinition';
 import { RulePropertyDefinitionFactory } from '../RulePropertyDefinition';
-import { RuleUtils } from '../Rule';
-import RulePropertyTypes from '../RulePropertyTypes';
 
 describe('RuleFactory', () => {
   it('should generate an unique GUID if none is provided', () => {
@@ -116,78 +114,5 @@ describe('RuleFactory', () => {
     });
 
     expect(rule.properties.get('property2')).toBeUndefined();
-  });
-});
-
-describe('RuleUtils', () => {
-  describe('isValid', () => {
-    it('should be false for rule without selector', () => {
-      const rule: Rule = RuleFactory();
-      expect(RuleUtils.isValid(rule)).toBe(false);
-    });
-
-    it('should be true for rule with selector', () => {
-      const rule: Rule = RuleFactory({
-        selector: '.some-selector',
-      });
-      expect(RuleUtils.isValid(rule)).toBe(true);
-    });
-
-    it('should be false for rule with invalid required properties', () => {
-      const rule: Rule = RuleFactory({
-        selector: '.some-selector',
-        definition: RuleDefinitionFactory({
-          properties: Map({
-            'invalid-property': RulePropertyDefinitionFactory({
-              name: 'invalid-property',
-              required: true,
-            }),
-          }),
-        }),
-        properties: Map({
-          'invalid-property': RulePropertyFactory(),
-        }),
-      });
-      expect(RuleUtils.isValid(rule)).toBe(false);
-    });
-
-    it('should be true for rule with invalid non-required properties', () => {
-      const rule: Rule = RuleFactory({
-        selector: '.some-selector',
-        definition: RuleDefinitionFactory({
-          properties: Map({
-            'invalid-property': RulePropertyDefinitionFactory({
-              name: 'invalid-property',
-            }),
-          }),
-        }),
-        properties: Map({
-          'invalid-property': RulePropertyFactory(),
-        }),
-      });
-      expect(RuleUtils.isValid(rule)).toBe(true);
-    });
-
-    it('should be true for rule with valid required properties', () => {
-      const rule: Rule = RuleFactory({
-        selector: '.some-selector',
-        definition: RuleDefinitionFactory({
-          properties: Map({
-            'valid-property': RulePropertyDefinitionFactory({
-              name: 'valid-property',
-              supportedTypes: Set([RulePropertyTypes.ELEMENT]),
-              required: true,
-            }),
-          }),
-        }),
-        properties: Map({
-          'valid-property': RulePropertyFactory({
-            type: RulePropertyTypes.ELEMENT,
-            selector: '.some-selector',
-          }),
-        }),
-      });
-      expect(RuleUtils.isValid(rule)).toBe(true);
-    });
   });
 });

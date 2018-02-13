@@ -10,7 +10,7 @@
 
 import type { State as RuleStoreState } from '../data/RuleStore';
 import type { RuleCategory } from '../models/RuleCategories';
-import { RuleUtils } from '../models/Rule';
+import { RuleUtils } from '../utils/RuleUtils';
 import type { Field } from '../models/Field';
 
 /**

@@ -19,7 +19,7 @@ import type { BrowserMessage } from '../models/BrowserMessage';
 import { BrowserMessageTypes } from '../models/BrowserMessage';
 import Preview from './Preview.react';
 import { homeURL } from '../models/Editor';
-import { RuleUtils } from '../models/Rule';
+import { RuleUtils } from '../utils/RuleUtils';
 
 type State = {
   displayURL: string,

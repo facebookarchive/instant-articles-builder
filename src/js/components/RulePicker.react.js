@@ -16,7 +16,7 @@ const RuleActions = require('../data/RuleActions');
 
 import type { Rule } from '../models/Rule';
 import type { Props as BaseProps } from '../containers/AppContainer.react';
-import { RuleUtils } from '../models/Rule';
+import { RuleUtils } from '../utils/RuleUtils';
 
 type Props = BaseProps & { rule: Rule };
 
