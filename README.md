@@ -2,7 +2,8 @@
 
 [![CircleCI](https://circleci.com/gh/facebook/facebook-instant-articles-rules-editor.svg?style=shield)](https://circleci.com/gh/facebook/facebook-instant-articles-rules-editor)
 
-An App to help transforming your site articles into Facebook Instant Articles.
+**Rules Editor** helps you to create rules that convert your articles
+to [Facebok Instant Articles](https://instantarticles.fb.com/).
 
 ## Installation
 
