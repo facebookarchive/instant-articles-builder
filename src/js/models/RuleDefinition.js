@@ -13,6 +13,9 @@ import type { RecordOf, RecordFactory } from 'immutable';
 import type { RulePropertyDefinition } from './RulePropertyDefinition';
 import type { RuleCategory } from './RuleCategories';
 import RuleCategories from './RuleCategories';
+import type { State as RuleStoreState } from '../data/RuleStore';
+import { articleBodySelectionContext } from '../utils/selection-contexts';
+import type { Field } from './Field';
 
 type RuleDefinitionRecord = {
   name: string,
@@ -20,7 +23,8 @@ type RuleDefinitionRecord = {
   displayName: string,
   placeholder: string,
   properties: Map<string, RulePropertyDefinition>,
-  unique: boolean
+  unique: boolean,
+  getSelectionContext: (field: Field, rules: RuleStoreState) => string
 };
 
 export const RuleDefinitionFactory: RecordFactory<
@@ -32,6 +36,7 @@ export const RuleDefinitionFactory: RecordFactory<
   placeholder: '',
   properties: Map(),
   unique: false,
+  getSelectionContext: articleBodySelectionContext,
 });
 
 export type RuleDefinition = RecordOf<RuleDefinitionRecord> &

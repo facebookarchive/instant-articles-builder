@@ -23,6 +23,8 @@ export type WebviewStateChangeListener = (
 
 let state: WebviewState = WebviewStates.DEFAULT;
 let contextSelector: string = 'html';
+let passThroughSelectors: string[] = [];
+let fieldName: ?string = null;
 let listeners: WebviewStateChangeListener[] = [];
 
 export class WebviewStateMachine {
@@ -36,6 +38,22 @@ export class WebviewStateMachine {
 
   static get contextSelector(): string {
     return contextSelector;
+  }
+
+  static set fieldName(newFieldName: string) {
+    fieldName = newFieldName;
+  }
+
+  static get fieldName(): ?string {
+    return fieldName;
+  }
+
+  static set passThroughSelectors(newPassThroughSelectors: string[]) {
+    passThroughSelectors = newPassThroughSelectors;
+  }
+
+  static get passThroughSelectors(): string[] {
+    return passThroughSelectors;
   }
 
   static set state(newState: WebviewState) {

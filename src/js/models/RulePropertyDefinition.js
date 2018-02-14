@@ -14,9 +14,13 @@ import RulePropertyTypes from './RulePropertyTypes';
 import type { RuleProperty } from './RuleProperty';
 import type { RulePropertyType } from './RulePropertyTypes.js';
 import type { RecordOf, RecordFactory } from 'immutable';
+import type { State as RuleStoreState } from '../data/RuleStore';
+import { ruleSelectionContext } from '../utils/selection-contexts';
+import type { Field } from './Field';
 
 /**
- * @property {?RuleProperty} defaultProperty a default pre-filled property for this definition.
+ * @property {?RuleProperty} defaultProperty a default pre-filled property
+ * for this definition.
  */
 type RulePropertyDefinitionRecord = {
   name: string,
@@ -27,7 +31,8 @@ type RulePropertyDefinitionRecord = {
   required: boolean,
   unique: boolean,
   defaultProperty: ?RuleProperty,
-  defaultType: RulePropertyType
+  defaultType: RulePropertyType,
+  getSelectionContext: (field: Field, rules: RuleStoreState) => string
 };
 
 const BaseRulePropertyDefinitionFactory: RecordFactory<
@@ -42,6 +47,7 @@ const BaseRulePropertyDefinitionFactory: RecordFactory<
   unique: true,
   defaultProperty: null,
   defaultType: RulePropertyTypes.STRING,
+  getSelectionContext: ruleSelectionContext,
 });
 
 export const RulePropertyDefinitionFactory = (

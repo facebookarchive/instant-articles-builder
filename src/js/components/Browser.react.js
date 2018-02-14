@@ -17,9 +17,9 @@ import RuleActions from '../data/RuleActions';
 import type { Props } from '../containers/AppContainer.react';
 import type { BrowserMessage } from '../models/BrowserMessage';
 import { BrowserMessageTypes } from '../models/BrowserMessage';
-import { RuleUtils } from '../models/Rule';
 import Preview from './Preview.react';
 import { homeURL } from '../models/Editor';
+import { RuleUtils } from '../utils/RuleUtils';
 
 type State = {
   displayURL: string,
@@ -140,36 +140,36 @@ class Browser extends React.Component<Props, State> {
     return false;
   };
 
+  getPassThroughSelectors = () => {
+    const selectors = [];
+    for (let rule of this.props.rules.valueSeq()) {
+      if (
+        rule.definition.name == 'PassThroughRule' &&
+        RuleUtils.isValid(rule)
+      ) {
+        selectors.push(rule.selector);
+      }
+    }
+    return selectors;
+  };
+
   highlightElements = () => {
     if (this.props.editor.focusedField != null) {
       let field = this.props.editor.focusedField;
+      let fieldName = null;
       let findMultipleElements = !field.definition.unique;
       let selector = field.selector;
-
-      // Calculate context for selecting elements
-      let context = 'html';
-      if (field.fieldType === 'RuleProperty' && field.rule != null) {
-        let ruleGuid = field.rule.guid;
-        for (let rule of this.props.rules.valueSeq()) {
-          if (rule.guid === ruleGuid) {
-            context = rule.selector;
-          }
-        }
-      }
+      let context = field.definition.getSelectionContext(
+        field,
+        this.props.rules
+      );
+      let passThroughSelectors = this.getPassThroughSelectors();
       if (field.fieldType === 'Rule') {
-        for (let rule of this.props.rules.valueSeq()) {
-          if (
-            rule.definition.name === 'GlobalRule' &&
-            RuleUtils.isValid(rule)
-          ) {
-            const selector = rule.properties.getIn([
-              'article.body',
-              'selector',
-            ]);
-            if (selector != null && selector != '') {
-              context = selector;
-            }
-          }
+        fieldName = `${field.definition.name}.selector`;
+      } else if (field.fieldType === 'RuleProperty') {
+        let rule = field.rule;
+        if (rule != null) {
+          fieldName = `${rule.definition.name}.${field.definition.name}`;
         }
       }
 
@@ -177,7 +177,9 @@ class Browser extends React.Component<Props, State> {
         this.webview.send('message', {
           type: BrowserMessageTypes.SELECT_ELEMENT,
           selector: context,
+          passThroughSelectors: passThroughSelectors,
           multiple: findMultipleElements,
+          fieldName: fieldName,
         });
       } else {
         this.webview.send('message', {
@@ -210,7 +212,7 @@ class Browser extends React.Component<Props, State> {
   componentDidMount() {
     if (this.webview) {
       let webview = this.webview;
-      this.webview.addEventListener('did-finish-load', function() {
+      this.webview.addEventListener('dom-ready', function() {
         fs.readFile(__dirname + '/../../css/injected.css', 'utf-8', function(
           error,
           data

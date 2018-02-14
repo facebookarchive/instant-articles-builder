@@ -39,7 +39,9 @@ export type FetchAttributesMessage = {
 export type SelectElementMessage = {
   type: 'select_element',
   multiple: boolean,
-  selector: string
+  selector: string,
+  passThroughSelectors: string[],
+  fieldName: string
 };
 
 /**

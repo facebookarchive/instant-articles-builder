@@ -17,8 +17,8 @@ import RuleActions from '../data/RuleActions';
 import { RuleFactory } from '../models/Rule';
 import { RulePropertyFactory } from '../models/RuleProperty';
 import RulePropertyTypes from '../models/RulePropertyTypes';
-import { RuleUtils } from '../models/Rule';
-import { RulePropertyUtils } from '../models/RuleProperty';
+import { RuleUtils } from '../utils/RuleUtils';
+import { RulePropertyUtils } from '../utils/RulePropertyUtils';
 
 export type JSONFormat = {
   rules: RuleJSON[]

@@ -15,6 +15,11 @@ import type { RuleDefinition } from './models/RuleDefinition';
 import { RuleDefinitionFactory } from './models/RuleDefinition';
 import { RulePropertyDefinitionFactory } from './models/RulePropertyDefinition';
 import { RulePropertyFactory } from './models/RuleProperty';
+import {
+  htmlSelectionContext,
+  selectionContextByRuleCategories,
+  selectionContextByRules,
+} from './utils/selection-contexts';
 
 const ruleDefinitions: RuleDefinition[] = [];
 
@@ -24,6 +29,7 @@ ruleDefinitions.push(
     category: RuleCategories.BASIC,
     placeholder: 'Example: html',
     displayName: 'Article Structure',
+    getSelectionContext: htmlSelectionContext,
     unique: true,
     properties: Map({
       'article.title': RulePropertyDefinitionFactory({
@@ -51,6 +57,7 @@ ruleDefinitions.push(
         supportedTypes: Set([RulePropertyTypes.STRING]),
         defaultType: RulePropertyTypes.STRING,
         required: true,
+        unique: false,
       }),
       'image.url': RulePropertyDefinitionFactory({
         name: 'image.url',
@@ -89,6 +96,9 @@ ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'ItalicRule',
     category: RuleCategories.TEXT,
+    getSelectionContext: selectionContextByRuleCategories([
+      RuleCategories.TEXT,
+    ]),
     displayName: 'Italic Text',
     placeholder: 'Example: i',
   })
@@ -99,6 +109,9 @@ ruleDefinitions.push(
     category: RuleCategories.MEDIA,
     displayName: 'Caption',
     placeholder: 'Example: article',
+    getSelectionContext: selectionContextByRuleCategories([
+      RuleCategories.MEDIA,
+    ]),
     properties: Map({
       'caption.default': RulePropertyDefinitionFactory({
         name: 'caption.default',
@@ -117,6 +130,9 @@ ruleDefinitions.push(
     category: RuleCategories.TEXT,
     displayName: 'Link',
     placeholder: 'Example: a',
+    getSelectionContext: selectionContextByRuleCategories([
+      RuleCategories.TEXT,
+    ]),
     properties: Map({
       'anchor.href': RulePropertyDefinitionFactory({
         name: 'anchor.href',
@@ -142,6 +158,9 @@ ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'EmphasizedRule',
     category: RuleCategories.TEXT,
+    getSelectionContext: selectionContextByRuleCategories([
+      RuleCategories.TEXT,
+    ]),
     displayName: 'Emphasized Text',
     placeholder: 'Example: em',
   })
@@ -150,6 +169,9 @@ ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'BoldRule',
     category: RuleCategories.TEXT,
+    getSelectionContext: selectionContextByRuleCategories([
+      RuleCategories.TEXT,
+    ]),
     displayName: 'Bold Text',
     placeholder: 'Example: b, strong',
   })
@@ -166,6 +188,7 @@ ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'ListItemRule',
     category: RuleCategories.TEXT,
+    getSelectionContext: selectionContextByRules(['ListRule']),
     displayName: 'List Item',
     placeholder: 'Example: li',
   })
@@ -174,6 +197,9 @@ ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'SponsorRule',
     category: RuleCategories.BASIC,
+    getSelectionContext: selectionContextByRuleCategories([
+      RuleCategories.TEXT,
+    ]),
     displayName: 'Sponsor(s)',
     placeholder: 'Example: ul.op-sponsors',
     properties: Map({
@@ -243,6 +269,7 @@ ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'FooterRelatedArticlesRule',
     category: RuleCategories.WIDGETS,
+    getSelectionContext: selectionContextByRules(['FooterRule']),
     displayName: 'Related Articles (Footer)',
     placeholder: 'Example: ul.op-related-articles',
   })
@@ -253,6 +280,10 @@ ruleDefinitions.push(
     category: RuleCategories.WIDGETS,
     displayName: 'Related Item',
     placeholder: 'Example: li',
+    getSelectionContext: selectionContextByRules([
+      'RelatedArticlesRule',
+      'FooterRelatedArticlesRule',
+    ]),
     properties: Map({
       'related.url': RulePropertyDefinitionFactory({
         name: 'related.url',
@@ -289,6 +320,10 @@ ruleDefinitions.push(
         supportedTypes: Set([RulePropertyTypes.ELEMENT]),
         defaultType: RulePropertyTypes.ELEMENT,
         defaultAttribute: 'content',
+        defaultProperty: RulePropertyFactory({
+          selector: 'img',
+          attribute: 'src',
+        }),
       }),
       'image.credit': RulePropertyDefinitionFactory({
         name: 'image.credit',
@@ -329,6 +364,7 @@ ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'SlideshowImageRule',
     category: RuleCategories.MEDIA,
+    getSelectionContext: selectionContextByRules(['SlideshowRule']),
     displayName: 'Slideshow Image',
     placeholder: 'Example: div.img',
     properties: Map({
@@ -340,6 +376,10 @@ ruleDefinitions.push(
         defaultType: RulePropertyTypes.STRING,
         defaultAttribute: 'src',
         required: true,
+        defaultProperty: RulePropertyFactory({
+          selector: 'img',
+          attribute: 'src',
+        }),
       }),
       'caption.title': RulePropertyDefinitionFactory({
         name: 'caption.title',
@@ -374,6 +414,10 @@ ruleDefinitions.push(
         supportedTypes: Set([RulePropertyTypes.ELEMENT]),
         defaultType: RulePropertyTypes.ELEMENT,
         defaultAttribute: 'content',
+        defaultProperty: RulePropertyFactory({
+          selector: '*',
+          attribute: 'innerContent',
+        }),
       }),
       'interactive.url': RulePropertyDefinitionFactory({
         name: 'interactive.url',
@@ -401,6 +445,10 @@ ruleDefinitions.push(
         defaultType: RulePropertyTypes.STRING,
         defaultAttribute: 'src',
         required: true,
+        defaultProperty: RulePropertyFactory({
+          selector: 'video',
+          attribute: 'src',
+        }),
       }),
       'video.type': RulePropertyDefinitionFactory({
         name: 'video.type',
@@ -409,6 +457,10 @@ ruleDefinitions.push(
         supportedTypes: Set([RulePropertyTypes.STRING]),
         defaultType: RulePropertyTypes.STRING,
         defaultAttribute: 'type',
+        defaultProperty: RulePropertyFactory({
+          selector: 'video',
+          attribute: 'type',
+        }),
       }),
     }),
   })

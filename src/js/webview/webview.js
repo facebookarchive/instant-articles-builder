@@ -8,13 +8,18 @@
  * @flow
  */
 
-import resolveCSSSelector from '../utils/resolve-css-selector';
+import { CSSSelectorResolver } from './CSSSelectorResolver';
 import { ipcRenderer } from 'electron';
 import { BrowserMessageTypes } from '../models/BrowserMessage';
 import { WebviewStateMachine, WebviewStates } from './WebviewStateMachine';
 import { WebviewUtils } from './WebviewUtils';
 import type { WebviewState } from './WebviewStateMachine';
 import type { BrowserMessage } from '../models/BrowserMessage';
+
+// Load Filters
+import './filters/all.selector.filter';
+import './filters/GlobalRule.article.body.filter';
+import './filters/GlobalRule.author.name.filter';
 
 //
 // Listen to messages from the Browser
@@ -37,6 +42,8 @@ function receiveMessage(message: BrowserMessage): void {
     case BrowserMessageTypes.SELECT_ELEMENT:
       WebviewUtils.clearHighlights();
       WebviewStateMachine.contextSelector = message.selector;
+      WebviewStateMachine.passThroughSelectors = message.passThroughSelectors;
+      WebviewStateMachine.fieldName = message.fieldName;
       if (message.multiple) {
         WebviewStateMachine.state = WebviewStates.SELECTING_MULTIPLE;
       } else {
@@ -63,15 +70,25 @@ function fetchAttributes(selector: string, contextSelector: string) {
   for (let context of contextElements) {
     const elements = context.querySelectorAll(selector);
     const count = elements.length;
-    if (count > 0) {
-      const attributes = WebviewUtils.getAttributes(elements.item(0));
 
+    let attributes = null;
+    if (context.matches(selector)) {
+      // Handle selecting the context itself, not a child node
+      // Ex: selecting a/href as the href of a link
+      attributes = WebviewUtils.getAttributes(context);
+    } else if (count > 0) {
+      // Returns the attributes of the first matched element
+      attributes = WebviewUtils.getAttributes(elements.item(0));
+    }
+
+    if (attributes != null) {
       ipcRenderer.sendToHost('message', {
         type: BrowserMessageTypes.ATTRIBUTES_RETRIEVED,
         selector,
         count,
         attributes,
       });
+      return;
     }
   }
 }
@@ -104,11 +121,27 @@ function onChangeState(oldState: WebviewState, newState: WebviewState) {
 }
 
 function handleSelectElement(event: MouseEvent) {
+  let element = event.target;
+  if (!(element instanceof Element)) {
+    return;
+  }
+
+  const fieldName = WebviewStateMachine.fieldName;
+  if (fieldName == null) {
+    return;
+  }
+
+  const contextSelector = WebviewStateMachine.contextSelector;
+
+  // Filter element
+  element = WebviewUtils.filterElement(element);
+
   // Resolve the CSS selector for the selected element
-  let selectors: string[] = resolveCSSSelector(
-    event.target,
+  const selectors: string[] = CSSSelectorResolver.resolve(
+    element,
     WebviewStateMachine.state === WebviewStates.SELECTING_MULTIPLE,
-    WebviewStateMachine.contextSelector
+    contextSelector,
+    fieldName
   );
 
   ipcRenderer.sendToHost('message', {
@@ -132,8 +165,8 @@ function handleSelectElement(event: MouseEvent) {
 
 function hightlightOnHover(event: MouseEvent) {
   WebviewUtils.clearHighlights();
-  let target = event.target;
-  if (target instanceof Element) {
-    WebviewUtils.hoverElement(target);
+  let element = event.target;
+  if (element instanceof Element) {
+    WebviewUtils.hoverElement(WebviewUtils.filterElement(element));
   }
 }

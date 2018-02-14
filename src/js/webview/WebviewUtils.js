@@ -10,11 +10,15 @@
 
 import RulePropertyTypes from '../models/RulePropertyTypes';
 import type { AttributeRecord } from '../models/Attribute';
+import { WebviewStateMachine } from './WebviewStateMachine';
 
 const highlightClass = 'facebook-instant-articles-sdk-rules-editor-highlight';
 const hoverClass = 'facebook-instant-articles-sdk-rules-editor-hover';
 const contextClass = 'facebook-instant-articles-sdk-rules-editor-context';
 const selectingClass = 'facebook-instant-articles-sdk-rules-editor-selecting';
+
+export type ElementFilter = (element: Element) => Element;
+const elementFilters: Map<string, ElementFilter> = new Map();
 
 export class WebviewUtils {
   static startSelecting(contextSelector: string): void {
@@ -34,7 +38,13 @@ export class WebviewUtils {
   }
 
   static stopSelecting(): void {
-    // Remove class form existing highlighted elements
+    let body = document.body;
+    if (body == null) {
+      return;
+    }
+
+    body.classList.remove(selectingClass);
+
     let oldHighlightedElements = document.querySelectorAll(`.${contextClass}`);
     oldHighlightedElements.forEach(function(element) {
       element.classList.remove(contextClass);
@@ -68,6 +78,40 @@ export class WebviewUtils {
         element.classList.add(highlightClass);
       });
     }
+  }
+
+  /**
+   * Register an ElementFilter for the given fieldName being selected.
+   *
+   * The format of the fieldName is:
+   * - RuleName.propertyName for matching a single property
+   * - RuleName.selector for matching the selector field of the Rule
+   * - *.propertyName for matching propertyName on any Rule
+   * - *.selector for matching the selector of any Rule
+   *
+   * @param {string} fieldName The name of the field
+   */
+  static addElementFilter(elementFilter: ElementFilter, fieldName: string) {
+    elementFilters.set(fieldName, elementFilter);
+  }
+
+  /**
+   * Filters the elements through registered filters.
+   */
+  static filterElement(element: Element): Element {
+    let field = WebviewStateMachine.fieldName;
+    if (field != null) {
+      // Try get the filter by key
+      let filter = elementFilters.get(field);
+      if (filter == null) {
+        // Try wildcard match the filters like all.propertyName
+        filter = elementFilters.get(field.replace(/^[a-z]*\./i, 'all.'));
+      }
+      if (filter != null) {
+        return filter(element);
+      }
+    }
+    return element;
   }
 
   static hoverElement(element: Element): void {

@@ -15,7 +15,6 @@ import type { RecordOf, RecordFactory } from 'immutable';
 import type { Rule } from './Rule';
 import type { RulePropertyDefinition } from './RulePropertyDefinition';
 import type { RulePropertyType } from './RulePropertyTypes.js';
-import RulePropertyTypes from './RulePropertyTypes';
 
 type RulePropertyRecord = {
   fieldType: 'RuleProperty',
@@ -36,27 +35,5 @@ export const RulePropertyFactory: RecordFactory<RulePropertyRecord> = Record({
   format: '',
   rule: null,
 });
-
-export class RulePropertyUtils {
-  static isValid(ruleProperty: RuleProperty): boolean {
-    if (ruleProperty.selector == '' || ruleProperty.selector == null) {
-      return false;
-    }
-    if (
-      ruleProperty.type != RulePropertyTypes.ELEMENT &&
-      ruleProperty.attribute == null &&
-      ruleProperty.definition.defaultAttribute == null
-    ) {
-      return false;
-    }
-    if (
-      ruleProperty.type == RulePropertyTypes.DATETIME &&
-      ruleProperty.format == ''
-    ) {
-      return false;
-    }
-    return true;
-  }
-}
 
 export type RuleProperty = RecordOf<RulePropertyRecord> & RulePropertyFactory;

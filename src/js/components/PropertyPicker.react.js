@@ -15,7 +15,7 @@ const SelectorPicker = require('./SelectorPicker.react.js');
 import type { RuleProperty } from '../models/RuleProperty';
 import RulePropertyTypes from '../models/RulePropertyTypes';
 import RuleActions from '../data/RuleActions';
-import { RulePropertyUtils } from '../models/RuleProperty';
+import { RulePropertyUtils } from '../utils/RulePropertyUtils';
 
 import type { Props as BaseProps } from '../containers/AppContainer.react';
 

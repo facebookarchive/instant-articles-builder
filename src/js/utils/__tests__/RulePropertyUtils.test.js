@@ -6,9 +6,9 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-import { RulePropertyUtils } from '../RuleProperty';
-import { RulePropertyFactory } from '../RuleProperty';
-import RulePropertyTypes from '../RulePropertyTypes';
+import { RulePropertyUtils } from '../RulePropertyUtils';
+import { RulePropertyFactory } from '../../models/RuleProperty';
+import RulePropertyTypes from '../../models/RulePropertyTypes';
 
 describe('RulePropertyUtils', () => {
   describe('isValid', () => {
