@@ -5,15 +5,11 @@
 **Rules Editor** helps you to create rules that convert your articles
 to [Facebok Instant Articles](https://instantarticles.fb.com/).
 
-## Installation
+Try it out (Windows/Mac): https://facebook.github.io/facebook-instant-articles-rules-editor/
 
-Please make sure you have the latest version of node. On Mac, use Homebrew:
+## Building from source
 
-```
-brew upgrade node
-```
-
-Then run (on the root of the project):
+Run (on the root of the project):
 
 ```
 npm install
@@ -31,7 +27,7 @@ And install the composer dependencies:
 composer install
 ```
 
-## Launch the App
+### Launching the App
 
 Just run (on the root of the project):
 
@@ -39,7 +35,7 @@ Just run (on the root of the project):
 npm start
 ```
 
-## Testing
+### Testing
 
 Run the following command (on the root of the project):
 
