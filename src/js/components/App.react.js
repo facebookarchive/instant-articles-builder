@@ -17,6 +17,7 @@ import type { Props } from '../containers/AppContainer.react';
 import { NUX } from './NUX.react';
 import { NUXTour } from './NUXTour.react';
 import { BugReporter } from './BugReporter.react';
+import { UpdateNotice } from './UpdateNotice.react';
 
 class App extends React.Component<Props> {
   constructor(props: Props) {
@@ -76,6 +77,7 @@ class App extends React.Component<Props> {
             <RuleList {...this.props} />
           </nav>
         </div>
+        <UpdateNotice {...this.props} />
       </div>
     );
   }

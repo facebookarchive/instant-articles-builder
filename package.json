@@ -60,6 +60,8 @@
     "react"
   ],
   "dependencies": {
+    "@octokit/rest": "^14.0.9",
+    "compare-versions": "^3.1.0",
     "electron-debug": "^1.4.0",
     "electron-settings": "^3.1.4",
     "flux": "^3.1.3",
