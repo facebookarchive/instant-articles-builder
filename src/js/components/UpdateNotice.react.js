@@ -36,8 +36,11 @@ export class UpdateNotice extends React.Component<Props, State> {
       releaseVersion: null,
       visible: false,
     };
-    this.fetchVersion();
   }
+
+  componentDidMount = () => {
+    this.fetchVersion();
+  };
 
   handleDismiss = () => {
     this.setState({
