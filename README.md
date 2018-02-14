@@ -5,7 +5,7 @@
 **Rules Editor** helps you to create rules that convert your articles
 to [Facebok Instant Articles](https://instantarticles.fb.com/).
 
-Try it out (Windows/Mac): https://facebook.github.io/facebook-instant-aritcles-rules-editor
+Try it out (Windows/Mac): https://facebook.github.io/facebook-instant-articles-rules-editor/
 
 ## Building from source
 
