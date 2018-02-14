@@ -9,6 +9,11 @@
 jest.mock('fs');
 const fs = require('fs');
 
+jest.mock('../Browser.react.js');
+jest.mock('../NUX.react.js');
+jest.mock('../NUXTour.react.js');
+jest.mock('../UpdateNotice.react.js');
+
 const Adapter = require('enzyme-adapter-react-15');
 const Enzyme = require('enzyme');
 const { mount } = Enzyme;
