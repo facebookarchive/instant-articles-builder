@@ -7,7 +7,7 @@
  */
 
 const electron = require('electron');
-const { app, BrowserWindow } = require('electron');
+const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 const url = require('url');
 const php = require('gulp-connect-php');
@@ -22,7 +22,11 @@ let win;
 
 function createWindow() {
   // Create the browser window.
-  win = new BrowserWindow(electron.screen.getPrimaryDisplay().workAreaSize);
+  win = new BrowserWindow({
+    width: electron.screen.getPrimaryDisplay().workAreaSize.width,
+    height: electron.screen.getPrimaryDisplay().workAreaSize.height,
+    icon: '../img/icon.png',
+  });
 
   const {
     default: installExtension,
@@ -53,6 +57,54 @@ function createWindow() {
 
     phpServer.closeServer();
   });
+
+  // Create the Application's main menu
+  var template = [
+    {
+      label: 'Application',
+      submenu: [
+        {
+          label: 'Quit',
+          accelerator: 'Command+Q',
+          click: function() {
+            app.quit();
+          },
+        },
+      ],
+    },
+    {
+      label: 'Edit',
+      submenu: [
+        { label: 'Undo', accelerator: 'CmdOrCtrl+Z', selector: 'undo:' },
+        { label: 'Redo', accelerator: 'Shift+CmdOrCtrl+Z', selector: 'redo:' },
+        { type: 'separator' },
+        { label: 'Cut', accelerator: 'CmdOrCtrl+X', selector: 'cut:' },
+        { label: 'Copy', accelerator: 'CmdOrCtrl+C', selector: 'copy:' },
+        { label: 'Paste', accelerator: 'CmdOrCtrl+V', selector: 'paste:' },
+        {
+          label: 'Select All',
+          accelerator: 'CmdOrCtrl+A',
+          selector: 'selectAll:',
+        },
+      ],
+    },
+    {
+      label: 'View',
+      submenu: [
+        { role: 'reload' },
+        { role: 'forcereload' },
+        { role: 'toggledevtools' },
+        { type: 'separator' },
+        { role: 'resetzoom' },
+        { role: 'zoomin' },
+        { role: 'zoomout' },
+        { type: 'separator' },
+        { role: 'togglefullscreen' },
+      ],
+    },
+  ];
+
+  Menu.setApplicationMenu(Menu.buildFromTemplate(template));
 }
 
 // This method will be called when Electron has finished
@@ -81,7 +133,15 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 // php ruleZ
 
-phpServer.server({
-  port: 8105,
-  base: path.resolve(__dirname) + '/../../webserver',
-});
+if (process.platform === 'win32') {
+  phpServer.server({
+    port: 8105,
+    base: path.resolve(__dirname) + '/../../webserver',
+    bin: path.resolve(__dirname) + '/../../bin/php/php.exe',
+  });
+} else {
+  phpServer.server({
+    port: 8105,
+    base: path.resolve(__dirname) + '/../../webserver',
+  });
+}

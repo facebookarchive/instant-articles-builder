@@ -14,12 +14,14 @@ import classNames from 'classnames';
 import RuleExporter from '../utils/RuleExporter';
 import type { BaseProps } from '../containers/AppContainer.react';
 import { Loader, Dimmer, Form, Tab } from 'semantic-ui-react';
+import debounce from '../utils/debounce';
 
 type Props = BaseProps & { hidden: boolean };
 
 type State = {
   previewLoading: boolean,
-  sourceLoading: boolean
+  sourceLoading: boolean,
+  activeTab: number
 };
 
 class Preview extends React.Component<Props, State> {
@@ -31,6 +33,7 @@ class Preview extends React.Component<Props, State> {
     this.state = {
       previewLoading: false,
       sourceLoading: false,
+      activeTab: 0,
     };
   }
 
@@ -48,28 +51,71 @@ class Preview extends React.Component<Props, State> {
     this.setState({ sourceLoading: false });
   };
 
-  sourceSrc = () => {
-    return (
-      'view-source:http://127.0.0.1:8105/source.php?url=' +
-      encodeURIComponent(this.props.editor.url) +
-      '&rules=' +
-      encodeURIComponent(
-        JSON.stringify(RuleExporter.export(this.props.rules))
-      ) +
-      '&preview=false'
-    );
+  reloadPreview = debounce(() => {
+    if (this.state.activeTab == 0 && this.preview != null) {
+      this.preview.loadURL(
+        'http://127.0.0.1:8105/preview.php?url=' +
+          encodeURIComponent(this.props.editor.url),
+        {
+          postData: [
+            {
+              type: 'rawData',
+              bytes: Buffer.from(
+                'rules=' +
+                  encodeURIComponent(
+                    JSON.stringify(RuleExporter.export(this.props.rules))
+                  )
+              ),
+            },
+          ],
+          extraHeaders: 'Content-Type: application/x-www-form-urlencoded',
+        }
+      );
+    }
+  }, 1000);
+
+  reloadSource = debounce(() => {
+    if (this.state.activeTab == 1 && this.sourceview != null) {
+      this.sourceview.loadURL(
+        'view-source:http://127.0.0.1:8105/source.php?url=' +
+          encodeURIComponent(this.props.editor.url),
+        {
+          postData: [
+            {
+              type: 'rawData',
+              bytes: Buffer.from(
+                'rules=' +
+                  encodeURIComponent(
+                    JSON.stringify(RuleExporter.export(this.props.rules))
+                  )
+              ),
+            },
+          ],
+          extraHeaders: 'Content-Type: application/x-www-form-urlencoded',
+        }
+      );
+    }
+  }, 1000);
+
+  shouldReload = (nextProps: Props): boolean => {
+    if (nextProps.editor.url != this.props.editor.url) {
+      return true;
+    }
+    if (
+      RuleExporter.export(nextProps.rules) !=
+      RuleExporter.export(this.props.rules)
+    ) {
+      return true;
+    }
+    return false;
   };
-  previewSrc = () => {
-    return (
-      'http://127.0.0.1:8105/preview.php?url=' +
-      encodeURIComponent(this.props.editor.url) +
-      '&rules=' +
-      encodeURIComponent(
-        JSON.stringify(RuleExporter.export(this.props.rules))
-      ) +
-      '&preview=true'
-    );
-  };
+
+  componentWillReceiveProps(nextProps: Props) {
+    if (this.shouldReload(nextProps)) {
+      this.reloadPreview();
+      this.reloadSource();
+    }
+  }
 
   render() {
     return (
@@ -83,6 +129,17 @@ class Preview extends React.Component<Props, State> {
           <Form.Field className="grow">
             <Tab
               className="grow"
+              onTabChange={(event, data) => {
+                this.setState({ activeTab: data.activeIndex });
+                if (data.activeIndex == 0) {
+                  this.previewLoading();
+                  this.reloadPreview();
+                }
+                if (data.activeIndex == 1) {
+                  this.sourceLoading();
+                  this.reloadSource();
+                }
+              }}
               panes={[
                 {
                   menuItem: 'Preview',
@@ -90,9 +147,10 @@ class Preview extends React.Component<Props, State> {
                     const webview = (
                       <webview
                         id="preview"
-                        src={this.previewSrc()}
+                        src="about:blank"
                         ref={webview => {
                           if (webview) {
+                            this.preview = webview;
                             (webview: any).addEventListener(
                               'did-start-loading',
                               this.previewLoading
@@ -121,16 +179,17 @@ class Preview extends React.Component<Props, State> {
                     const webview = (
                       <webview
                         id="source"
-                        src={this.sourceSrc()}
+                        src="about:blank"
                         ref={webview => {
                           if (webview) {
+                            this.sourceview = webview;
                             (webview: any).addEventListener(
                               'did-start-loading',
-                              this.previewLoading
+                              this.sourceLoading
                             );
                             (webview: any).addEventListener(
                               'did-stop-loading',
-                              this.previewFinishedLoading
+                              this.sourceFinishedLoading
                             );
                           }
                         }}

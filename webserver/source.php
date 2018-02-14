@@ -7,7 +7,7 @@ use Facebook\InstantArticles\Elements\InstantArticle;
 use Facebook\InstantArticles\Elements\Header;
 
 function exception_error_handler($errno, $errstr, $errfile, $errline ) {
-    throw new ErrorException($errstr, $errno, 0, $errfile, $errline);
+  // noop
 }
 
 set_error_handler("exception_error_handler");
@@ -16,10 +16,10 @@ try {
   // Read the URL parameter
   //----------------------
   $url = $_GET['url'];
-  $rules = $_GET['rules'];
+  $rules = $_POST['rules'];
 
   if (!$url || !$rules) {
-    die('Invalid parameters');
+    invalidIA();
   }
 
   if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
@@ -38,8 +38,11 @@ try {
 
   // Fetch the URL
   //--------------
-  $content = file_get_contents($url, false, $context_options);
+  $content = @file_get_contents($url, false, $context_options);
 
+  if ($content === false) {
+    invalidIA();
+  }
 
   // Load rules
   //-----------
@@ -61,7 +64,7 @@ catch (Exception $e) {
   die();
 }
 
-function invalidIA($preview) {
+function invalidIA() {
   echo 'Open an article and fully configure the <em>Article Structure</em>';
   echo 'rule to see the source of your Instant Article here.';
   die();

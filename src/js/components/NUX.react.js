@@ -64,7 +64,7 @@ export class NUX extends React.Component<Props, State> {
         className="nux-modal"
       >
         <Modal.Header className="nux-header">
-          <Image src="../img/logo-nobg.png" size="mini" floated="left" />{' '}
+          <Image src="../img/icon-nobg.svg" size="mini" floated="left" />{' '}
           Welcome to the Rules Editor
         </Modal.Header>
         <Modal.Content>

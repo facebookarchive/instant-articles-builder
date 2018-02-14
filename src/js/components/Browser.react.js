@@ -10,6 +10,7 @@
 
 const React = require('react');
 const fs = require('fs');
+const path = require('path');
 
 import { Map } from 'immutable';
 import EditorActions from '../data/EditorActions';
@@ -275,7 +276,7 @@ class Browser extends React.Component<Props, State> {
             }}
             id="webview"
             src={this.props.editor.url}
-            preload="../js/injected.js"
+            preload={path.join(__dirname, '../injected.js')}
           />
           <div className="tab" role="presentation" onClick={this.togglePreview}>
             <span>{this.state.showPreview ? '>' : '<'}</span>

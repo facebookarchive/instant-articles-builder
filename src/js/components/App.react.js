@@ -63,7 +63,7 @@ class App extends React.Component<Props> {
             <NUX {...this.props} />
             <BugReporter {...this.props} />
           </div>
-          <img src="../img/logo-nobg.png" width="48" height="48" />
+          <img src="../img/icon-nobg.svg" width="48" height="48" />
           <h1>
             <span className="ia">Instant Articles</span>{' '}
             <span className="app-name">Rules Editor</span>

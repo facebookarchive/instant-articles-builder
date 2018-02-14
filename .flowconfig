@@ -1,5 +1,6 @@
 [ignore]
 .*/react/node_modules/.*
+.*/electron-packager/test/.*
 
 [include]
 node_modules/react
