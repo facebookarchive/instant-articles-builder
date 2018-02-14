@@ -662,3 +662,7 @@ button {
 a:hover {
   cursor: pointer !important;
 }
+.update-notice .close {
+  margin-top: 4px !important;
+  margin-right: 5px !important;
+}
