@@ -26,7 +26,7 @@ const importExportEncoding = 'utf8';
 const tutorialSite =
   'https://media.fb.com/2016/03/07/instant-articles-wordpress-plugin/';
 
-export class NUXTour extends React.Component<Props> {
+class NUXTour extends React.Component<Props> {
   joyride: ?Joyride = null;
 
   newConfiguration = () => {
@@ -530,3 +530,5 @@ export class NUXTour extends React.Component<Props> {
     );
   }
 }
+
+export default NUXTour;
