@@ -28,7 +28,7 @@ type State = {
   visible: boolean
 };
 
-export class UpdateNotice extends React.Component<Props, State> {
+class UpdateNotice extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -94,3 +94,5 @@ export class UpdateNotice extends React.Component<Props, State> {
     );
   }
 }
+
+export default UpdateNotice;
