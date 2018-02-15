@@ -26,6 +26,56 @@ jobs:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
-        
-      # run tests!
+
+  test:
+    docker:
+      - image: circleci/node:9.5
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
       - run: yarn test
+
+  flow:
+    docker:
+      - image: circleci/node:9.5
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run: yarn flow
+
+  lint:
+    docker:
+      - image: circleci/node:9.5
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+      - restore_cache:
+          key: v1-dependencies-{{ checksum "package.json" }}
+      - run: yarn lint
+
+workflows:
+  version: 2
+
+  lint-flow-and-then-test:
+    jobs:
+      - build
+      - lint:
+          requires:
+            - build
+      - flow:
+          requires:
+            - build
+      - test:
+          requires:
+            - lint
+            - flow
