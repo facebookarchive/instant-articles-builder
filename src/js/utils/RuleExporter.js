@@ -13,6 +13,7 @@ import type { Rule } from '../models/Rule';
 import type { RuleProperty } from '../models/RuleProperty';
 import type { RuleDefinition } from '../models/RuleDefinition';
 import type { RulePropertyDefinition } from '../models/RulePropertyDefinition';
+import type { TransformationSettings } from '../models/TransformationSettings';
 import RuleActions from '../data/RuleActions';
 import { RuleFactory } from '../models/Rule';
 import { RulePropertyFactory } from '../models/RuleProperty';
@@ -21,7 +22,8 @@ import { RuleUtils } from '../utils/RuleUtils';
 import { RulePropertyUtils } from '../utils/RulePropertyUtils';
 
 export type JSONFormat = {
-  rules: RuleJSON[]
+  rules: RuleJSON[],
+  styleName?: string
 };
 
 type RulePropertyJSON = {
@@ -35,6 +37,16 @@ type RuleJSON = {
   class: string,
   selector?: string,
   properties?: { [string]: RulePropertyJSON }
+};
+
+type AdsJSON = {
+  audience_network_placement_id?: string,
+  raw_html?: string
+};
+
+type AnalyticsJSON = {
+  fb_pixel_id?: string,
+  raw_html?: string
 };
 
 class RuleExporter {
@@ -54,8 +66,11 @@ class RuleExporter {
       .forEach(rule => (rule != null ? RuleActions.addRule(rule) : null));
   }
 
-  static export(rules: Immutable.Map<string, Rule>): JSONFormat {
-    return {
+  static export(
+    rules: Immutable.Map<string, Rule>,
+    settings: TransformationSettings
+  ): JSONFormat {
+    let exported = {
       rules: [
         { class: 'TextNodeRule' },
         ...Array.from(
@@ -67,6 +82,22 @@ class RuleExporter {
         ),
       ],
     };
+
+    if (settings && settings.styleName) {
+      exported = { style_name: settings.styleName, ...exported };
+    }
+
+    const ads = this.createAdsJSON(settings);
+    if (ads) {
+      exported = { ads, ...exported };
+    }
+
+    const analytics = this.createAnalyticsJSON(settings);
+    if (analytics) {
+      exported = { analytics, ...exported };
+    }
+
+    return exported;
   }
 
   static createJSONFromRule(rule: Rule): ?RuleJSON {
@@ -124,6 +155,41 @@ class RuleExporter {
       };
     }
     return null;
+  }
+
+  static createAdsJSON(settings: TransformationSettings): ?AdsJSON {
+    if (!settings || !settings.adsSettings) {
+      return null;
+    }
+
+    // Do not build the object if there are no settings
+    const adsSettings = settings.adsSettings;
+    if (!adsSettings.audienceNetworkPlacementId && !adsSettings.rawHtml) {
+      return null;
+    }
+
+    return {
+      audience_network_placement_id:
+        settings.adsSettings.audienceNetworkPlacementId,
+      raw_html: settings.adsSettings.rawHtml,
+    };
+  }
+
+  static createAnalyticsJSON(settings: TransformationSettings): ?AnalyticsJSON {
+    if (!settings || !settings.analyticsSettings) {
+      return null;
+    }
+
+    // Do not build the object if there are no settings
+    const analyticsSettings = settings.analyticsSettings;
+    if (!analyticsSettings.fbPixelId && !analyticsSettings.rawHtml) {
+      return null;
+    }
+
+    return {
+      fb_pixel_id: settings.analyticsSettings.fbPixelId,
+      raw_html: settings.analyticsSettings.rawHtml,
+    };
   }
 
   static createRuleFromJSON(

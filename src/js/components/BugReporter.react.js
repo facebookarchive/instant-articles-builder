@@ -44,7 +44,11 @@ export class BugReporter extends React.Component<Props> {
 **URL**: \`${this.props.editor.url}\`
 **RULES**:
 \`\`\`json
-${JSON.stringify(RuleExporter.export(this.props.rules), null, 2)}
+${JSON.stringify(
+      RuleExporter.export(this.props.rules, this.props.settings),
+      null,
+      2
+    )}
 \`\`\``;
     //----------------
     // End of template
