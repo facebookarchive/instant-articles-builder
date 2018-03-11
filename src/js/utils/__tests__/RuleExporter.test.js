@@ -14,6 +14,8 @@ import { RulePropertyDefinitionFactory } from '../../models/RulePropertyDefiniti
 import { RulePropertyFactory } from '../../models/RuleProperty';
 import RulePropertyTypes from '../../models/RulePropertyTypes';
 
+import { TransformationSettingsFactory } from '../../models/TransformationSettings';
+
 // Rules that are always included in the exported file
 const defaultExportedRules = [{ class: 'TextNodeRule' }];
 
@@ -81,5 +83,102 @@ describe('RuleExporter', () => {
         },
       },
     ]);
+  });
+
+  describe('Settings', () => {
+    it('should not export style name by default', () => {
+      const exported = RuleExporter.export(
+        Map(),
+        TransformationSettingsFactory()
+      );
+
+      expect(exported.style_name).toBeUndefined();
+    });
+
+    it('should export style name', () => {
+      // use random style name
+      const styleName = 'style' + Math.random().toString();
+      const transformationSettings = TransformationSettingsFactory({
+        styleName,
+      });
+
+      const exported = RuleExporter.export(Map(), transformationSettings);
+
+      expect(exported.style_name).toEqual(styleName);
+    });
+
+    describe('Ads Settings', () => {
+      it('should not export Ads Settings by default', () => {
+        const exported = RuleExporter.export(Map());
+
+        expect(exported.ads).toBeUndefined();
+      });
+
+      it('should export Audience Network Placement ID', () => {
+        // use random AN Placement ID
+        const audienceNetworkPlacementId = Math.random().toString();
+        const transformationSettings = TransformationSettingsFactory({
+          adsSettings: {
+            audienceNetworkPlacementId,
+          },
+        });
+
+        const exported = RuleExporter.export(Map(), transformationSettings);
+
+        expect(exported.ads.audience_network_placement_id).toEqual(
+          audienceNetworkPlacementId
+        );
+      });
+
+      it('should export Ads Raw HTML', () => {
+        // use random raw HTML
+        const rawHtml = Math.random().toString();
+        const transformationSettings = TransformationSettingsFactory({
+          adsSettings: {
+            rawHtml,
+          },
+        });
+
+        const exported = RuleExporter.export(Map(), transformationSettings);
+
+        expect(exported.ads.raw_html).toEqual(rawHtml);
+      });
+    });
+
+    describe('Analytics Settings', () => {
+      it('should not export Analytics Settings by default', () => {
+        const exported = RuleExporter.export(Map());
+
+        expect(exported.analytics).toBeUndefined();
+      });
+
+      it('should export FB Pixel ID', () => {
+        // use random FB Pixel ID
+        const fbPixelId = Math.random().toString();
+        const transformationSettings = TransformationSettingsFactory({
+          analyticsSettings: {
+            fbPixelId,
+          },
+        });
+
+        const exported = RuleExporter.export(Map(), transformationSettings);
+
+        expect(exported.analytics.fb_pixel_id).toEqual(fbPixelId);
+      });
+
+      it('should export Analytics Raw HTML', () => {
+        // use random raw HTML
+        const rawHtml = Math.random().toString();
+        const transformationSettings = TransformationSettingsFactory({
+          analyticsSettings: {
+            rawHtml,
+          },
+        });
+
+        const exported = RuleExporter.export(Map(), transformationSettings);
+
+        expect(exported.analytics.raw_html).toEqual(rawHtml);
+      });
+    });
   });
 });
