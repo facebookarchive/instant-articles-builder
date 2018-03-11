@@ -55,7 +55,7 @@ try {
   $warnings = $transformer->getWarnings();
 
   $properties = array(
-    'styles-folder' => __DIR__.'/' // Where the styles are stored
+    'styles-folder' => __DIR__.'/styles/' // Where the styles are stored
   );
 
   if ($instant_article->isValid()) {
