@@ -7,13 +7,13 @@
  */
 
 import { Map, Set } from 'immutable';
+import AdsTypes from '../../data/AdsTypes';
 import RuleExporter from '../RuleExporter';
 import { RuleFactory } from '../../models/Rule';
 import { RuleDefinitionFactory } from '../../models/RuleDefinition';
 import { RulePropertyDefinitionFactory } from '../../models/RulePropertyDefinition';
 import { RulePropertyFactory } from '../../models/RuleProperty';
 import RulePropertyTypes from '../../models/RulePropertyTypes';
-
 import { TransformationSettingsFactory } from '../../models/TransformationSettings';
 
 // Rules that are always included in the exported file
@@ -120,6 +120,7 @@ describe('RuleExporter', () => {
         const transformationSettings = TransformationSettingsFactory({
           adsSettings: {
             audienceNetworkPlacementId,
+            type: AdsTypes.AUDIENCE_NETWORK,
           },
         });
 
@@ -130,18 +131,81 @@ describe('RuleExporter', () => {
         );
       });
 
+      it('should not export Audience Network Placement ID if Raw', () => {
+        // use random AN Placement ID
+        const audienceNetworkPlacementId = Math.random().toString();
+        const transformationSettings = TransformationSettingsFactory({
+          adsSettings: {
+            audienceNetworkPlacementId,
+            rawHtml: 'somthing',
+            type: AdsTypes.RAW_HTML,
+          },
+        });
+
+        const exported = RuleExporter.export(Map(), transformationSettings);
+
+        expect(exported.ads.audience_network_placement_id).toBeUndefined();
+      });
+
+      it('should not export Audience Network Placement ID if None', () => {
+        // use random AN Placement ID
+        const audienceNetworkPlacementId = Math.random().toString();
+        const transformationSettings = TransformationSettingsFactory({
+          adsSettings: {
+            audienceNetworkPlacementId,
+            type: AdsTypes.NONE,
+          },
+        });
+
+        const exported = RuleExporter.export(Map(), transformationSettings);
+
+        expect(exported.ads).toBeUndefined();
+      });
+
       it('should export Ads Raw HTML', () => {
         // use random raw HTML
         const rawHtml = Math.random().toString();
         const transformationSettings = TransformationSettingsFactory({
           adsSettings: {
             rawHtml,
+            type: AdsTypes.RAW_HTML,
           },
         });
 
         const exported = RuleExporter.export(Map(), transformationSettings);
 
         expect(exported.ads.raw_html).toEqual(rawHtml);
+      });
+
+      it('should not export Ads Raw HTML if AN', () => {
+        // use random raw HTML
+        const rawHtml = Math.random().toString();
+        const transformationSettings = TransformationSettingsFactory({
+          adsSettings: {
+            rawHtml,
+            audienceNetworkPlacementId: 'something',
+            type: AdsTypes.AUDIENCE_NETWORK,
+          },
+        });
+
+        const exported = RuleExporter.export(Map(), transformationSettings);
+
+        expect(exported.ads.raw_html).toBeUndefined();
+      });
+
+      it('should not export Ads Raw HTML if None', () => {
+        // use random raw HTML
+        const rawHtml = Math.random().toString();
+        const transformationSettings = TransformationSettingsFactory({
+          adsSettings: {
+            rawHtml,
+            type: AdsTypes.NONE,
+          },
+        });
+
+        const exported = RuleExporter.export(Map(), transformationSettings);
+
+        expect(exported.ads).toBeUndefined();
       });
     });
 

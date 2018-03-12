@@ -20,6 +20,13 @@ class SettingsActions {
     });
   }
 
+  static editAdsType(adsType: string) {
+    RulesEditorDispatcher.dispatch({
+      type: SettingsActionTypes.EDIT_ADS_TYPE,
+      adsType,
+    });
+  }
+
   static editAnalyticsRawHtml(analyticsRawHtml: string) {
     RulesEditorDispatcher.dispatch({
       type: SettingsActionTypes.EDIT_ANALYTICS_RAW_HTML,

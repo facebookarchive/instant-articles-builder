@@ -8,6 +8,7 @@
  * @flow
  */
 
+import AdsTypes from '../data/AdsTypes';
 import Immutable from 'immutable';
 import type { Rule } from '../models/Rule';
 import type { RuleProperty } from '../models/RuleProperty';
@@ -162,17 +163,25 @@ class RuleExporter {
       return null;
     }
 
-    // Do not build the object if there are no settings
     const adsSettings = settings.adsSettings;
-    if (!adsSettings.audienceNetworkPlacementId && !adsSettings.rawHtml) {
-      return null;
+    switch (adsSettings.type) {
+      case AdsTypes.AUDIENCE_NETWORK:
+        return adsSettings.audienceNetworkPlacementId
+          ? {
+            audience_network_placement_id:
+                adsSettings.audienceNetworkPlacementId,
+          }
+          : null;
+      case AdsTypes.RAW_HTML:
+        return adsSettings.rawHtml
+          ? {
+            raw_html: adsSettings.rawHtml,
+          }
+          : null;
+      case AdsTypes.NONE:
+      default:
+        return null;
     }
-
-    return {
-      audience_network_placement_id:
-        settings.adsSettings.audienceNetworkPlacementId,
-      raw_html: settings.adsSettings.rawHtml,
-    };
   }
 
   static createAnalyticsJSON(settings: TransformationSettings): ?AnalyticsJSON {

@@ -78,7 +78,8 @@ h1 {
 }
 
 .field-line label,
-.field-line input {
+.field-line input,
+.field-line select {
   display: block;
   width: 100%;
   clear: both;
@@ -87,7 +88,9 @@ h1 {
 .field-line input,
 .field-line input:active,
 .field-line textarea,
-.field-line textarea:active {
+.field-line textarea:active,
+.field-line select,
+.field-line select:active {
   border-radius: 5px;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
@@ -614,12 +617,14 @@ button {
 }
 
 .settings input,
-.settings textarea {
+.settings textarea,
+.settings select {
   border-radius: 5px;
   border: 1px solid #ccc;
 }
 
-.settings textarea {
+.settings textarea,
+.settings select {
   margin: 5px 0;
   width: 100%;
 }

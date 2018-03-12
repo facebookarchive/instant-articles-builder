@@ -11,6 +11,7 @@
 const React = require('react');
 
 import { Accordion, Icon } from 'semantic-ui-react';
+import AdsTypes from '../data/AdsTypes';
 import SettingsActions from '../data/SettingsActions';
 
 import type { Props as BaseProps } from '../containers/AppContainer.react';
@@ -28,6 +29,10 @@ type AccordionItemProps = {
 class TransformationSettings extends React.Component<Props> {
   handleAdsRawHtmlChanged = (event: SyntheticEvent<HTMLInputElement>) => {
     SettingsActions.editAdsRawHtml(event.currentTarget.value);
+  };
+
+  handleAdsTypeChanged = (event: SyntheticEvent<HTMLInputElement>) => {
+    SettingsActions.editAdsType(event.currentTarget.value);
   };
 
   handleAnalyticsRawHtmlChanged = (event: SyntheticEvent<HTMLInputElement>) => {
@@ -48,7 +53,52 @@ class TransformationSettings extends React.Component<Props> {
     SettingsActions.editStyleName(event.currentTarget.value);
   };
 
+  renderAudienceNetworkDiv() {
+    return this.props.settings.adsSettings.type ===
+      AdsTypes.AUDIENCE_NETWORK ? (
+        <div>
+          <label className="sub-label" htmlFor="audienceNetworkId">
+            <span>
+              {this.props.settings.adsSettings.audienceNetworkPlacementId
+                ? '✔'
+                : '•'}
+            </span>&nbsp; Audience Network ID
+          </label>
+          <div className="field">
+            <input
+              type="text"
+              name="audienceNetworkId"
+              placeholder="123456"
+              onChange={this.handleAudienceNetworkPlacementIdChanged}
+            />
+          </div>
+        </div>
+      ) : null;
+  }
+
+  renderAdsRawHtmlDiv() {
+    return this.props.settings.adsSettings.type === AdsTypes.RAW_HTML ? (
+      <div>
+        <label className="sub-label" htmlFor="adsRawHtml">
+          <span>{this.props.settings.adsSettings.rawHtml ? '✔' : '•'}</span>&nbsp;
+          Raw HTML
+        </label>
+        <div className="field">
+          <textarea
+            name="adsRawHtml"
+            placeholder="<script>...</script>"
+            onChange={this.handleAdsRawHtmlChanged}
+            rows="4"
+          />
+        </div>
+      </div>
+    ) : null;
+  }
+
   render() {
+    const audienceNetworkDiv = this.renderAudienceNetworkDiv();
+    const adsRawHtmlDiv = this.renderAdsRawHtmlDiv();
+
     return (
       <div>
         <Accordion.Title
@@ -117,34 +167,24 @@ class TransformationSettings extends React.Component<Props> {
                 <label>
                   <Icon name="money" />Ads
                 </label>
-                <label className="sub-label" htmlFor="audienceNetworkId">
-                  <span>
-                    {this.props.settings.adsSettings.audienceNetworkPlacementId
-                      ? '✔'
-                      : '•'}
-                  </span>&nbsp; Audience Network ID
+                <label className="sub-label" htmlFor="adsType">
+                  Type
                 </label>
                 <div className="field">
-                  <input
-                    type="text"
-                    name="audienceNetworkId"
-                    placeholder="123456"
-                    onChange={this.handleAudienceNetworkPlacementIdChanged}
-                  />
+                  <select
+                    defaultValue=""
+                    name="adsType"
+                    onChange={this.handleAdsTypeChanged}
+                  >
+                    <option value={AdsTypes.NONE}>None</option>
+                    <option value={AdsTypes.AUDIENCE_NETWORK}>
+                      Audience Network
+                    </option>
+                    <option value={AdsTypes.RAW_HTML}>Other / Raw HTML</option>
+                  </select>
                 </div>
-                <label className="sub-label" htmlFor="adsRawHtml">
-                  <span>
-                    {this.props.settings.adsSettings.rawHtml ? '✔' : '•'}
-                  </span>&nbsp; Raw HTML
-                </label>
-                <div className="field">
-                  <textarea
-                    name="adsRawHtml"
-                    placeholder="<script>...</script>"
-                    onChange={this.handleAdsRawHtmlChanged}
-                    rows="4"
-                  />
-                </div>
+                {audienceNetworkDiv}
+                {adsRawHtmlDiv}
               </div>
             </div>
           </div>

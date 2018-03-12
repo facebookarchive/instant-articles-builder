@@ -19,6 +19,7 @@ import SettingsActionTypes from './SettingsActionTypes';
 
 type Action = {
   adsRawHtml?: string,
+  adsType?: string,
   analyticsRawHtml?: string,
   audienceNetworkPlacementId?: string,
   fbPixelId?: string,
@@ -44,6 +45,11 @@ class SettingsStore extends ReduceStore<TransformationSettings> {
         return state.set(
           'adsSettings',
           state.get('adsSettings').set('rawHtml', action.adsRawHtml || '')
+        );
+      case SettingsActionTypes.EDIT_ADS_TYPE:
+        return state.set(
+          'adsSettings',
+          state.get('adsSettings').set('type', action.adsType || '')
         );
       case SettingsActionTypes.EDIT_ANALYTICS_RAW_HTML:
         return state.set(
