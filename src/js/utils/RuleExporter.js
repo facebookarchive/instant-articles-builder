@@ -21,10 +21,13 @@ import { RulePropertyFactory } from '../models/RuleProperty';
 import RulePropertyTypes from '../models/RulePropertyTypes';
 import { RuleUtils } from '../utils/RuleUtils';
 import { RulePropertyUtils } from '../utils/RulePropertyUtils';
+import SettingsActions from '../data/SettingsActions';
 
 export type JSONFormat = {
+  ads?: { audience_network_placement_id?: string, raw_html?: string },
+  analytics?: { fb_pixel_id?: string, raw_html?: string },
   rules: RuleJSON[],
-  styleName?: string
+  style_name?: string
 };
 
 type RulePropertyJSON = {
@@ -65,6 +68,58 @@ class RuleExporter {
     rules
       .filter(rule => rule != null)
       .forEach(rule => (rule != null ? RuleActions.addRule(rule) : null));
+
+    this.importSettings(json);
+  }
+
+  static importSettings(json: JSONFormat): void {
+    // Restore style name, if present
+    if (json.style_name) {
+      SettingsActions.editStyleName(json.style_name);
+    }
+
+    this.importAdsSettings(json);
+    this.importAnalyticsSettings(json);
+  }
+
+  static importAdsSettings(json: JSONFormat): void {
+    const { ads } = json;
+
+    // Restore Ads Settings, if present
+    if (ads) {
+      if (ads.audience_network_placement_id) {
+        SettingsActions.editAudienceNetworkPlacementId(
+          ads.audience_network_placement_id
+        );
+        SettingsActions.editAdsType(AdsTypes.AUDIENCE_NETWORK);
+        return;
+      } else if (ads.raw_html) {
+        SettingsActions.editAdsRawHtml(ads.raw_html);
+        SettingsActions.editAdsType(AdsTypes.RAW_HTML);
+        return;
+      }
+    }
+
+    SettingsActions.editAdsType(AdsTypes.NONE);
+  }
+
+  static importAnalyticsSettings(json: JSONFormat): void {
+    const { analytics } = json;
+    // Restore Analytics Settings, if present
+    if (!analytics) {
+      return;
+    }
+    const { fb_pixel_id: fbPixelId, raw_html: rawHtml } = analytics;
+
+    // Restore FB Pixel ID, if present
+    if (fbPixelId) {
+      SettingsActions.editFbPixelId(fbPixelId);
+    }
+
+    // Restore Analytics Raw HTML, if present
+    if (rawHtml) {
+      SettingsActions.editAnalyticsRawHtml(rawHtml);
+    }
   }
 
   static export(

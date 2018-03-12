@@ -70,6 +70,7 @@ class TransformationSettings extends React.Component<Props> {
               name="audienceNetworkId"
               placeholder="123456"
               onChange={this.handleAudienceNetworkPlacementIdChanged}
+              value={this.props.settings.adsSettings.audienceNetworkPlacementId}
             />
           </div>
         </div>
@@ -89,6 +90,7 @@ class TransformationSettings extends React.Component<Props> {
             placeholder="<script>...</script>"
             onChange={this.handleAdsRawHtmlChanged}
             rows="4"
+            value={this.props.settings.adsSettings.rawHtml}
           />
         </div>
       </div>
@@ -127,6 +129,7 @@ class TransformationSettings extends React.Component<Props> {
                     name="styleName"
                     placeholder="default"
                     onChange={this.handleStyleNameChanged}
+                    value={this.props.settings.styleName}
                   />
                 </div>
               </div>
@@ -147,6 +150,7 @@ class TransformationSettings extends React.Component<Props> {
                     name="pixelId"
                     placeholder="123456"
                     onChange={this.handleFbPixelIdChanged}
+                    value={this.props.settings.analyticsSettings.fbPixelId}
                   />
                 </div>
                 <label className="sub-label" htmlFor="analyticsRawHtml">
@@ -160,6 +164,7 @@ class TransformationSettings extends React.Component<Props> {
                     placeholder="<script>...</script>"
                     onChange={this.handleAnalyticsRawHtmlChanged}
                     rows="4"
+                    value={this.props.settings.analyticsSettings.rawHtml}
                   />
                 </div>
               </div>
@@ -172,9 +177,9 @@ class TransformationSettings extends React.Component<Props> {
                 </label>
                 <div className="field">
                   <select
-                    defaultValue=""
                     name="adsType"
                     onChange={this.handleAdsTypeChanged}
+                    value={this.props.settings.adsSettings.type}
                   >
                     <option value={AdsTypes.NONE}>None</option>
                     <option value={AdsTypes.AUDIENCE_NETWORK}>
