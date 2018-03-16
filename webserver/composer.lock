@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "bfb64253f7cbe6d5d415b97c69449184",
+    "content-hash": "ca3dda77e3624f4fd8e183dc6c9df87c",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -115,22 +115,22 @@
         },
         {
             "name": "facebook/facebook-instant-articles-sdk-php",
-            "version": "v1.9.0",
+            "version": "v1.9.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/facebook-instant-articles-sdk-php.git",
-                "reference": "4669415fa2f21a061e6d24149b383def7a357d28"
+                "reference": "d2ccefa4da393ea33b9c095a7ebce7b352e31480"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/facebook-instant-articles-sdk-php/zipball/4669415fa2f21a061e6d24149b383def7a357d28",
-                "reference": "4669415fa2f21a061e6d24149b383def7a357d28",
+                "url": "https://api.github.com/repos/facebook/facebook-instant-articles-sdk-php/zipball/d2ccefa4da393ea33b9c095a7ebce7b352e31480",
+                "reference": "d2ccefa4da393ea33b9c095a7ebce7b352e31480",
                 "shasum": ""
             },
             "require": {
                 "facebook/graph-sdk": "~5.0",
                 "php": "^5.4 || ^7.0",
-                "symfony/css-selector": "2.8.*"
+                "symfony/css-selector": "^2.8 || ^3.0"
             },
             "require-dev": {
                 "fzaninotto/faker": "^1.6.0",
@@ -163,7 +163,7 @@
                 "instant",
                 "sdk"
             ],
-            "time": "2018-02-27T20:47:14+00:00"
+            "time": "2018-03-16T19:42:33+00:00"
         },
         {
             "name": "facebook/graph-sdk",
@@ -225,25 +225,25 @@
         },
         {
             "name": "symfony/css-selector",
-            "version": "v2.8.34",
+            "version": "v3.4.6",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
-                "reference": "c5b39674eacd34adedbef78227c57109caa9e318"
+                "reference": "544655f1fc078a9cd839fdda2b7b1e64627c826a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/css-selector/zipball/c5b39674eacd34adedbef78227c57109caa9e318",
-                "reference": "c5b39674eacd34adedbef78227c57109caa9e318",
+                "url": "https://api.github.com/repos/symfony/css-selector/zipball/544655f1fc078a9cd839fdda2b7b1e64627c826a",
+                "reference": "544655f1fc078a9cd839fdda2b7b1e64627c826a",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.9"
+                "php": "^5.5.9|>=7.0.8"
             },
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.8-dev"
+                    "dev-master": "3.4-dev"
                 }
             },
             "autoload": {
@@ -274,7 +274,7 @@
             ],
             "description": "Symfony CssSelector Component",
             "homepage": "https://symfony.com",
-            "time": "2018-01-03T07:36:31+00:00"
+            "time": "2018-02-03T14:55:07+00:00"
         }
     ],
     "packages-dev": [],
