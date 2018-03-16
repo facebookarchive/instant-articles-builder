@@ -9,6 +9,7 @@
  */
 
 import AdsTypes from '../data/AdsTypes';
+import { remote as ElectronRemote } from 'electron';
 import Immutable from 'immutable';
 import type { Rule } from '../models/Rule';
 import type { RuleProperty } from '../models/RuleProperty';
@@ -23,9 +24,13 @@ import { RuleUtils } from '../utils/RuleUtils';
 import { RulePropertyUtils } from '../utils/RulePropertyUtils';
 import SettingsActions from '../data/SettingsActions';
 
+const GENERATOR_NAME = 'facebook-instant-articles-rules-editor';
+
 export type JSONFormat = {
   ads?: { audience_network_placement_id?: string, raw_html?: string },
   analytics?: { fb_pixel_id?: string, raw_html?: string },
+  generator_name: string,
+  generator_version: string,
   rules: RuleJSON[],
   style_name?: string
 };
@@ -127,6 +132,11 @@ class RuleExporter {
     settings: TransformationSettings
   ): JSONFormat {
     let exported = {
+      // We are NOT using ElectronRemote.app.getName() because it defaults to
+      // the 'productName' field in the package.json file
+      // (Facebook Instant Articles Rules Editor) and we are looking for 'name'
+      generator_name: GENERATOR_NAME,
+      generator_version: ElectronRemote.app.getVersion(),
       rules: [
         { class: 'TextNodeRule' },
         ...Array.from(

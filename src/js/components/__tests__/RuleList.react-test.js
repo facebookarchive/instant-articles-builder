@@ -15,6 +15,11 @@ const { mount } = Enzyme;
 
 const React = require('react');
 
+const defaultAttributionInfo = {
+  generator_name: 'facebook-instant-articles-rules-editor',
+  generator_version: '0.0.0',
+};
+
 // Rules that are always included in the exported file
 const defaultExportedRules = [{ class: 'TextNodeRule' }];
 
@@ -34,10 +39,11 @@ describe('RuleList', () => {
     // Set this function as the one that will be called as fs.writeFile
     fs.__setWriteFileCallback((fileName, contents, encoding, errorCallback) => {
       // Expected exported object has no rules
-      const expectedRules = {
+      const expectedContents = {
+        ...defaultAttributionInfo,
         rules: [...defaultExportedRules],
       };
-      expect(JSON.parse(contents)).toEqual(expectedRules);
+      expect(JSON.parse(contents)).toEqual(expectedContents);
     });
 
     simlulateExport();
@@ -228,6 +234,7 @@ describe('RuleList', () => {
     inputRules.forEach(rule => RuleDefinitionActions.addRuleDefinition(rule));
 
     const importedFileObj = {
+      ...defaultAttributionInfo,
       rules: [
         ...defaultExportedRules,
         {
