@@ -65,6 +65,7 @@ h1 {
   padding-right: 10px;
   overflow-y: auto;
   display: flex;
+  flex-direction: column;
 }
 
 .loader {
@@ -77,14 +78,19 @@ h1 {
 }
 
 .field-line label,
-.field-line input {
+.field-line input,
+.field-line select {
   display: block;
   width: 100%;
   clear: both;
 }
 
 .field-line input,
-.field-line input:active {
+.field-line input:active,
+.field-line textarea,
+.field-line textarea:active,
+.field-line select,
+.field-line select:active {
   border-radius: 5px;
   border-top-right-radius: 0px;
   border-bottom-right-radius: 0px;
@@ -394,7 +400,8 @@ h1 {
 }
 
 .field-line.active,
-.field-line input:focus {
+.field-line input:focus,
+.field-line textarea:focus {
   border: 1px solid #4a90e2;
 }
 
@@ -427,7 +434,8 @@ webview {
   color: #ccc !important;
 }
 
-.selectors-form {
+.selectors-form,
+.settings-fields {
   margin-bottom: 10px;
   position: relative;
   background: rgba(255, 255, 255, 0.6);
@@ -443,7 +451,8 @@ webview {
 }
 .selectors-form .field,
 .selectors-form .attributes,
-.selector-label {
+.selector-label,
+.settings-fields .field {
   padding: 0 5px !important;
 }
 
@@ -476,6 +485,7 @@ webview {
   color: rgba(0, 0, 0, 0.87);
   padding: 5px;
   cursor: pointer;
+  width: 100%;
 }
 
 .rule-header {
@@ -594,7 +604,29 @@ button {
 .rule-list {
   display: flex;
   flex-direction: column;
-  width: 300px;
+  flex-grow: 1;
+  width: 325px;
+}
+
+.rule-list label {
+  display: block;
+}
+
+.settings {
+  width: 100%;
+}
+
+.settings input,
+.settings textarea,
+.settings select {
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.settings textarea,
+.settings select {
+  margin: 5px 0;
+  width: 100%;
 }
 
 .scrollable {
@@ -613,7 +645,6 @@ button {
   margin: 0;
   display: flex;
   flex-direction: column;
-  margin-right: 5px;
 }
 
 .hidden {

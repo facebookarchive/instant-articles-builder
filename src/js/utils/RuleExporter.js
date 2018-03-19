@@ -8,20 +8,26 @@
  * @flow
  */
 
+import AdsTypes from '../data/AdsTypes';
 import Immutable from 'immutable';
 import type { Rule } from '../models/Rule';
 import type { RuleProperty } from '../models/RuleProperty';
 import type { RuleDefinition } from '../models/RuleDefinition';
 import type { RulePropertyDefinition } from '../models/RulePropertyDefinition';
+import type { TransformationSettings } from '../models/TransformationSettings';
 import RuleActions from '../data/RuleActions';
 import { RuleFactory } from '../models/Rule';
 import { RulePropertyFactory } from '../models/RuleProperty';
 import RulePropertyTypes from '../models/RulePropertyTypes';
 import { RuleUtils } from '../utils/RuleUtils';
 import { RulePropertyUtils } from '../utils/RulePropertyUtils';
+import SettingsActions from '../data/SettingsActions';
 
 export type JSONFormat = {
-  rules: RuleJSON[]
+  ads?: { audience_network_placement_id?: string, raw_html?: string },
+  analytics?: { fb_pixel_id?: string, raw_html?: string },
+  rules: RuleJSON[],
+  style_name?: string
 };
 
 type RulePropertyJSON = {
@@ -35,6 +41,16 @@ type RuleJSON = {
   class: string,
   selector?: string,
   properties?: { [string]: RulePropertyJSON }
+};
+
+type AdsJSON = {
+  audience_network_placement_id?: string,
+  raw_html?: string
+};
+
+type AnalyticsJSON = {
+  fb_pixel_id?: string,
+  raw_html?: string
 };
 
 class RuleExporter {
@@ -52,10 +68,65 @@ class RuleExporter {
     rules
       .filter(rule => rule != null)
       .forEach(rule => (rule != null ? RuleActions.addRule(rule) : null));
+
+    this.importSettings(json);
   }
 
-  static export(rules: Immutable.Map<string, Rule>): JSONFormat {
-    return {
+  static importSettings(json: JSONFormat): void {
+    // Restore style name, if present
+    if (json.style_name) {
+      SettingsActions.editStyleName(json.style_name);
+    }
+
+    this.importAdsSettings(json);
+    this.importAnalyticsSettings(json);
+  }
+
+  static importAdsSettings(json: JSONFormat): void {
+    const { ads } = json;
+
+    // Restore Ads Settings, if present
+    if (ads) {
+      if (ads.audience_network_placement_id) {
+        SettingsActions.editAudienceNetworkPlacementId(
+          ads.audience_network_placement_id
+        );
+        SettingsActions.editAdsType(AdsTypes.AUDIENCE_NETWORK);
+        return;
+      } else if (ads.raw_html) {
+        SettingsActions.editAdsRawHtml(ads.raw_html);
+        SettingsActions.editAdsType(AdsTypes.RAW_HTML);
+        return;
+      }
+    }
+
+    SettingsActions.editAdsType(AdsTypes.NONE);
+  }
+
+  static importAnalyticsSettings(json: JSONFormat): void {
+    const { analytics } = json;
+    // Restore Analytics Settings, if present
+    if (!analytics) {
+      return;
+    }
+    const { fb_pixel_id: fbPixelId, raw_html: rawHtml } = analytics;
+
+    // Restore FB Pixel ID, if present
+    if (fbPixelId) {
+      SettingsActions.editFbPixelId(fbPixelId);
+    }
+
+    // Restore Analytics Raw HTML, if present
+    if (rawHtml) {
+      SettingsActions.editAnalyticsRawHtml(rawHtml);
+    }
+  }
+
+  static export(
+    rules: Immutable.Map<string, Rule>,
+    settings: TransformationSettings
+  ): JSONFormat {
+    let exported = {
       rules: [
         { class: 'TextNodeRule' },
         ...Array.from(
@@ -67,6 +138,22 @@ class RuleExporter {
         ),
       ],
     };
+
+    if (settings && settings.styleName) {
+      exported = { style_name: settings.styleName, ...exported };
+    }
+
+    const ads = this.createAdsJSON(settings);
+    if (ads) {
+      exported = { ads, ...exported };
+    }
+
+    const analytics = this.createAnalyticsJSON(settings);
+    if (analytics) {
+      exported = { analytics, ...exported };
+    }
+
+    return exported;
   }
 
   static createJSONFromRule(rule: Rule): ?RuleJSON {
@@ -124,6 +211,49 @@ class RuleExporter {
       };
     }
     return null;
+  }
+
+  static createAdsJSON(settings: TransformationSettings): ?AdsJSON {
+    if (!settings || !settings.adsSettings) {
+      return null;
+    }
+
+    const adsSettings = settings.adsSettings;
+    switch (adsSettings.type) {
+      case AdsTypes.AUDIENCE_NETWORK:
+        return adsSettings.audienceNetworkPlacementId
+          ? {
+            audience_network_placement_id:
+                adsSettings.audienceNetworkPlacementId,
+          }
+          : null;
+      case AdsTypes.RAW_HTML:
+        return adsSettings.rawHtml
+          ? {
+            raw_html: adsSettings.rawHtml,
+          }
+          : null;
+      case AdsTypes.NONE:
+      default:
+        return null;
+    }
+  }
+
+  static createAnalyticsJSON(settings: TransformationSettings): ?AnalyticsJSON {
+    if (!settings || !settings.analyticsSettings) {
+      return null;
+    }
+
+    // Do not build the object if there are no settings
+    const analyticsSettings = settings.analyticsSettings;
+    if (!analyticsSettings.fbPixelId && !analyticsSettings.rawHtml) {
+      return null;
+    }
+
+    return {
+      fb_pixel_id: settings.analyticsSettings.fbPixelId,
+      raw_html: settings.analyticsSettings.rawHtml,
+    };
   }
 
   static createRuleFromJSON(

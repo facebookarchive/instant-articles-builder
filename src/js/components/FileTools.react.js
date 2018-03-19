@@ -48,7 +48,7 @@ class FileTools extends React.Component<Props> {
       fileName => {
         if (fileName) {
           const contents = JSON.stringify(
-            RuleExporter.export(this.props.rules)
+            RuleExporter.export(this.props.rules, this.props.settings)
           );
           Fs.writeFile(fileName, contents, importExportEncoding, error => {
             if (error) {

@@ -63,7 +63,9 @@ class Preview extends React.Component<Props, State> {
               bytes: Buffer.from(
                 'rules=' +
                   encodeURIComponent(
-                    JSON.stringify(RuleExporter.export(this.props.rules))
+                    JSON.stringify(
+                      RuleExporter.export(this.props.rules, this.props.settings)
+                    )
                   )
               ),
             },
@@ -86,7 +88,9 @@ class Preview extends React.Component<Props, State> {
               bytes: Buffer.from(
                 'rules=' +
                   encodeURIComponent(
-                    JSON.stringify(RuleExporter.export(this.props.rules))
+                    JSON.stringify(
+                      RuleExporter.export(this.props.rules, this.props.settings)
+                    )
                   )
               ),
             },
@@ -102,8 +106,8 @@ class Preview extends React.Component<Props, State> {
       return true;
     }
     if (
-      RuleExporter.export(nextProps.rules) !=
-      RuleExporter.export(this.props.rules)
+      RuleExporter.export(nextProps.rules, nextProps.settings) !=
+      RuleExporter.export(this.props.rules, this.props.settings)
     ) {
       return true;
     }

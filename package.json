@@ -1,7 +1,7 @@
 {
   "name": "facebook-instant-articles-sdk-rules-editor",
   "productName": "Facebook Instant Articles Rules Editor",
-  "version": "0.0.1",
+  "version": "0.2.0",
   "description": "App to help creating transformer rules for the Facebook Instant Articles SDK.",
   "license": "SEE LICENSE IN ./LICENSE",
   "main": "src/js/background.js",
