@@ -8,6 +8,7 @@
 
 import { Map, Set } from 'immutable';
 import AdsTypes from '../../data/AdsTypes';
+import { remote as ElectronRemote } from 'electron';
 import RulesEditorDispatcher from '../../data/RulesEditorDispatcher';
 import RuleExporter from '../RuleExporter';
 import { RuleFactory } from '../../models/Rule';
@@ -88,6 +89,31 @@ describe('RuleExporter', () => {
         },
       },
     ]);
+  });
+
+  describe('Attribution', () => {
+    it('should set the generator name', () => {
+      // Fixed value
+      const expectedName = 'facebook-instant-articles-rules-editor';
+
+      const exported = RuleExporter.export(Map());
+
+      // Ensure the expected fixed value is returned
+      expect(exported.generator_name).toEqual(expectedName);
+    });
+
+    it('should set the generator version', () => {
+      // Generate random version name
+      const version = 'v' + Math.random().toString();
+      const { app } = ElectronRemote;
+      // Override the version with our random value
+      app.__setVersion(version);
+
+      const exported = RuleExporter.export(Map());
+
+      // Ensure we are calling app.getVersion()
+      expect(exported.generator_version).toEqual(version);
+    });
   });
 
   describe('Settings', () => {
