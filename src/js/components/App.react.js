@@ -9,15 +9,15 @@
  */
 
 const React = require('react');
-const Browser = require('./Browser.react.js');
 const RuleList = require('./RuleList.react.js');
 const EditorActions = require('../data/EditorActions');
 
+import Browser from './Browser.react';
 import type { Props } from '../containers/AppContainer.react';
 import { NUX } from './NUX.react';
-import { NUXTour } from './NUXTour.react';
+import NUXTour from './NUXTour.react';
 import { BugReporter } from './BugReporter.react';
-import { UpdateNotice } from './UpdateNotice.react';
+import UpdateNotice from './UpdateNotice.react';
 
 class App extends React.Component<Props> {
   constructor(props: Props) {
