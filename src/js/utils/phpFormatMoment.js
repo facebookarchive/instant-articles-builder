@@ -62,6 +62,7 @@ const formatMap = {
   i: 'mm',
   s: 'ss',
   u: '[u]', // not sure if moment has this
+  v: 'SSS',
   e: '[e]', // moment does not have this
   I: function() {
     return this.isDST() ? 1 : 0;
@@ -76,7 +77,7 @@ const formatMap = {
   r: 'ddd, DD MMM YYYY HH:mm:ss ZZ',
   U: 'X',
 };
-const formatEx = /[dDjlNSwzWFmMntLoYyaABgGhHisueIOPTZcrU]/g;
+const formatEx = /[dDjlNSwzWFmMntLoYyaABgGhHisuveIOPTZcrU]/g;
 
 moment.fn.formatPHP = function(format) {
   var that = this;
