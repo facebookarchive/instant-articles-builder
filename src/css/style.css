@@ -77,7 +77,7 @@ h1 {
   display: flex;
 }
 
-.field-line label,
+.field-line div label,
 .field-line input,
 .field-line select {
   display: block;
@@ -134,7 +134,7 @@ h1 {
   border-bottom-left-radius: 5px;
 }
 
-.field-line > label:first-of-type {
+.field-line > div label:first-of-type {
   background: #f6f7f9;
   color: #777;
   padding: 5px;
@@ -142,7 +142,7 @@ h1 {
   border-bottom: 1px solid #e8e8e8;
 }
 
-.field-line.valid > label:first-of-type {
+.field-line.valid > div label:first-of-type {
   color: #3b5998;
 }
 
@@ -293,7 +293,7 @@ h1 {
   color: #9aaf28 !important;
 }
 
-.field-line.active .match label.sub-label {
+.field-line.active .match div label.sub-label {
   color: #9aaf28 !important;
 }
 
@@ -302,7 +302,7 @@ h1 {
   color: #e76e63 !important;
 }
 
-.field-line.active .mismatch label.sub-label {
+.field-line.active .mismatch div label.sub-label {
   color: #e76e63 !important;
 }
 .field-line .attributes {
@@ -336,7 +336,7 @@ h1 {
   background: #9aaf28;
 }
 
-.field-line label.sub-label {
+.field-line div label.sub-label {
   font-size: 0.8em;
   margin: 0px 0px;
   margin-bottom: -8px;
@@ -349,40 +349,46 @@ h1 {
   color: #777;
 }
 
-.field-line.active:not(.finding).single-element-found label.sub-label {
+.field-line.active:not(.finding).single-element-found div label.sub-label {
   color: #9aaf28;
 }
 
-.field-line.active:not(.finding).multiple-elements-found label.sub-label {
+.field-line.active:not(.finding).multiple-elements-found div label.sub-label {
   color: #e76e63;
 }
 
 .field-line.active:not(.finding).multiple.multiple-elements-found
+  div
   label.sub-label {
   color: #9aaf28;
 }
 
-.field-line.active label.sub-label {
+.field-line.active div label.sub-label {
   color: #4a90e2;
 }
 
-.field-line.active:not(.finding).single-element-found > label:first-of-type {
+.field-line.active:not(.finding).single-element-found
+  > div
+  label:first-of-type {
   background: #9aaf28;
   color: #fff;
 }
 
-.field-line.active:not(.finding).multiple-elements-found > label:first-of-type {
+.field-line.active:not(.finding).multiple-elements-found
+  > div
+  label:first-of-type {
   background: #e76e63;
   color: #fff;
 }
 
 .field-line.active:not(.finding).multiple.multiple-elements-found
-  > label:first-of-type {
+  > div
+  label:first-of-type {
   background: #9aaf28;
   color: #fff;
 }
 
-.field-line.active > label:first-of-type {
+.field-line.active > div label:first-of-type {
   background: #4a90e2;
   color: #fff;
 }
@@ -608,7 +614,7 @@ button {
   width: 325px;
 }
 
-.rule-list label {
+.rule-list div label {
   display: block;
 }
 
