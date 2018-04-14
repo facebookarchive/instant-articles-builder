@@ -35,6 +35,7 @@ const siteConfig = {
   },
   scripts: ['https://buttons.github.io/buttons.js'],
   repoUrl: 'https://github.com/facebook/facebook-instant-articles-rules-editor',
+  facebookPixelId: '178314219485164',
 };
 
 module.exports = siteConfig;
