@@ -1,6 +1,6 @@
 {
     "name": "facebook/facebook-instant-articles-rules-editor",
-    "description": "Instant Articles Rules Editor",
+    "description": "Instant Articles Builder",
     "keywords": ["facebook", "instant-articles", "rules", "editor"],
     "type": "project",
     "homepage": "https://github.com/facebook/facebook-instant-articles-rules-editor",

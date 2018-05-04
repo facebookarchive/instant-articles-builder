@@ -61,7 +61,7 @@ class HomeSplash extends React.Component {
         <div className="inner">
           <img width="632" height="373" src={imgUrl('print-overall.png')} />
           <h2 className="projectTitle">
-            Rules Editor
+            Instant Articles Builder
             <small>
               Set-up <a target="_blank" href="http://instantarticles.fb.com">
               Facebook Instant Articles</a> without coding

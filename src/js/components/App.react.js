@@ -66,7 +66,7 @@ class App extends React.Component<Props> {
           <img src="../img/icon-nobg.svg" width="48" height="48" />
           <h1>
             <span className="ia">Instant Articles</span>{' '}
-            <span className="app-name">Rules Editor</span>
+            <span className="app-name">Builder</span>
           </h1>
         </header>
         <div id="content-wrapper">

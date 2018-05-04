@@ -134,7 +134,7 @@ class RuleExporter {
     let exported = {
       // We are NOT using ElectronRemote.app.getName() because it defaults to
       // the 'productName' field in the package.json file
-      // (Facebook Instant Articles Rules Editor) and we are looking for 'name'
+      // (Facebook Instant Articles Builder) and we are looking for 'name'
       generator_name: GENERATOR_NAME,
       generator_version: ElectronRemote.app.getVersion(),
       rules: [

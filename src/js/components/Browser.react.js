@@ -257,12 +257,12 @@ class Browser extends React.Component<Props, State> {
             className="address"
             type="text"
             name="url"
-            placeholder="about:home"
+            placeholder="/home/shopping"
             value={this.displayURL()}
             onChange={this.urlTyped}
           />
           <button className="button load" onClick={this.go}>
-            Go!
+            Use Site
           </button>
         </form>
         <progress value={this.state.progress} />

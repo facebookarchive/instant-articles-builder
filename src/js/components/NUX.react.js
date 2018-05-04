@@ -65,23 +65,21 @@ export class NUX extends React.Component<Props, State> {
       >
         <Modal.Header className="nux-header">
           <Image src="../img/icon-nobg.svg" size="mini" floated="left" />{' '}
-          Welcome to the Rules Editor
+          Welcome to the Instant Articles Builder
         </Modal.Header>
         <Modal.Content>
           <p>
-            <strong>Rules Editor</strong> helps you to create rules that convert
-            your articles to
+            To convert your articles into
             <a target="_blank" href="https://instantarticles.fb.com/">
               {' '}
               Facebok Instant Articles
-            </a>.
+            </a>, you'll need:
           </p>
-          <p>For using this tool you'll need:</p>
           <ul>
-            <li>A website containing articles.</li>
+            <li>A website with articles</li>
             <li>
-              A Facebook Page enabled to use Instant Articles and connected to
-              your website.
+              A Facebook Page with Instant Articles turned on and connected to
+              your website
             </li>
           </ul>
           <p>
@@ -102,9 +100,9 @@ export class NUX extends React.Component<Props, State> {
               role="button"
               onClick={() => shell.openExternal(helpURL)}
             >
-              <Icon name="info circle" /> Read the full documentation to learn
-              more.
-            </a>
+              <Icon name="info circle" /> Read our developer docs
+            </a>{' '}
+            to learn more.
           </p>
         </Modal.Content>
         <Modal.Actions>
@@ -116,7 +114,7 @@ export class NUX extends React.Component<Props, State> {
           "
           />
           <Button onClick={this.handleClose} icon>
-            <Icon name="close" /> Dismiss
+            <Icon name="close" /> Close
           </Button>
           <Button
             color="facebook"
@@ -124,7 +122,7 @@ export class NUX extends React.Component<Props, State> {
             icon
             labelPosition="right"
           >
-            <Icon name="arrow right" /> Take a tour
+            <Icon name="arrow right" /> Take the Tour
           </Button>
         </Modal.Actions>
       </Modal>

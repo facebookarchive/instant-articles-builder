@@ -1,8 +1,8 @@
-# Facebook Instant Articles Rules Editor
+# Facebook Instant Articles Builder
 
 [![CircleCI](https://circleci.com/gh/facebook/facebook-instant-articles-rules-editor.svg?style=shield)](https://circleci.com/gh/facebook/facebook-instant-articles-rules-editor)
 
-**Rules Editor** helps you to create rules that convert your articles
+**Instant Articles Builder** helps you to create rules that convert your articles
 to [Facebok Instant Articles](https://instantarticles.fb.com/).
 
 Try it out (Windows/Mac): https://facebook.github.io/facebook-instant-articles-rules-editor/

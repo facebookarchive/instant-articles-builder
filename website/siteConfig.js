@@ -6,7 +6,7 @@
  */
 
 const siteConfig = {
-  title: 'Instant Articles Rules Editor' /* title for your website */,
+  title: 'Instant Articles Builder' /* title for your website */,
   tagline: 'Set-up Instant Articles without coding',
   url: 'https://facebook.github.io' /* your website url */,
   baseUrl: '/facebook-instant-articles-rules-editor/',

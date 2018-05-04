@@ -158,7 +158,7 @@ class RuleList extends React.Component<Props, State> {
                   content: item.text,
                   icon: item.icon,
                 })}
-                text="Pick at least 1 category"
+                text="Choose one or more filters"
                 value={this.props.editor.categories.toArray()}
                 onChange={this.handleChangeFilters}
               />
@@ -176,7 +176,7 @@ class RuleList extends React.Component<Props, State> {
               </option>
               <optgroup label="-----------------------------------" />
               {Object.values(RuleCategories).map((category: RuleCategory) => (
-                <optgroup key={category} label={category + ' rules'}>
+                <optgroup key={category} label={category}>
                   {this.props.ruleDefinitions
                     .sortBy(defintion => defintion.displayName)
                     .valueSeq()

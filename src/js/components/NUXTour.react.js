@@ -75,7 +75,7 @@ class NUXTour extends React.Component<Props> {
               onClick={this.stop}
               className="cancel-tour"
             >
-              <Icon name="close" /> Cancel Tour
+              <Icon name="close" /> Close
             </span>
           )}
           <Button
@@ -110,16 +110,9 @@ class NUXTour extends React.Component<Props> {
         text: this.buildStepText({
           content: (
             <div>
-              <p>
-                In this tour we will learn the basic components of the{' '}
-                <b>Rules Editor</b> and create a working rule configuration for
-                a sample article.
-              </p>
-              <p>Let's start by creating a new configuration.</p>
+              <p>Click New each time you want to create a new configuration.</p>
             </div>
           ),
-          nextLabel: 'New configuration',
-          icon: 'file outline',
         }),
         selector: '.tools button:first-child',
         style: stepStyle,
@@ -130,14 +123,12 @@ class NUXTour extends React.Component<Props> {
           content: (
             <div>
               <p>
-                Use the address bar to navigate to your site like you would in a
-                regular web browser.
+                Use the address bar the same way you would in a web browser to
+                load a page of your site.
               </p>
-              <p>Let's load a sample article now.</p>
+              <p>Let's use this sample article.</p>
             </div>
           ),
-          nextLabel: 'Load sample article',
-          icon: 'globe',
         }),
         selector: '.loader',
         style: stepStyle,
@@ -145,11 +136,7 @@ class NUXTour extends React.Component<Props> {
       {
         name: 'browser',
         text: this.buildStepText({
-          content: (
-            <p>
-              Your site will load in the in-app <b>Browser</b>.
-            </p>
-          ),
+          content: <p>Your webpage will load in the browser.</p>,
         }),
         selector: '.webviews > webview',
         style: stepStyle,
@@ -160,11 +147,8 @@ class NUXTour extends React.Component<Props> {
           content: (
             <div>
               <p>
-                Your transformation <b>rules</b> will appear here.
-              </p>
-              <p>
-                <b>Rules</b> are used to convert tags on your site into content
-                on your Instant Articles.
+                Here's a list of the different Instant Articles elements. You
+                can filter them by type above.
               </p>
             </div>
           ),
@@ -178,14 +162,11 @@ class NUXTour extends React.Component<Props> {
           content: (
             <div>
               <p>
-                The <b>Article Structure</b> rule is the most important rule and
-                it is added by default.
+                Article Structure is added by default because it's the most
+                important rule. It allows you to define the main structural
+                elements of your article.
               </p>
-              <p>
-                This rule tells where the main structural elements of your page
-                are.
-              </p>
-              <p>Let's configure this rule for the sample article.</p>
+              <p>Let's add it to the sample article.</p>
             </div>
           ),
         }),
@@ -197,15 +178,13 @@ class NUXTour extends React.Component<Props> {
         text: this.buildStepText({
           content: (
             <div>
-              <p>Rules work by using CSS selectors.</p>
+              <p>This element uses CSS selectors.</p>
               <p>
-                The CSS selector for the title in this article is:{' '}
+                The CSS selector for the title in this article is{' '}
                 <code>h2 a</code>.
               </p>
             </div>
           ),
-          nextLabel: 'Fill the selector',
-          icon: 'code',
         }),
         selector: '.property-article-title',
         position: 'right',
@@ -217,12 +196,11 @@ class NUXTour extends React.Component<Props> {
           content: (
             <div>
               <p>
-                You could've clicked on the target icon to visually select the
-                element on the browser instead.
+                You can also click and drag this icon to an element you see in
+                the browser to connect them.
               </p>
             </div>
           ),
-          nextLabel: 'Next',
         }),
         selector: '.property-article-title .find-button',
         position: 'right',
@@ -233,10 +211,9 @@ class NUXTour extends React.Component<Props> {
         text: this.buildStepText({
           content: (
             <div>
-              <p>Once you're done configuring a field you'll see a ✔ mark.</p>
+              <p>Once an element is configured, you'll see a ✔.</p>
             </div>
           ),
-          nextLabel: 'Next',
         }),
         selector: '.property-article-title label',
         position: 'right',
@@ -255,6 +232,19 @@ class NUXTour extends React.Component<Props> {
           nextLabel: 'Next',
         }),
         selector: '.property-author-name label',
+        position: 'right',
+        style: stepStyle,
+      },
+      {
+        name: 'publish-date-optional',
+        text: this.buildStepText({
+          content: (
+            <div>
+              <p>Fields that aren't required will be marked as optional.</p>
+            </div>
+          ),
+        }),
+        selector: '.property-article-publish label',
         position: 'right',
         style: stepStyle,
       },
@@ -313,7 +303,6 @@ class NUXTour extends React.Component<Props> {
               <p>Incomplete rules have a grey header instead.</p>
             </div>
           ),
-          nextLabel: 'Next',
         }),
         selector: '.selectors-form',
         position: 'right',
@@ -325,12 +314,11 @@ class NUXTour extends React.Component<Props> {
           content: (
             <div>
               <p>
-                The Preview window will give you an approximated visualization
-                of the Instant Article created by your rules.
+                Once the Article Structure elements are configured, you'll be
+                able to see a preview of what the Instant Article may look like.
               </p>
             </div>
           ),
-          nextLabel: 'Next',
         }),
         selector: '.preview',
         position: 'left',
@@ -341,14 +329,12 @@ class NUXTour extends React.Component<Props> {
         text: this.buildStepText({
           content: (
             <div>
-              <p>Rules are grouped by categories.</p>
               <p>
-                By default, only{' '}
+                Use the filters to view rules by type.{' '}
                 <b>
                   <Icon name="circle check" />Basic
                 </b>{' '}
-                rules are displayed. In order to edit or add rules from other
-                categories you need to change this filter.
+                rules are displayed by default.
               </p>
             </div>
           ),
@@ -410,7 +396,9 @@ class NUXTour extends React.Component<Props> {
         text: this.buildStepText({
           content: (
             <div>
-              <p>You now know the basic features of the Rules Editor!</p>
+              <p>
+                You now know the basic features of the Instant Articles Builder!
+              </p>
               <p>
                 <a
                   tabIndex="0"
