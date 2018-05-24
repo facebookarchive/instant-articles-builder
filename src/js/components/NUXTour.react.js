@@ -137,7 +137,15 @@ class NUXTour extends React.Component<Props> {
       {
         name: 'browser',
         text: this.buildStepText({
-          content: <p>Your webpage will load in the browser.</p>,
+          content: (
+            <div>
+              <p>
+                The address bar works the same way as it does in a web browser.
+                You can enter the URL of any article on your website.
+              </p>
+              <p>Let's load a sample article for now.</p>
+            </div>
+          ),
         }),
         selector: '.webviews > webview',
         style: stepStyle,
