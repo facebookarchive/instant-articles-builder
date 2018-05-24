@@ -72,7 +72,7 @@ export class NUX extends React.Component<Props, State> {
             To convert your articles into
             <a target="_blank" href="https://instantarticles.fb.com/">
               {' '}
-              Facebok Instant Articles
+              Facebook Instant Articles
             </a>, you'll need:
           </p>
           <ul>
@@ -84,7 +84,7 @@ export class NUX extends React.Component<Props, State> {
           </ul>
           <p>
             Once you've finished and saved, upload the file to a public URL and
-            reference it by addint the following meta tag to the
+            reference it by adding the following meta tag to the
             <code>&lt;head&gt;</code> tag of your articles:
           </p>
           <p>
