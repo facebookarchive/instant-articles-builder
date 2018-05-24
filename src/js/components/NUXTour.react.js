@@ -152,8 +152,8 @@ class NUXTour extends React.Component<Props> {
           content: (
             <div>
               <p>
-                Here's a list of the different Instant Articles elements. You
-                can filter them by type above.
+                Here's a list of the different elements you can add to your
+                template.
               </p>
             </div>
           ),
