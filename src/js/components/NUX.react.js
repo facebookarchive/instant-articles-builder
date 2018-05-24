@@ -30,8 +30,8 @@ export class NUX extends React.Component<Props, State> {
   }
 
   handleSkipChange = (event: Event, data: { checked: boolean }) => {
-    this.setState({ skip: !data.checked });
-    settings.set('nux', { skip: !data.checked });
+    this.setState({ skip: data.checked });
+    settings.set('nux', { skip: data.checked });
   };
 
   handleClose = () => this.setState({ modalOpen: false });
@@ -83,10 +83,9 @@ export class NUX extends React.Component<Props, State> {
             </li>
           </ul>
           <p>
-            The <abbr title="JavaScript Object Notation">JSON</abbr> file
-            produced by this tool should be uploaded to a public URL and
-            referenced by a meta tag inside the <code>&lt;head&gt;</code> tag of
-            your articles:
+            Once you've finished and saved, upload the file to a public URL and
+            reference it by addint the following meta tag to the
+            <code>&lt;head&gt;</code> tag of your articles:
           </p>
           <p>
             <code>
@@ -107,9 +106,9 @@ export class NUX extends React.Component<Props, State> {
         </Modal.Content>
         <Modal.Actions>
           <Checkbox
-            checked={!this.state.skip}
+            checked={this.state.skip}
             onChange={this.handleSkipChange}
-            label="Show on startup"
+            label="Don't show this again"
             className="nux-checkbox
           "
           />
