@@ -32,7 +32,13 @@ export const EditorFactory: RecordFactory<EditorRecord> = Record({
   elementCounts: Map(),
   focusedField: null,
   finding: false,
-  categories: Set([RuleCategories.BASIC]),
+  categories: Set([
+    RuleCategories.BASIC,
+    RuleCategories.MEDIA,
+    RuleCategories.ADVANCED,
+    RuleCategories.WIDGETS,
+    RuleCategories.TEXT,
+  ]),
   takeTour: false,
   url: homeURL,
 });

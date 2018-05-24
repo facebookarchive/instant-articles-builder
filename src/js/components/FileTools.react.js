@@ -86,7 +86,8 @@ class FileTools extends React.Component<Props> {
         this.loadFromExportedData(data);
       }
     );
-    EditorActions.filterRules(Set([RuleCategories.BASIC]));
+    // * Disable Filtering
+    // EditorActions.filterRules(Set([RuleCategories.BASIC]));
   };
 
   render() {
