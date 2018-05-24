@@ -110,7 +110,8 @@ class NUXTour extends React.Component<Props> {
         text: this.buildStepText({
           content: (
             <div>
-              <p>Click New each time you want to create a new configuration.</p>
+              <p>Let's create an Instant Article template together.</p>
+              <p>We'll use the New button to get started.</p>
             </div>
           ),
         }),
