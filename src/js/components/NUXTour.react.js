@@ -167,32 +167,13 @@ class NUXTour extends React.Component<Props> {
           content: (
             <div>
               <p>
-                Article Structure is added by default because it's the most
-                important rule. It allows you to define the main structural
-                elements of your article.
+                When building an Instant Article, you'll start with the Article
+                element. It's added by default because it's required.
               </p>
-              <p>Let's add it to the sample article.</p>
             </div>
           ),
         }),
         selector: '.selectors-form',
-        style: stepStyle,
-      },
-      {
-        name: 'title',
-        text: this.buildStepText({
-          content: (
-            <div>
-              <p>This element uses CSS selectors.</p>
-              <p>
-                The CSS selector for the title in this article is{' '}
-                <code>h2 a</code>.
-              </p>
-            </div>
-          ),
-        }),
-        selector: '.property-article-title',
-        position: 'right',
         style: stepStyle,
       },
       {
@@ -201,8 +182,8 @@ class NUXTour extends React.Component<Props> {
           content: (
             <div>
               <p>
-                You can also click and drag this icon to an element you see in
-                the browser to connect them.
+                You can click and drag this icon to an element you see in the
+                browser to connect them.
               </p>
             </div>
           ),
@@ -212,11 +193,27 @@ class NUXTour extends React.Component<Props> {
         style: stepStyle,
       },
       {
+        name: 'title',
+        text: this.buildStepText({
+          content: (
+            <div>
+              <p>
+                You can also use CSS selectors. Let's enter the CSS selector for
+                the title in this article, which is <code>h2 a</code>.
+              </p>
+            </div>
+          ),
+        }),
+        selector: '.property-article-title',
+        position: 'right',
+        style: stepStyle,
+      },
+      {
         name: 'title-valid',
         text: this.buildStepText({
           content: (
             <div>
-              <p>Once an element is configured, you'll see a ✔.</p>
+              <p>Once an element is connected, you'll see a ✔.</p>
             </div>
           ),
         }),
@@ -230,7 +227,8 @@ class NUXTour extends React.Component<Props> {
           content: (
             <div>
               <p>
-                Required fields that are not configured are marked with a ✘.
+                Make sure you fill out all of the fields marked with an ✘ or
+                your article will not load as an Instant Article.
               </p>
             </div>
           ),
@@ -241,75 +239,34 @@ class NUXTour extends React.Component<Props> {
         style: stepStyle,
       },
       {
-        name: 'publish-date-optional',
-        text: this.buildStepText({
-          content: (
-            <div>
-              <p>Fields that aren't required will be marked as optional.</p>
-            </div>
-          ),
-        }),
-        selector: '.property-article-publish label',
-        position: 'right',
-        style: stepStyle,
-      },
-      {
         name: 'authors',
         text: this.buildStepText({
           content: (
             <div>
-              <p>Let's continue configuring the rules.</p>
               <p>
-                The selector for the author is: <code>p:first-child a</code>
+                Let's keep going. The CSS selector for Author is{' '}
+                <code>p:first-child a</code>
               </p>
             </div>
           ),
-          nextLabel: 'Fill the selector',
-          icon: 'code',
         }),
         selector: '.property-author-name',
         position: 'right',
         style: stepStyle,
       },
       {
-        name: 'content',
+        name: 'publish-date-optional',
         text: this.buildStepText({
           content: (
             <div>
               <p>
-                This property tells where the main content body of your article
-                is.
-              </p>
-              <p>
-                Make sure you pick the element that is the{' '}
-                <b>immediate parent</b> of the content paragraphs.
-              </p>
-              <p>
-                The selector for this article is: <code>.post-content</code>
+                The required Article elements are connected. You can also
+                connect optional elements like Published Date and Hero Image.
               </p>
             </div>
           ),
-          nextLabel: 'Fill the selector',
-          icon: 'code',
         }),
-        selector: '.property-article-body',
-        position: 'right',
-        style: stepStyle,
-      },
-      {
-        name: 'rule-valid',
-        text: this.buildStepText({
-          content: (
-            <div>
-              <p>
-                Once you finish configuring all required fields for a rule, its
-                header will become blue.
-              </p>
-              <p>Incomplete rules have a grey header instead.</p>
-            </div>
-          ),
-        }),
-        selector: '.selectors-form',
+        selector: '.property-article-publish label',
         position: 'right',
         style: stepStyle,
       },
@@ -319,8 +276,9 @@ class NUXTour extends React.Component<Props> {
           content: (
             <div>
               <p>
-                Once the Article Structure elements are configured, you'll be
-                able to see a preview of what the Instant Article may look like.
+                Once all of the required Article elements are connected, you'll
+                be able to see a preview of what the Instant Article may look
+                like.
               </p>
             </div>
           ),
