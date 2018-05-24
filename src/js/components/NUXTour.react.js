@@ -38,7 +38,8 @@ class NUXTour extends React.Component<Props> {
         RuleExporter.import(data, this.props.ruleDefinitions);
       }
     );
-    EditorActions.filterRules(Set([RuleCategories.BASIC]));
+    // * Disable Filtering
+    // EditorActions.filterRules(Set([RuleCategories.BASIC]));
   };
 
   nextStep = () => {

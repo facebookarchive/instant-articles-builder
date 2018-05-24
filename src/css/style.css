@@ -694,3 +694,8 @@ a:hover {
   margin-top: 4px !important;
   margin-right: 5px !important;
 }
+
+/* Disable Filtering */
+.rule-filters {
+  display: none;
+}
