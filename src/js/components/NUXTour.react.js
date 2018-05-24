@@ -139,11 +139,7 @@ class NUXTour extends React.Component<Props> {
         text: this.buildStepText({
           content: (
             <div>
-              <p>
-                The address bar works the same way as it does in a web browser.
-                You can enter the URL of any article on your website.
-              </p>
-              <p>Let's load a sample article for now.</p>
+              <p>Your article will load in the browser.</p>
             </div>
           ),
         }),
