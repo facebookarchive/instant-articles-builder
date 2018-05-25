@@ -79,8 +79,8 @@ catch (Exception $e) {
 function invalidIA() {
   ?>
   <p>
-    Open an article and fully configure the <em>Article Structure</em>
-    rule to see the preview of your Instant Article here.
+    Open an article, then connect the required fields in the <em>Article</em>
+    element to see a preview.
   </p>
   <style>
     body {

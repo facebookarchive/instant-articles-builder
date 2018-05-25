@@ -133,7 +133,7 @@ class RuleList extends React.Component<Props, State> {
             onClick={this.handleAccordionTitleClick}
           >
             <label>
-              <Icon name="dropdown" />Content Transformation
+              <Icon name="dropdown" />Template
             </label>
           </Accordion.Title>
           <Accordion.Content active={this.state.activeAccordionIndex === 0}>
@@ -164,7 +164,7 @@ class RuleList extends React.Component<Props, State> {
               />
             </div>
             <label>
-              <Icon name="list" />Rules:
+              <Icon name="list" />Elements:
             </label>
             <select
               className="rule-selector"
@@ -172,7 +172,7 @@ class RuleList extends React.Component<Props, State> {
               value=""
             >
               <option value="" disabled={true}>
-                + Add a new rule...
+                + Add a new element...
               </option>
               <optgroup label="-----------------------------------" />
               {Object.values(RuleCategories).map((category: RuleCategory) => (

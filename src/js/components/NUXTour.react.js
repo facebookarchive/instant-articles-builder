@@ -256,6 +256,23 @@ class NUXTour extends React.Component<Props> {
         style: stepStyle,
       },
       {
+        name: 'content',
+        text: this.buildStepText({
+          content: (
+            <div>
+              <p>Connect this element to the body of your article.</p>
+              <p>
+                Let's do this now with the CSS selector{' '}
+                <code>.post-content</code>
+              </p>
+            </div>
+          ),
+        }),
+        selector: '.property-article-body',
+        position: 'right',
+        style: stepStyle,
+      },
+      {
         name: 'publish-date-optional',
         text: this.buildStepText({
           content: (
@@ -289,48 +306,30 @@ class NUXTour extends React.Component<Props> {
         style: stepStyle,
       },
       {
-        name: 'filters',
-        text: this.buildStepText({
-          content: (
-            <div>
-              <p>
-                Use the filters to view rules by type.{' '}
-                <b>
-                  <Icon name="circle check" />Basic
-                </b>{' '}
-                rules are displayed by default.
-              </p>
-            </div>
-          ),
-        }),
-        selector: '.rule-filters',
-        style: stepStyle,
-      },
-      {
         name: 'tools',
         text: this.buildStepText({
           content: (
             <div>
-              <p>You can use the toolbar buttons to:</p>
+              <p>The toolbar lets you:</p>
               <ul>
                 <li>
                   Create a{' '}
                   <b>
                     <Icon name="file outline" />New
                   </b>{' '}
-                  configuration
+                  template
                 </li>
                 <li>
                   <b>
                     <Icon name="folder open" />Open
                   </b>{' '}
-                  a rules configuration file
+                  an existing file
                 </li>
                 <li>
                   <b>
                     <Icon name="save" />Save
                   </b>{' '}
-                  your rules configuration to a file
+                  your template to a file
                 </li>
               </ul>
             </div>
@@ -345,9 +344,9 @@ class NUXTour extends React.Component<Props> {
           content: (
             <div>
               <p>
-                Please let us know if something is broken by reporting a{' '}
-                <Icon name="bug" />bug on our <Icon name="github" />GitHub
-                repository.
+                Report a <Icon name="bug" />bug on our <Icon name="github" />GitHub
+                repository to let us know if something is broken or not working
+                correctly.
               </p>
             </div>
           ),
@@ -360,30 +359,28 @@ class NUXTour extends React.Component<Props> {
         text: this.buildStepText({
           content: (
             <div>
-              <p>
-                You now know the basic features of the Instant Articles Builder!
-              </p>
+              <p>You've completed the tour.</p>
               <p>
                 <a
                   tabIndex="0"
                   role="button"
                   onClick={() => shell.openExternal(helpURL)}
                 >
-                  <Icon name="info circle" /> Read the full documentation to
-                  learn more.
+                  <Icon name="info circle" /> You can also read our developer
+                  docs to learn more.
                 </a>
               </p>
               <p>
-                If you need help at any time, you can click on the{' '}
+                Just click{' '}
                 <b>
                   <Icon name="help circle" />Help
                 </b>{' '}
-                button and restart this tour.
+                to take this tour again at any time.
               </p>
             </div>
           ),
           icon: 'check',
-          nextLabel: 'Finish tour',
+          nextLabel: 'Done',
           color: 'green',
           extraButtons: (
             <span>
