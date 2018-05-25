@@ -28,7 +28,7 @@ ruleDefinitions.push(
     name: 'GlobalRule',
     category: RuleCategories.BASIC,
     placeholder: 'Example: html',
-    displayName: 'Article Structure',
+    displayName: 'Article',
     getSelectionContext: htmlSelectionContext,
     unique: true,
     properties: Map({
