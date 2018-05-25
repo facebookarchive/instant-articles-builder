@@ -24,7 +24,7 @@ import { RuleUtils } from '../utils/RuleUtils';
 import { RulePropertyUtils } from '../utils/RulePropertyUtils';
 import SettingsActions from '../data/SettingsActions';
 
-const GENERATOR_NAME = 'facebook-instant-articles-rules-editor';
+const GENERATOR_NAME = 'facebook-instant-articles-builder';
 
 export type JSONFormat = {
   ads?: { audience_network_placement_id?: string, raw_html?: string },

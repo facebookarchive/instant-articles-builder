@@ -1,8 +1,8 @@
 {
-  "name": "facebook-instant-articles-rules-editor",
+  "name": "facebook-instant-articles-builder",
   "productName": "Facebook Instant Articles Builder",
   "version": "0.2.0",
-  "description": "App to help creating transformer rules for the Facebook Instant Articles SDK.",
+  "description": "App to create a template to build Instant Articles from articles on your website.",
   "license": "SEE LICENSE IN ./LICENSE",
   "main": "src/js/background.js",
   "dependencies": {
@@ -65,7 +65,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/facebook/facebook-instant-articles-rules-editor"
+    "url": "git://github.com/facebook/instant-articles-builder"
   },
   "keywords": [
     "electron",

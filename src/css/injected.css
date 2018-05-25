@@ -6,15 +6,15 @@
  * LICENSE file in the root directory of this source tree.
  */
 
-.facebook-instant-articles-sdk-rules-editor-context {
+.facebook-instant-articles-builder-context {
   box-shadow: 0px 0px 0px 1px #9aaf28, 0px 0px 4px 4px #ccc !important;
 }
 
-.facebook-instant-articles-sdk-rules-editor-highlight {
+.facebook-instant-articles-builder-highlight {
   box-shadow: 0px 0px 0px 1px #9aaf28, 0px 0px 4px 4px #ccc !important;
 }
 
-.facebook-instant-articles-sdk-rules-editor-hover {
+.facebook-instant-articles-builder-hover {
   cursor: pointer !important;
   box-shadow: 0px 0px 0px 1px #4a90e2, 0px 0px 4px 4px #ccc !important;
 }

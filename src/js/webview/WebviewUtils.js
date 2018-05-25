@@ -12,10 +12,10 @@ import RulePropertyTypes from '../models/RulePropertyTypes';
 import type { AttributeRecord } from '../models/Attribute';
 import { WebviewStateMachine } from './WebviewStateMachine';
 
-const highlightClass = 'facebook-instant-articles-sdk-rules-editor-highlight';
-const hoverClass = 'facebook-instant-articles-sdk-rules-editor-hover';
-const contextClass = 'facebook-instant-articles-sdk-rules-editor-context';
-const selectingClass = 'facebook-instant-articles-sdk-rules-editor-selecting';
+const highlightClass = 'facebook-instant-articles-builder-highlight';
+const hoverClass = 'facebook-instant-articles-builder-hover';
+const contextClass = 'facebook-instant-articles-builder-context';
+const selectingClass = 'facebook-instant-articles-builder-selecting';
 
 export type ElementFilter = (element: Element) => Element;
 const elementFilters: Map<string, ElementFilter> = new Map();

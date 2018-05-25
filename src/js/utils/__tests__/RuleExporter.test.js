@@ -94,7 +94,7 @@ describe('RuleExporter', () => {
   describe('Attribution', () => {
     it('should set the generator name', () => {
       // Fixed value
-      const expectedName = 'facebook-instant-articles-rules-editor';
+      const expectedName = 'facebook-instant-articles-builder';
 
       const exported = RuleExporter.export(Map());
 
