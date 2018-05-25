@@ -71,7 +71,7 @@ class HomeSplash extends React.Component {
             <Button
               href={
                 'http://github.com/facebook/' +
-                'facebook-instant-articles-rules-editor' +
+                'instant-articles-builder' +
                 '/releases/latest'
               }
             >
@@ -101,7 +101,7 @@ const Features = props => (
     {[
       {
         title: 'Point & Click',
-        content: 'Visually select elements from your site',
+        content: 'Visually select elements from your website',
         image: imgUrl('print-point-and-click.png'),
         imageAlign: 'top',
       },
@@ -113,7 +113,7 @@ const Features = props => (
       },
       {
         title: 'Refine',
-        content: 'Refine your configuration with CSS3 selectors',
+        content: 'Refine your configuration with CSS selectors',
         image: imgUrl('print-css.png'),
         imageAlign: 'top',
       },

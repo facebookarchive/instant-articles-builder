@@ -50,10 +50,10 @@ class Footer extends React.Component {
           </div>
           <div>
             <h5>More</h5>
-            <a href="https://github.com/facebook/facebook-instant-articles-rules-editor">
+            <a href="https://github.com/facebook/instant-articles-builder">
               GitHub Repository
             </a>
-            <a href="https://github.com/facebook/facebook-instant-articles-rules-editor/blob/master/LICENSE">
+            <a href="https://github.com/facebook/instant-articles-builder/blob/master/LICENSE">
               License
             </a>
           </div>
