@@ -1,11 +1,10 @@
-# Facebook Instant Articles Rules Editor
+# Facebook Instant Articles Builder
 
-[![CircleCI](https://circleci.com/gh/facebook/facebook-instant-articles-rules-editor.svg?style=shield)](https://circleci.com/gh/facebook/facebook-instant-articles-rules-editor)
+[![CircleCI](https://circleci.com/gh/facebook/instant-articles-builder.svg?style=shield)](https://circleci.com/gh/facebook/instant-articles-builder)
 
-**Rules Editor** helps you to create rules that convert your articles
-to [Facebok Instant Articles](https://instantarticles.fb.com/).
+**Instant Articles Builder** helps you to create a template to build [Facebook Instant Articles](https://instantarticles.fb.com/) from articles on your website.
 
-Try it out (Windows/Mac): https://facebook.github.io/facebook-instant-articles-rules-editor/
+Try it out (Windows/Mac): https://facebook.github.io/instant-articles-builder/
 
 ## Building from source
 
@@ -44,4 +43,4 @@ npm test
 ```
 
 ## License
-Please read the [LICENSE](https://github.com/facebook/facebook-instant-articles-rules-editor/blob/master/LICENSE) file for more information.
+Please read the [LICENSE](https://github.com/facebook/instant-articles-builder/blob/master/LICENSE) file for more information.

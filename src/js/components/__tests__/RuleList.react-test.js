@@ -21,7 +21,7 @@ const { mount } = Enzyme;
 const React = require('react');
 
 const defaultAttributionInfo = {
-  generator_name: 'facebook-instant-articles-rules-editor',
+  generator_name: 'facebook-instant-articles-builder',
   generator_version: '0.0.0',
 };
 

@@ -30,8 +30,8 @@ export class NUX extends React.Component<Props, State> {
   }
 
   handleSkipChange = (event: Event, data: { checked: boolean }) => {
-    this.setState({ skip: !data.checked });
-    settings.set('nux', { skip: !data.checked });
+    this.setState({ skip: data.checked });
+    settings.set('nux', { skip: data.checked });
   };
 
   handleClose = () => this.setState({ modalOpen: false });
@@ -65,30 +65,27 @@ export class NUX extends React.Component<Props, State> {
       >
         <Modal.Header className="nux-header">
           <Image src="../img/icon-nobg.svg" size="mini" floated="left" />{' '}
-          Welcome to the Rules Editor
+          Welcome to the Instant Articles Builder
         </Modal.Header>
         <Modal.Content>
           <p>
-            <strong>Rules Editor</strong> helps you to create rules that convert
-            your articles to
+            To convert your articles into
             <a target="_blank" href="https://instantarticles.fb.com/">
               {' '}
-              Facebok Instant Articles
-            </a>.
+              Facebook Instant Articles
+            </a>, you'll need:
           </p>
-          <p>For using this tool you'll need:</p>
           <ul>
-            <li>A website containing articles.</li>
+            <li>A website with articles</li>
             <li>
-              A Facebook Page enabled to use Instant Articles and connected to
-              your website.
+              A Facebook Page with Instant Articles turned on and connected to
+              your website
             </li>
           </ul>
           <p>
-            The <abbr title="JavaScript Object Notation">JSON</abbr> file
-            produced by this tool should be uploaded to a public URL and
-            referenced by a meta tag inside the <code>&lt;head&gt;</code> tag of
-            your articles:
+            Once you've finished and saved, upload the file to a public URL and
+            reference it by adding the following meta tag to the
+            <code>&lt;head&gt;</code> tag of your articles:
           </p>
           <p>
             <code>
@@ -102,21 +99,21 @@ export class NUX extends React.Component<Props, State> {
               role="button"
               onClick={() => shell.openExternal(helpURL)}
             >
-              <Icon name="info circle" /> Read the full documentation to learn
-              more.
-            </a>
+              <Icon name="info circle" /> Read our developer docs
+            </a>{' '}
+            to learn more.
           </p>
         </Modal.Content>
         <Modal.Actions>
           <Checkbox
-            checked={!this.state.skip}
+            checked={this.state.skip}
             onChange={this.handleSkipChange}
-            label="Show on startup"
+            label="Don't show this again"
             className="nux-checkbox
           "
           />
           <Button onClick={this.handleClose} icon>
-            <Icon name="close" /> Dismiss
+            <Icon name="close" /> Close
           </Button>
           <Button
             color="facebook"
@@ -124,7 +121,7 @@ export class NUX extends React.Component<Props, State> {
             icon
             labelPosition="right"
           >
-            <Icon name="arrow right" /> Take a tour
+            <Icon name="arrow right" /> Take the Tour
           </Button>
         </Modal.Actions>
       </Modal>

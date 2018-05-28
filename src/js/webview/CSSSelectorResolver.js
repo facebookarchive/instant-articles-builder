@@ -207,7 +207,7 @@ export class CSSSelectorResolver {
 
     // .class candidates
     for (let className of classes) {
-      if (!className.startsWith('facebook-instant-articles-sdk-rules-editor')) {
+      if (!className.startsWith('facebook-instant-articles-builder')) {
         selector = '.' + className;
         candidates.add(selector);
       }
@@ -215,7 +215,7 @@ export class CSSSelectorResolver {
 
     // tagName.class candidates
     for (let className of classes) {
-      if (!className.startsWith('facebook-instant-articles-sdk-rules-editor')) {
+      if (!className.startsWith('facebook-instant-articles-builder')) {
         selector = tagName + '.' + className;
         candidates.add(selector);
       }

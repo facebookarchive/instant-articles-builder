@@ -1,9 +1,9 @@
 {
-    "name": "facebook/facebook-instant-articles-rules-editor",
-    "description": "Instant Articles Rules Editor",
-    "keywords": ["facebook", "instant-articles", "rules", "editor"],
+    "name": "facebook/instant-articles-builder",
+    "description": "Instant Articles Builder",
+    "keywords": ["facebook", "instant-articles", "builder"],
     "type": "project",
-    "homepage": "https://github.com/facebook/facebook-instant-articles-rules-editor",
+    "homepage": "https://github.com/facebook/instant-articles-builder",
     "license": "proprietary",
     "authors": [{
         "name": "Facebook",

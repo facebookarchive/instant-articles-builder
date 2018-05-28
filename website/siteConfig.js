@@ -6,12 +6,12 @@
  */
 
 const siteConfig = {
-  title: 'Instant Articles Rules Editor' /* title for your website */,
+  title: 'Instant Articles Builder' /* title for your website */,
   tagline: 'Set-up Instant Articles without coding',
   url: 'https://facebook.github.io' /* your website url */,
-  baseUrl: '/facebook-instant-articles-rules-editor/',
+  baseUrl: '/instant-articles-builder/',
   organizationName: 'facebook',
-  projectName: 'facebook-instant-articles-rules-editor',
+  projectName: 'instant-articles-builder',
   headerLinks: [
     {doc: 'get-started', label: 'Get Started'},
   ],
@@ -34,7 +34,7 @@ const siteConfig = {
     theme: 'default',
   },
   scripts: ['https://buttons.github.io/buttons.js'],
-  repoUrl: 'https://github.com/facebook/facebook-instant-articles-rules-editor',
+  repoUrl: 'https://github.com/facebook/instant-articles-builder',
   facebookPixelId: '178314219485164',
 };
 

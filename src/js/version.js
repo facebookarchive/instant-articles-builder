@@ -8,6 +8,6 @@
  * @flow
  */
 
-// This is the Rules Editor version constant.
+// This is the Instant Articles Builder version constant.
 // Bump this version when releasing.
 export const version = '0.1.0';

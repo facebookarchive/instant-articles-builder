@@ -28,7 +28,7 @@ class RulePicker extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      collapsed: false,
+      collapsed: RuleUtils.isValid(props.rule),
     };
   }
 

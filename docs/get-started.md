@@ -3,7 +3,7 @@ id: get-started
 title: Getting Started
 ---
 
-**Rules Editor** helps you to create rules that convert your articles to [Facebok Instant Articles](https://instantarticles.fb.com/).
+**Instant Articles Builder** helps you to create rules that convert your articles to [Facebook Instant Articles](https://instantarticles.fb.com/).
 
 For using this tool you'll need:
 

@@ -28,7 +28,7 @@ ruleDefinitions.push(
     name: 'GlobalRule',
     category: RuleCategories.BASIC,
     placeholder: 'Example: html',
-    displayName: 'Article Structure',
+    displayName: 'Article',
     getSelectionContext: htmlSelectionContext,
     unique: true,
     properties: Map({
@@ -51,7 +51,7 @@ ruleDefinitions.push(
       }),
       'author.name': RulePropertyDefinitionFactory({
         name: 'author.name',
-        displayName: 'Author(s)',
+        displayName: 'Author',
         placeholder: 'Example: span.author',
         defaultAttribute: 'textContent',
         supportedTypes: Set([RulePropertyTypes.STRING]),
@@ -200,7 +200,7 @@ ruleDefinitions.push(
     getSelectionContext: selectionContextByRuleCategories([
       RuleCategories.TEXT,
     ]),
-    displayName: 'Sponsor(s)',
+    displayName: 'Sponsor',
     placeholder: 'Example: ul.op-sponsors',
     properties: Map({
       'sponsor.page_url': RulePropertyDefinitionFactory({
@@ -243,7 +243,7 @@ ruleDefinitions.push(
   RuleDefinitionFactory({
     name: 'H2Rule',
     category: RuleCategories.TEXT,
-    displayName: 'Sub-title, Header (h2)',
+    displayName: 'Subtitle, Header (h2)',
     placeholder: 'Example: h2',
   })
 );

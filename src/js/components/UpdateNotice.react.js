@@ -19,7 +19,7 @@ const octokit = require('@octokit/rest')();
 
 const repository = {
   owner: 'facebook',
-  repo: 'facebook-instant-articles-rules-editor',
+  repo: 'instant-articles-builder',
 };
 
 type State = {

@@ -16,7 +16,7 @@ import { version } from '../version';
 import { shell } from 'electron';
 
 const baseURL =
-  'https://github.com/facebook/facebook-instant-articles-rules-editor' +
+  'https://github.com/facebook/instant-articles-builder' +
   '/issues/new?labels=bug';
 
 export class BugReporter extends React.Component<Props> {

@@ -61,7 +61,7 @@ class HomeSplash extends React.Component {
         <div className="inner">
           <img width="632" height="373" src={imgUrl('print-overall.png')} />
           <h2 className="projectTitle">
-            Rules Editor
+            Instant Articles Builder
             <small>
               Set-up <a target="_blank" href="http://instantarticles.fb.com">
               Facebook Instant Articles</a> without coding
@@ -71,7 +71,7 @@ class HomeSplash extends React.Component {
             <Button
               href={
                 'http://github.com/facebook/' +
-                'facebook-instant-articles-rules-editor' +
+                'instant-articles-builder' +
                 '/releases/latest'
               }
             >
@@ -101,7 +101,7 @@ const Features = props => (
     {[
       {
         title: 'Point & Click',
-        content: 'Visually select elements from your site',
+        content: 'Visually select elements from your website',
         image: imgUrl('print-point-and-click.png'),
         imageAlign: 'top',
       },
@@ -113,7 +113,7 @@ const Features = props => (
       },
       {
         title: 'Refine',
-        content: 'Refine your configuration with CSS3 selectors',
+        content: 'Refine your configuration with CSS selectors',
         image: imgUrl('print-css.png'),
         imageAlign: 'top',
       },
