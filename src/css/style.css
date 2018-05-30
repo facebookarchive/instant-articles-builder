@@ -654,6 +654,9 @@ button {
   background-color: #3b5998 !important;
   color: white !important;
 }
+.nux-header img {
+  margin-top: -7px;
+}
 .nux-modal {
   background: none !important;
 }
@@ -698,4 +701,9 @@ a:hover {
 /* Disable Filtering */
 .rule-filters {
   display: none;
+}
+
+header > img.logo {
+  opacity: 1;
+  margin: 10px;
 }
