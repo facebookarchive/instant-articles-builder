@@ -66,6 +66,7 @@ h1 {
   overflow-y: auto;
   display: flex;
   flex-direction: column;
+  margin-right: 10px;
 }
 
 .loader {

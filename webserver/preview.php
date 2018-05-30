@@ -59,7 +59,19 @@ try {
   );
 
   if ($instant_article->isValid()) {
-    $amp_article = AMPArticle::create($instant_article, $properties)->render();
+    $amp_article = AMPArticle::create($instant_article, $properties);
+    $amp_article->getObserver()->addFilter(
+      'AMP_HEAD',
+      function ($head) {
+        $style_node = $head->ownerDocument->createElement('link');
+        $style_node->setAttribute('rel', 'stylesheet');
+        $style_node->setAttribute('href', 'style.css');
+        $head->appendChild($style_node);
+        return $head;
+      }
+    );
+
+    $amp_article = $amp_article->render();
 
     if ($amp_article) {
       echo $amp_article;
