@@ -1,4 +1,6 @@
 #!/bin/bash
+# Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
+
 red=`tput setaf 1`
 green=`tput setaf 2`
 yellow=`tput setaf 3`

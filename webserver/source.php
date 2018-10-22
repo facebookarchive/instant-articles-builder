@@ -1,4 +1,5 @@
 <?php
+// Copyright (c) Facebook, Inc. and its affiliates. All Rights Reserved.
 
 include('vendor/autoload.php');
 
