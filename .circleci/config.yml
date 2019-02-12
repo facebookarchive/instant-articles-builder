@@ -6,7 +6,7 @@ version: 2
 jobs:
   build:
     docker:
-      - image: circleci/node:9.5
+      - image: circleci/node:latest
 
     working_directory: ~/repo
 
@@ -29,7 +29,7 @@ jobs:
 
   test:
     docker:
-      - image: circleci/node:9.5
+      - image: circleci/node:latest
 
     working_directory: ~/repo
 
@@ -41,7 +41,7 @@ jobs:
 
   flow:
     docker:
-      - image: circleci/node:9.5
+      - image: circleci/node:latest
 
     working_directory: ~/repo
 
@@ -53,7 +53,7 @@ jobs:
 
   lint:
     docker:
-      - image: circleci/node:9.5
+      - image: circleci/node:latest
 
     working_directory: ~/repo
 
