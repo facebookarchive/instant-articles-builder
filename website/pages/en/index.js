@@ -63,7 +63,7 @@ class HomeSplash extends React.Component {
           <h2 className="projectTitle">
             Instant Articles Builder
             <small>
-              Set-up <a target="_blank" href="http://instantarticles.fb.com">
+              Setup <a target="_blank" href="http://instantarticles.fb.com">
               Facebook Instant Articles</a> without coding
             </small>
           </h2>
