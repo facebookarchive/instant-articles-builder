@@ -24,7 +24,7 @@ import { shell } from 'electron';
 const importExportEncoding = 'utf8';
 
 const tutorialSite =
-  'https://media.fb.com/2016/03/07/instant-articles-wordpress-plugin/';
+  'https://code.fb.com/web/react-16-a-look-inside-an-api-compatible-rewrite-of-our-frontend-ui-library/';
 
 class NUXTour extends React.Component<Props> {
   joyride: ?Joyride = null;
@@ -59,11 +59,11 @@ class NUXTour extends React.Component<Props> {
   };
 
   buildStepText = (step: {
-    content: any,
-    nextLabel?: string,
-    icon?: string,
-    color?: string,
-    extraButtons?: any
+  content: any,
+  nextLabel?: string,
+  icon?: string,
+  color?: string,
+  extraButtons?: any,
   }) => {
     return (
       <Segment.Group>
@@ -200,7 +200,8 @@ class NUXTour extends React.Component<Props> {
             <div>
               <p>
                 You can also use CSS selectors. Let's enter the CSS selector for
-                the title in this article, which is <code>h2 a</code>.
+                the title in this article, which is{' '}
+                <code>.entry-title div</code>.
               </p>
             </div>
           ),
@@ -246,7 +247,7 @@ class NUXTour extends React.Component<Props> {
             <div>
               <p>
                 Let's keep going. The CSS selector for Author is{' '}
-                <code>p:first-child a</code>
+                <code>.entry-author</code>
               </p>
             </div>
           ),
@@ -263,7 +264,7 @@ class NUXTour extends React.Component<Props> {
               <p>Connect this element to the body of your article.</p>
               <p>
                 Let's do this now with the CSS selector{' '}
-                <code>.post-content</code>
+                <code>.entry-content</code>
               </p>
             </div>
           ),
@@ -273,18 +274,18 @@ class NUXTour extends React.Component<Props> {
         style: stepStyle,
       },
       {
-        name: 'publish-date-optional',
+        name: 'publish-hero-optional',
         text: this.buildStepText({
           content: (
             <div>
               <p>
                 The required Article elements are connected. You can also
-                connect optional elements like Published Date and Hero Image.
+                connect optional elements like the Hero Image.
               </p>
             </div>
           ),
         }),
-        selector: '.property-article-publish label',
+        selector: '.property-image-url label',
         position: 'right',
         style: stepStyle,
       },
@@ -315,19 +316,22 @@ class NUXTour extends React.Component<Props> {
                 <li>
                   Create a{' '}
                   <b>
-                    <Icon name="file outline" />New
+                    <Icon name="file outline" />
+                    New
                   </b>{' '}
                   template
                 </li>
                 <li>
                   <b>
-                    <Icon name="folder open" />Open
+                    <Icon name="folder open" />
+                    Open
                   </b>{' '}
                   an existing file
                 </li>
                 <li>
                   <b>
-                    <Icon name="save" />Save
+                    <Icon name="save" />
+                    Save
                   </b>{' '}
                   your template to a file
                 </li>
@@ -344,9 +348,10 @@ class NUXTour extends React.Component<Props> {
           content: (
             <div>
               <p>
-                Report a <Icon name="bug" />bug on our <Icon name="github" />GitHub
-                repository to let us know if something is broken or not working
-                correctly.
+                Report a <Icon name="bug" />
+                bug on our <Icon name="github" />
+                GitHub repository to let us know if something is broken or not
+                working correctly.
               </p>
             </div>
           ),
@@ -373,7 +378,8 @@ class NUXTour extends React.Component<Props> {
               <p>
                 Just click{' '}
                 <b>
-                  <Icon name="help circle" />Help
+                  <Icon name="help circle" />
+                  Help
                 </b>{' '}
                 to take this tour again at any time.
               </p>
@@ -426,7 +432,7 @@ class NUXTour extends React.Component<Props> {
             if (firstRule != null) {
               const property = firstRule.properties.get('article.title');
               if (property != null) {
-                const field = property.set('selector', 'h2 a');
+                const field = property.set('selector', '.entry-title div');
                 RuleActions.editField(field);
                 EditorActions.focusField(field);
               }
@@ -436,7 +442,7 @@ class NUXTour extends React.Component<Props> {
             if (firstRule != null) {
               const property = firstRule.properties.get('author.name');
               if (property != null) {
-                const field = property.set('selector', 'p:first-child a');
+                const field = property.set('selector', '.entry-author');
                 RuleActions.editField(field);
                 EditorActions.focusField(field);
               }
@@ -446,7 +452,20 @@ class NUXTour extends React.Component<Props> {
             if (firstRule != null) {
               const property = firstRule.properties.get('article.body');
               if (property != null) {
-                const field = property.set('selector', '.post-content');
+                const field = property.set('selector', '.entry-content');
+                RuleActions.editField(field);
+                EditorActions.focusField(field);
+              }
+            }
+            break;
+          case 'publish-hero-optional':
+            if (firstRule != null) {
+              const property = firstRule.properties.get('image.url');
+              if (property != null) {
+                const field = property.set(
+                  'selector',
+                  '#post-feat-image-container .wp-post-image'
+                );
                 RuleActions.editField(field);
                 EditorActions.focusField(field);
               }
