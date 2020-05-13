@@ -23,14 +23,14 @@ function debounce(func, wait, immediate = false) {
     var later = function() {
       timeout = null;
       if (!immediate) {
-        func.apply(context, args);
+        func.call(context, args);
       }
     };
     var callNow = immediate && !timeout;
     clearTimeout(timeout);
     timeout = setTimeout(later, wait);
     if (callNow) {
-      func.apply(context, args);
+      func.call(context, args);
     }
   };
 }
