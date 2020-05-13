@@ -25,7 +25,7 @@ import { RuleUtils } from '../utils/RuleUtils';
 type State = {
   displayURL: string,
   showPreview: boolean,
-  progress: number
+  progress: number,
 };
 
 class Browser extends React.Component<Props, State> {
@@ -277,6 +277,7 @@ class Browser extends React.Component<Props, State> {
             id="webview"
             src={this.props.editor.url}
             preload={path.join(__dirname, '../injected.js')}
+            webpreferences="sandbox=yes, nodeIntegration=no, contextIsolation=yes"
           />
           <div className="tab" role="presentation" onClick={this.togglePreview}>
             <span>{this.state.showPreview ? '>' : '<'}</span>
