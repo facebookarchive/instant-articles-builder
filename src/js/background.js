@@ -26,6 +26,10 @@ function createWindow() {
     width: electron.screen.getPrimaryDisplay().workAreaSize.width,
     height: electron.screen.getPrimaryDisplay().workAreaSize.height,
     icon: '../img/icon.png',
+    webPreferences: {
+      nodeIntegration: true,
+      webviewTag: true,
+    },
   });
 
   const {
