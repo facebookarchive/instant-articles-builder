@@ -8,5 +8,5 @@
  * @flow
  */
 
-require('babel-register');
+require('@babel/register');
 require('./webview/webview.js');
