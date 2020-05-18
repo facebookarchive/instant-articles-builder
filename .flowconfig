@@ -1,8 +1,11 @@
 [ignore]
 .*/react/node_modules/.*
 .*/electron-packager/test/.*
+.*/webserver/*
+.*/build/*
 
 [include]
+node_modules/electron
 node_modules/react
 node_modules/react-dom
 node_modules/classnames
