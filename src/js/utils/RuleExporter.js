@@ -32,30 +32,30 @@ export type JSONFormat = {
   generator_name: string,
   generator_version: string,
   rules: RuleJSON[],
-  style_name?: string
+  style_name?: string,
 };
 
 type RulePropertyJSON = {
   attribute: ?string,
   format?: string,
   selector: string,
-  type: string
+  type: string,
 };
 
 type RuleJSON = {
   class: string,
   selector?: string,
-  properties?: { [string]: RulePropertyJSON }
+  properties?: { [string]: RulePropertyJSON },
 };
 
 type AdsJSON = {
   audience_network_placement_id?: string,
-  raw_html?: string
+  raw_html?: string,
 };
 
 type AnalyticsJSON = {
   fb_pixel_id?: string,
-  raw_html?: string
+  raw_html?: string,
 };
 
 class RuleExporter {
@@ -195,9 +195,8 @@ class RuleExporter {
 
   static createJSONFromRuleProperty(property: RuleProperty): ?RulePropertyJSON {
     if (property != null && property.selector != null) {
-      return {
-        ...((property.attribute || property.definition.defaultAttribute) !=
-          null &&
+      const attributeObject: { attribute?: ?string } =
+        (property.attribute || property.definition.defaultAttribute) != null &&
         (property.attribute || property.definition.defaultAttribute) !=
           'innerContent' &&
         (property.attribute || property.definition.defaultAttribute) !=
@@ -208,7 +207,9 @@ class RuleExporter {
             attribute:
                 property.attribute || property.definition.defaultAttribute,
           }
-          : {}),
+          : {};
+      return {
+        ...attributeObject,
         ...((property.type || property.definition.defaultType) ==
         RulePropertyTypes.DATETIME
           ? { format: property.format }

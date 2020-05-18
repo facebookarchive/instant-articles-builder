@@ -23,12 +23,12 @@ type RulePropertyRecord = {
   type: ?RulePropertyType,
   attribute: ?string,
   format: string,
-  rule: ?Rule
+  rule: ?Rule,
 };
 
 export const RulePropertyFactory: RecordFactory<RulePropertyRecord> = Record({
   fieldType: 'RuleProperty',
-  definition: RulePropertyDefinitionFactory(),
+  definition: RulePropertyDefinitionFactory({}),
   selector: '',
   type: null,
   attribute: null,

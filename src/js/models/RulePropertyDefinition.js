@@ -32,23 +32,23 @@ type RulePropertyDefinitionRecord = {
   unique: boolean,
   defaultProperty: ?RuleProperty,
   defaultType: RulePropertyType,
-  getSelectionContext: (field: Field, rules: RuleStoreState) => string
+  getSelectionContext: (field: Field, rules: RuleStoreState) => string,
 };
 
-const BaseRulePropertyDefinitionFactory: RecordFactory<
-  RulePropertyDefinitionRecord
-> = Record({
-  name: '',
-  displayName: '',
-  placeholder: '',
-  defaultAttribute: null,
-  supportedTypes: Set(),
-  required: false,
-  unique: true,
-  defaultProperty: null,
-  defaultType: RulePropertyTypes.STRING,
-  getSelectionContext: ruleSelectionContext,
-});
+const BaseRulePropertyDefinitionFactory: RecordFactory<RulePropertyDefinitionRecord> = Record(
+  {
+    name: '',
+    displayName: '',
+    placeholder: '',
+    defaultAttribute: null,
+    supportedTypes: Set(),
+    required: false,
+    unique: true,
+    defaultProperty: null,
+    defaultType: RulePropertyTypes.STRING,
+    getSelectionContext: ruleSelectionContext,
+  }
+);
 
 export const RulePropertyDefinitionFactory = (
   values: $Shape<RulePropertyDefinitionRecord>
@@ -65,5 +65,4 @@ export const RulePropertyDefinitionFactory = (
   return rulePropertyDefinition;
 };
 
-export type RulePropertyDefinition = RecordOf<RulePropertyDefinitionRecord> &
-  RulePropertyDefinitionFactory;
+export type RulePropertyDefinition = RecordOf<RulePropertyDefinitionRecord>;

@@ -21,7 +21,7 @@ type RuleRecord = {
   guid: string,
   definition: RuleDefinition,
   properties: Map<string, RuleProperty>,
-  selector: string
+  selector: string,
 };
 
 const BaseRuleFactory: RecordFactory<RuleRecord> = Record({
@@ -61,4 +61,4 @@ export const RuleFactory = (values: $Shape<RuleRecord>): Rule => {
   return rule;
 };
 
-export type Rule = RecordOf<RuleRecord> & RuleFactory;
+export type Rule = RecordOf<RuleRecord>;
