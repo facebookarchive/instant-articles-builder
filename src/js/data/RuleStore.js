@@ -22,7 +22,7 @@ type Action = {
   rule?: Rule,
   field?: Field,
   oldIndex?: number,
-  newIndex?: number
+  newIndex?: number,
 };
 export type State = Immutable.Map<string, Rule>;
 
@@ -31,7 +31,7 @@ class RuleStore extends ReduceStore<State> {
     super(RulesEditorDispatcher);
   }
 
-  getInitialState() {
+  getInitialState(): State {
     return Immutable.OrderedMap();
   }
 

@@ -59,11 +59,11 @@ const SortableList = SortableContainer((props: any) => {
 });
 
 type AccordionItemProps = {
-  index: number
+  index: number,
 };
 
 type State = {
-  activeAccordionIndex: number
+  activeAccordionIndex: number,
 };
 
 class RuleList extends React.Component<Props, State> {
@@ -92,7 +92,7 @@ class RuleList extends React.Component<Props, State> {
     newIndex,
   }: {
     oldIndex: number,
-    newIndex: number
+    newIndex: number,
   }) => {
     RuleActions.changeOrder(oldIndex, newIndex);
   };
@@ -133,13 +133,15 @@ class RuleList extends React.Component<Props, State> {
             onClick={this.handleAccordionTitleClick}
           >
             <label>
-              <Icon name="dropdown" />Template
+              <Icon name="dropdown" />
+              Template
             </label>
           </Accordion.Title>
           <Accordion.Content active={this.state.activeAccordionIndex === 0}>
             <div className="rule-filters">
               <label>
-                <Icon name="filter" />Filter Rules:
+                <Icon name="filter" />
+                Filter Rules:
               </label>
               <Dropdown
                 multiple
@@ -164,7 +166,8 @@ class RuleList extends React.Component<Props, State> {
               />
             </div>
             <label>
-              <Icon name="list" />Elements:
+              <Icon name="list" />
+              Elements:
             </label>
             <select
               className="rule-selector"
@@ -207,10 +210,10 @@ class RuleList extends React.Component<Props, State> {
             </div>
           </Accordion.Content>
           <TransformationSettings
+            {...this.props}
             accordionActive={this.state.activeAccordionIndex === 1}
             accordionIndex={1}
             onAccordionTitleClick={this.handleAccordionTitleClick}
-            {...this.props}
           />
         </Accordion>
       </div>
