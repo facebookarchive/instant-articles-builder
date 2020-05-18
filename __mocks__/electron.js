@@ -25,9 +25,21 @@ const electron = {
     // Replace the function we will use in the dialog object
     dialog: {
       // Call directly the callback function passing a single valid file name
-      showOpenDialog: (options, callback) => callback([FILE_NAME]),
+      showOpenDialog: (options) => {
+        return new Promise((resolve, reject) => {
+          resolve({
+            filePaths: [FILE_NAME],
+          });
+        });
+      },
       // Call directly the callback function passing a valid file name
-      showSaveDialog: (options, callback) => callback(FILE_NAME),
+      showSaveDialog: (options) => {
+        return new Promise((resolve, reject) => {
+          resolve({
+            filePath: FILE_NAME,
+          });
+        });
+      },
     },
   },
 };

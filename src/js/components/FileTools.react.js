@@ -9,7 +9,9 @@
  */
 
 const React = require('react');
-const { remote: { dialog: Dialog } } = require('electron');
+const {
+  remote: { dialog: Dialog },
+} = require('electron');
 const Fs = require('fs');
 const path = require('path');
 
@@ -40,41 +42,35 @@ class FileTools extends React.Component<Props> {
   };
 
   handleExport = () => {
-    Dialog.showSaveDialog(
-      {
-        defaultPath: dialogDefaultPath,
-        filters: [dialogFilter],
-      },
-      fileName => {
-        if (fileName) {
-          const contents = JSON.stringify(
-            RuleExporter.export(this.props.rules, this.props.settings)
-          );
-          Fs.writeFile(fileName, contents, importExportEncoding, error => {
-            if (error) {
-              Dialog.showErrorBox('Unable to save file', error);
-            }
-          });
-        }
+    Dialog.showSaveDialog({
+      defaultPath: dialogDefaultPath,
+      filters: [dialogFilter],
+    }).then((e: { filePath: string }) => {
+      if (e.filePath) {
+        const contents = JSON.stringify(
+          RuleExporter.export(this.props.rules, this.props.settings)
+        );
+        Fs.writeFile(e.filePath, contents, importExportEncoding, error => {
+          if (error) {
+            Dialog.showErrorBox('Unable to save file', error);
+          }
+        });
       }
-    );
+    });
   };
 
   handleImport = () => {
-    Dialog.showOpenDialog(
-      {
-        defaultPath: dialogDefaultPath,
-        filters: [dialogFilter],
-        properties: ['openFile'],
-      },
-      (filePaths: Array<string>) => {
-        if (filePaths && filePaths.length === 1) {
-          Fs.readFile(filePaths[0], importExportEncoding, (error, data) => {
-            this.loadFromExportedData(data);
-          });
-        }
+    Dialog.showOpenDialog({
+      defaultPath: dialogDefaultPath,
+      filters: [dialogFilter],
+      properties: ['openFile'],
+    }).then((e: { filePaths: Array<string> }) => {
+      if (e.filePaths.length === 1) {
+        Fs.readFile(e.filePaths[0], importExportEncoding, (error, data) => {
+          this.loadFromExportedData(data);
+        });
       }
-    );
+    });
   };
 
   handleNew = () => {
