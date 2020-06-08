@@ -51,6 +51,7 @@ h1 {
   flex: 1;
   padding-top: 10px;
   padding-bottom: 10px;
+  height: 0;
 }
 
 #content {
