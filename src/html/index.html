@@ -23,7 +23,10 @@
         <div id="root">
         </div>
         <script>
-            require('@babel/register');
+            const path = require('path');
+            require('@babel/register')({
+                root: path.resolve(__dirname, '..', '..')
+            });
             require('../../src/js/client');
             require('../../src/js/utils/analytics');
         </script>
