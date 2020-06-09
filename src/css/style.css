@@ -709,3 +709,7 @@ header > img.logo {
   opacity: 1;
   margin: 10px;
 }
+
+code {
+  white-space: pre;
+}

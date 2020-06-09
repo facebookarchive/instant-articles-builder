@@ -59,11 +59,11 @@ class NUXTour extends React.Component<Props> {
   };
 
   buildStepText = (step: {
-  content: any,
-  nextLabel?: string,
-  icon?: string,
-  color?: string,
-  extraButtons?: any,
+    content: any,
+    nextLabel?: string,
+    icon?: string,
+    color?: string,
+    extraButtons?: any,
   }) => {
     return (
       <Segment.Group>
@@ -247,7 +247,7 @@ class NUXTour extends React.Component<Props> {
             <div>
               <p>
                 Let's keep going. The CSS selector for Author is{' '}
-                <code>.entry-author</code>
+                <code>.entry-authors-social .author</code>
               </p>
             </div>
           ),
@@ -442,7 +442,10 @@ class NUXTour extends React.Component<Props> {
             if (firstRule != null) {
               const property = firstRule.properties.get('author.name');
               if (property != null) {
-                const field = property.set('selector', '.entry-author');
+                const field = property.set(
+                  'selector',
+                  '.entry-authors-social .author'
+                );
                 RuleActions.editField(field);
                 EditorActions.focusField(field);
               }
