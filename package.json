@@ -1,7 +1,7 @@
 {
   "name": "facebook-instant-articles-builder",
   "productName": "Facebook Instant Articles Builder",
-  "version": "0.2.0",
+  "version": "0.2.2",
   "description": "App to create a template to build Instant Articles from articles on your website.",
   "license": "SEE LICENSE IN ./LICENSE",
   "main": "src/js/background.js",
