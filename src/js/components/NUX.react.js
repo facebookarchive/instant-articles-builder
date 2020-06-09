@@ -73,7 +73,8 @@ export class NUX extends React.Component<Props, State> {
             <a target="_blank" href="https://instantarticles.fb.com/">
               {' '}
               Facebook Instant Articles
-            </a>, you'll need:
+            </a>
+            , you'll need:
           </p>
           <ul>
             <li>A website with articles</li>
@@ -84,7 +85,7 @@ export class NUX extends React.Component<Props, State> {
           </ul>
           <p>
             Once you've finished and saved, upload the file to a public URL and
-            reference it by adding the following meta tag to the
+            reference it by adding the following meta tag to the{' '}
             <code>&lt;head&gt;</code> tag of your articles:
           </p>
           <p>

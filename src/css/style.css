@@ -51,6 +51,7 @@ h1 {
   flex: 1;
   padding-top: 10px;
   padding-bottom: 10px;
+  height: 0;
 }
 
 #content {
@@ -707,4 +708,8 @@ a:hover {
 header > img.logo {
   opacity: 1;
   margin: 10px;
+}
+
+code {
+  white-space: pre;
 }

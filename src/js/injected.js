@@ -7,6 +7,8 @@
  *
  * @flow
  */
-
-require('@babel/register');
+const path = require('path');
+require('@babel/register')({
+  root: path.resolve(__dirname, '..', '..'),
+});
 require('./webview/webview.js');
