@@ -25,7 +25,7 @@ function createWindow() {
   win = new BrowserWindow({
     width: electron.screen.getPrimaryDisplay().workAreaSize.width,
     height: electron.screen.getPrimaryDisplay().workAreaSize.height,
-    icon: '../img/icon.png',
+    icon: path.join(__dirname, '../img/icon.png'),
     webPreferences: {
       nodeIntegration: true,
       webviewTag: true,
