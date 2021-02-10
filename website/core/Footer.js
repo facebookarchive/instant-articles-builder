@@ -57,6 +57,21 @@ class Footer extends React.Component {
               License
             </a>
           </div>
+          <div>
+            <h5>Legal</h5>
+            <a
+              href="https://opensource.facebook.com/legal/privacy/"
+              target="blank"
+              rel="noreferrer noopener">
+              Privacy
+            </a>
+            <a
+              href="https://opensource.facebook.com/legal/terms/"
+              target="blank"
+              rel="noreferrer noopener">
+              Terms
+            </a>
+          </div>
         </section>
 
         <a
