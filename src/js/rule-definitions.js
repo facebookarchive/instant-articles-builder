@@ -136,7 +136,7 @@ ruleDefinitions.push(
     properties: Map({
       'anchor.href': RulePropertyDefinitionFactory({
         name: 'anchor.href',
-        displayName: 'HRef',
+        displayName: 'URL',
         placeholder: 'Example: a',
         supportedTypes: Set([RulePropertyTypes.STRING]),
         defaultType: RulePropertyTypes.STRING,
