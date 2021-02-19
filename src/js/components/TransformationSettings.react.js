@@ -9,6 +9,7 @@
  */
 
 const React = require('react');
+const RuleLabel = require('./RuleLabel.react.js');
 
 import { Accordion, Icon } from 'semantic-ui-react';
 import AdsTypes from '../data/AdsTypes';
@@ -19,11 +20,11 @@ import type { Props as BaseProps } from '../containers/AppContainer.react';
 type Props = BaseProps & {
   accordionActive: boolean,
   accordionIndex: number,
-  onAccordionTitleClick: (e: Event, itemProps: AccordionItemProps) => void
+  onAccordionTitleClick: (e: Event, itemProps: AccordionItemProps) => void,
 };
 
 type AccordionItemProps = {
-  index: number
+  index: number,
 };
 
 class TransformationSettings extends React.Component<Props> {
@@ -57,13 +58,13 @@ class TransformationSettings extends React.Component<Props> {
     return this.props.settings.adsSettings.type ===
       AdsTypes.AUDIENCE_NETWORK ? (
         <div>
-          <label className="sub-label" htmlFor="audienceNetworkId">
-            <span>
-              {this.props.settings.adsSettings.audienceNetworkPlacementId
-                ? '✔'
-                : '•'}
-            </span>&nbsp; Audience Network ID
-          </label>
+          <RuleLabel
+            filled={this.props.settings.adsSettings.audienceNetworkPlacementId}
+            required={false}
+            title="Audience Network ID"
+            className="sub-label"
+            htmlFor="audienceNetworkId"
+          />
           <div className="field">
             <input
               type="text"
@@ -80,10 +81,13 @@ class TransformationSettings extends React.Component<Props> {
   renderAdsRawHtmlDiv() {
     return this.props.settings.adsSettings.type === AdsTypes.RAW_HTML ? (
       <div>
-        <label className="sub-label" htmlFor="adsRawHtml">
-          <span>{this.props.settings.adsSettings.rawHtml ? '✔' : '•'}</span>&nbsp;
-          Raw HTML
-        </label>
+        <RuleLabel
+          filled={this.props.settings.adsSettings.rawHtml}
+          required={false}
+          title="Raw HTML"
+          className="sub-label"
+          htmlFor="adsRawHtml"
+        />
         <div className="field">
           <textarea
             name="adsRawHtml"
@@ -119,10 +123,13 @@ class TransformationSettings extends React.Component<Props> {
                 <label>
                   <Icon name="edit" />General
                 </label>
-                <label className="sub-label" htmlFor="styleName">
-                  <span>{this.props.settings.styleName ? '✔' : '•'}</span>&nbsp;
-                  Style Name
-                </label>
+                <RuleLabel
+                  filled={this.props.settings.styleName}
+                  required={false}
+                  title="Style Name"
+                  className="sub-label"
+                  htmlFor="styleName"
+                />
                 <div className="field">
                   <input
                     type="text"
@@ -137,13 +144,13 @@ class TransformationSettings extends React.Component<Props> {
                 <label>
                   <Icon name="bar chart" />Analytics
                 </label>
-                <label className="sub-label" htmlFor="pixelId">
-                  <span>
-                    {this.props.settings.analyticsSettings.fbPixelId
-                      ? '✔'
-                      : '•'}
-                  </span>&nbsp; Pixel ID
-                </label>
+                <RuleLabel
+                  filled={this.props.settings.analyticsSettings.fbPixelId}
+                  required={false}
+                  title="Pixel ID"
+                  className="sub-label"
+                  htmlFor="pixelId"
+                />
                 <div className="field">
                   <input
                     type="text"
@@ -153,11 +160,13 @@ class TransformationSettings extends React.Component<Props> {
                     value={this.props.settings.analyticsSettings.fbPixelId}
                   />
                 </div>
-                <label className="sub-label" htmlFor="analyticsRawHtml">
-                  <span>
-                    {this.props.settings.analyticsSettings.rawHtml ? '✔' : '•'}
-                  </span>&nbsp; Raw HTML
-                </label>
+                <RuleLabel
+                  filled={this.props.settings.analyticsSettings.rawHtml}
+                  required={false}
+                  title="Raw HTML"
+                  className="sub-label"
+                  htmlFor="analyticsRawHtml"
+                />
                 <div className="field">
                   <textarea
                     name="analyticsRawHtml"

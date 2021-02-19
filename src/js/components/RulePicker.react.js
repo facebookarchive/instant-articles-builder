@@ -11,6 +11,7 @@
 const React = require('react');
 const PropertyPicker = require('./PropertyPicker.react.js');
 const SelectorPicker = require('./SelectorPicker.react');
+const RuleLabel = require('./RuleLabel.react.js');
 const classNames = require('classnames');
 const RuleActions = require('../data/RuleActions');
 
@@ -21,7 +22,7 @@ import { RuleUtils } from '../utils/RuleUtils';
 type Props = BaseProps & { rule: Rule };
 
 type State = {
-  collapsed: boolean
+  collapsed: boolean,
 };
 
 class RulePicker extends React.Component<Props, State> {
@@ -87,10 +88,11 @@ class RulePicker extends React.Component<Props, State> {
               valid: this.props.rule.selector != '',
             })}
           >
-            <label>
-              {this.props.rule.selector != '' ? <span>✔</span> : <span>✘</span>}{' '}
-              Selector
-            </label>
+            <RuleLabel
+              filled={this.props.rule.selector == ''}
+              required={false}
+              title="Selector"
+            />
             <SelectorPicker {...this.props} field={this.props.rule} />
           </div>
           {this.props.rule.properties

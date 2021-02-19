@@ -12,6 +12,7 @@ const React = require('react');
 const classNames = require('classnames');
 const DateTimeFormatPicker = require('./DateTimeFormatPicker.react.js');
 const SelectorPicker = require('./SelectorPicker.react.js');
+const RuleLabel = require('./RuleLabel.react.js');
 import type { RuleProperty } from '../models/RuleProperty';
 import RulePropertyTypes from '../models/RulePropertyTypes';
 import RuleActions from '../data/RuleActions';
@@ -122,16 +123,11 @@ class PropertyPicker extends React.Component<Props> {
           [propertyClass]: true,
         })}
       >
-        <label>
-          {RulePropertyUtils.isValid(this.props.property) ? (
-            <span>✔</span>
-          ) : this.props.property.definition.required ? (
-            <span>✘</span>
-          ) : (
-            <span>•</span>
-          )}{' '}
-          {this.props.property.definition.displayName}
-        </label>
+        <RuleLabel
+          filled={!RulePropertyUtils.isValid(this.props.property)}
+          required={!this.props.property.definition.required}
+          title={this.props.property.definition.displayName}
+        />
         <label className="sub-label selector-label">Selector</label>
         <SelectorPicker {...this.props} field={this.props.property} />
         {attributePicker}
