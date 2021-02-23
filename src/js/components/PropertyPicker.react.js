@@ -12,6 +12,9 @@ const React = require('react');
 const classNames = require('classnames');
 const DateTimeFormatPicker = require('./DateTimeFormatPicker.react.js');
 const SelectorPicker = require('./SelectorPicker.react.js');
+const LabelIconOptional = require('./common/LabelIcon/LabelIconOptional.react.js');
+const LabelIconRequired = require('./common/LabelIcon/LabelIconRequired.react.js');
+const LabelIconValid = require('./common/LabelIcon/LabelIconValid.react.js');
 import type { RuleProperty } from '../models/RuleProperty';
 import RulePropertyTypes from '../models/RulePropertyTypes';
 import RuleActions from '../data/RuleActions';
@@ -103,7 +106,7 @@ class PropertyPicker extends React.Component<Props> {
 
     const propertyClass =
       'property-' + this.props.property.definition.name.replace('.', '-');
-
+    const labelDisplayName = this.props.property.definition.displayName;
     return (
       <div
         className={classNames({
@@ -122,16 +125,13 @@ class PropertyPicker extends React.Component<Props> {
           [propertyClass]: true,
         })}
       >
-        <label>
-          {RulePropertyUtils.isValid(this.props.property) ? (
-            <span>✔</span>
-          ) : this.props.property.definition.required ? (
-            <span>✘</span>
-          ) : (
-            <span>•</span>
-          )}{' '}
-          {this.props.property.definition.displayName}
-        </label>
+        {RulePropertyUtils.isValid(this.props.property) ? (
+          <LabelIconValid>{labelDisplayName}</LabelIconValid>
+        ) : this.props.property.definition.required ? (
+          <LabelIconRequired>{labelDisplayName}</LabelIconRequired>
+        ) : (
+          <LabelIconOptional>{labelDisplayName}</LabelIconOptional>
+        )}{' '}
         <label className="sub-label selector-label">Selector</label>
         <SelectorPicker {...this.props} field={this.props.property} />
         {attributePicker}
