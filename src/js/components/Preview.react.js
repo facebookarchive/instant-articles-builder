@@ -53,36 +53,32 @@ class Preview extends React.Component<Props, State> {
 
   reloadPreview = debounce(() => {
     if (this.state.activeTab == 0 && this.preview != null) {
-      const encoded = encodeURIComponent(this.props.editor.url);
       const generatedRules = RuleExporter.export(
         this.props.rules,
         this.props.settings
       );
-      if (
+      const hasRequiredField = !!(
         generatedRules &&
         generatedRules.rules.find(rule => rule.class === 'GlobalRule')
-      ) {
-        this.preview.loadURL(
-          'http://127.0.0.1:8105/preview.php?url=' +
-            encodeURIComponent(this.props.editor.url),
-          {
+      );
+      this.preview.loadURL(
+        'http://127.0.0.1:8105/preview.php?url=' +
+          encodeURIComponent(this.props.editor.url),
+        hasRequiredField
+          ? {
             postData: [
               {
                 type: 'rawData',
                 bytes: Buffer.from(
-                  'rules=' + encodeURIComponent(JSON.stringify(generatedRules))
+                  'rules=' +
+                      encodeURIComponent(JSON.stringify(generatedRules))
                 ),
               },
             ],
             extraHeaders: 'Content-Type: application/x-www-form-urlencoded',
           }
-        );
-      } else {
-        this.preview.loadURL(
-          'http://127.0.0.1:8105/preview.php?url=' +
-            encodeURIComponent(this.props.editor.url)
-        );
-      }
+          : null
+      );
     }
   }, 1000);
 
