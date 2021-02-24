@@ -30,7 +30,7 @@
     "react-dom": "^15.6.1",
     "react-joyride": "^1.11.4",
     "react-sortable-hoc": "^0.6.8",
-    "semantic-ui-react": "^0.77.2",
+    "semantic-ui-react": "^0.80.0",
     "yargs-parser": "^18.1.3"
   },
   "devDependencies": {
