@@ -1,6 +1,7 @@
 # Facebook Instant Articles Builder
 
 [![CircleCI](https://circleci.com/gh/facebook/instant-articles-builder.svg?style=shield)](https://circleci.com/gh/facebook/instant-articles-builder)
+[![node](https://img.shields.io/badge/node-%3E=8.11.4-blue.svg?style=flat-square)](https://nodejs.org/docs/v8.11.4/api/)
 
 **Instant Articles Builder** helps you to create a template to build [Facebook Instant Articles](https://instantarticles.fb.com/) from articles on your website.
 
