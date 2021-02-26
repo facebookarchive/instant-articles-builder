@@ -11,6 +11,8 @@
 const React = require('react');
 const PropertyPicker = require('./PropertyPicker.react.js');
 const SelectorPicker = require('./SelectorPicker.react');
+const LabelIconRequired = require('./common/LabelIcon/LabelIconRequired.react.js');
+const LabelIconValid = require('./common/LabelIcon/LabelIconValid.react.js');
 const classNames = require('classnames');
 const RuleActions = require('../data/RuleActions');
 
@@ -21,7 +23,7 @@ import { RuleUtils } from '../utils/RuleUtils';
 type Props = BaseProps & { rule: Rule };
 
 type State = {
-  collapsed: boolean
+  collapsed: boolean,
 };
 
 class RulePicker extends React.Component<Props, State> {
@@ -47,7 +49,7 @@ class RulePicker extends React.Component<Props, State> {
     const toggler = this.state.collapsed
       ? '\u25B6' // right triangle
       : '\u25BC'; // down triangle
-
+    const label = 'Selector';
     return (
       <div
         className={classNames({
@@ -87,10 +89,11 @@ class RulePicker extends React.Component<Props, State> {
               valid: this.props.rule.selector != '',
             })}
           >
-            <label>
-              {this.props.rule.selector != '' ? <span>✔</span> : <span>✘</span>}{' '}
-              Selector
-            </label>
+            {this.props.rule.selector != '' ? (
+              <LabelIconValid>{label}</LabelIconValid>
+            ) : (
+              <LabelIconRequired>{label}</LabelIconRequired>
+            )}
             <SelectorPicker {...this.props} field={this.props.rule} />
           </div>
           {this.props.rule.properties
