@@ -6,11 +6,13 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+require('dotenv').config();
+
 const electron = require('electron');
 const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 const url = require('url');
-const webserver = require('./webserver');
+const webserver = require('./utils/webserver');
 
 require('electron-debug')({ showDevTools: false });
 

@@ -16,6 +16,9 @@ import type { BaseProps } from '../containers/AppContainer.react';
 import { Loader, Dimmer, Form, Tab } from 'semantic-ui-react';
 import debounce from '../utils/debounce';
 
+import webserver from '../utils/webserver';
+import { BrowserWindow } from 'electron';
+
 type Props = BaseProps & { hidden: boolean };
 
 type State = {
@@ -51,60 +54,61 @@ class Preview extends React.Component<Props, State> {
     this.setState({ sourceLoading: false });
   };
 
-  reloadPreview = debounce(() => {
-    if (this.state.activeTab == 0 && this.preview != null) {
-      const generatedRules = RuleExporter.export(
-        this.props.rules,
-        this.props.settings
-      );
-      const hasRequiredField = !!(
-        generatedRules &&
-        generatedRules.rules.find(rule => rule.class === 'GlobalRule')
-      );
-      this.preview.loadURL(
-        'http://127.0.0.1:8105/preview.php?url=' +
-          encodeURIComponent(this.props.editor.url),
-        hasRequiredField
-          ? {
-            postData: [
-              {
-                type: 'rawData',
-                bytes: Buffer.from(
-                  'rules=' +
-                      encodeURIComponent(JSON.stringify(generatedRules))
-                ),
-              },
-            ],
-            extraHeaders: 'Content-Type: application/x-www-form-urlencoded',
-          }
-          : null
-      );
+  reloadTabBrowserWindow = (
+    tabIndex: number,
+    browserWindow: BrowserWindow,
+    contentPathname: string,
+    viewSource: boolean,
+    validateRequiredFields: boolean
+  ): void => {
+    if (this.state.activeTab == tabIndex && browserWindow != null) {
+      if (validateRequiredFields) {
+        const generatedRules = RuleExporter.export(
+          this.props.rules,
+          this.props.settings
+        );
+        const hasRequiredField = !!(
+          generatedRules &&
+          generatedRules.rules.find(rule => rule.class === 'GlobalRule')
+        );
+
+        if (!hasRequiredField) {
+          browserWindow.loadURL(null);
+          return;
+        }
+      }
+
+      const url = new URL(webserver.baseUrl);
+      url.pathname = contentPathname;
+      url.search = `url=${encodeURIComponent(this.props.editor.url)}`;
+
+      const href = (viewSource ? 'view-source:' : '') + url.href;
+
+      browserWindow.loadURL(href, {
+        postData: [
+          {
+            type: 'rawData',
+            bytes: Buffer.from(
+              'rules=' +
+                encodeURIComponent(
+                  JSON.stringify(
+                    RuleExporter.export(this.props.rules, this.props.settings)
+                  )
+                )
+            ),
+          },
+        ],
+        extraHeaders: 'Content-Type: application/x-www-form-urlencoded',
+      });
     }
+  };
+
+  reloadPreview = debounce(() => {
+    this.reloadTabBrowserWindow(0, this.preview, 'preview.php', false, true);
   }, 1000);
 
   reloadSource = debounce(() => {
-    if (this.state.activeTab == 1 && this.sourceview != null) {
-      this.sourceview.loadURL(
-        'view-source:http://127.0.0.1:8105/source.php?url=' +
-          encodeURIComponent(this.props.editor.url),
-        {
-          postData: [
-            {
-              type: 'rawData',
-              bytes: Buffer.from(
-                'rules=' +
-                  encodeURIComponent(
-                    JSON.stringify(
-                      RuleExporter.export(this.props.rules, this.props.settings)
-                    )
-                  )
-              ),
-            },
-          ],
-          extraHeaders: 'Content-Type: application/x-www-form-urlencoded',
-        }
-      );
-    }
+    this.reloadTabBrowserWindow(1, this.sourceview, 'source.php', true, false);
   }, 1000);
 
   shouldReload = (nextProps: Props): boolean => {
