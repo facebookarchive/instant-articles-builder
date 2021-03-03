@@ -10,9 +10,7 @@ const electron = require('electron');
 const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 const url = require('url');
-const php = require('gulp-connect-php');
-
-const phpServer = new php();
+const webserver = require('./webserver');
 
 require('electron-debug')({ showDevTools: false });
 
@@ -59,7 +57,7 @@ function createWindow() {
     // when you should delete the corresponding element.
     win = null;
 
-    phpServer.closeServer();
+    webserver.stop();
   });
 
   // Create the Application's main menu
@@ -137,15 +135,4 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 // php ruleZ
 
-if (process.platform === 'win32') {
-  phpServer.server({
-    port: 8105,
-    base: path.resolve(__dirname) + '/../../webserver',
-    bin: path.resolve(__dirname) + '/../../bin/php/php.exe',
-  });
-} else {
-  phpServer.server({
-    port: 8105,
-    base: path.resolve(__dirname) + '/../../webserver',
-  });
-}
+webserver.init();
