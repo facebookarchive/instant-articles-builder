@@ -14,7 +14,7 @@ const DEFAULT_HOST = 'http://localhost';
 const DEFAULT_PORT = 8105;
 const DEFAULT_START_LOCAL_WEBSERVER = true;
 
-class Webserver {
+class PreviewWebserver {
   constructor() {
     this.usingLocalWebserver = DEFAULT_START_LOCAL_WEBSERVER;
     if (process.env.START_LOCAL_PREVIEW_WEBSERVER !== undefined) {
@@ -59,4 +59,4 @@ class Webserver {
   }
 }
 
-module.exports = new Webserver();
+module.exports = new PreviewWebserver();
