@@ -39,13 +39,13 @@ class PreviewWebserver {
     if (process.platform === 'win32') {
       this.phpServer.server({
         port: this.port,
-        base: path.resolve(__dirname) + '/../../webserver',
-        bin: path.resolve(__dirname) + '/../../bin/php/php.exe',
+        base: path.resolve(__dirname) + '/../../../webserver',
+        bin: path.resolve(__dirname) + '/../../../bin/php/php.exe',
       });
     } else {
       this.phpServer.server({
         port: this.port,
-        base: path.resolve(__dirname) + '/../../webserver',
+        base: path.resolve(__dirname) + '/../../../webserver',
       });
     }
   }

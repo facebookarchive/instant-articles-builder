@@ -61,6 +61,9 @@ class Preview extends React.Component<Props, State> {
     viewSource: boolean,
     validateRequiredFields: boolean
   ): void => {
+    const url = new URL(webserver.baseUrl);
+    url.pathname = contentPathname;
+
     if (this.state.activeTab == tabIndex && browserWindow != null) {
       if (validateRequiredFields) {
         const generatedRules = RuleExporter.export(
@@ -73,13 +76,11 @@ class Preview extends React.Component<Props, State> {
         );
 
         if (!hasRequiredField) {
-          browserWindow.loadURL(null);
+          browserWindow.loadURL(url.href);
           return;
         }
       }
 
-      const url = new URL(webserver.baseUrl);
-      url.pathname = contentPathname;
       url.search = `url=${encodeURIComponent(this.props.editor.url)}`;
 
       const href = (viewSource ? 'view-source:' : '') + url.href;
