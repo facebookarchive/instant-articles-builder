@@ -31,7 +31,6 @@ function createWindow() {
       webviewTag: true,
     },
   });
-  win.webContents.openDevTools();
 
   const {
     default: installExtension,
