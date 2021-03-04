@@ -33,7 +33,7 @@ class App extends React.Component<Props> {
     document.removeEventListener('keyup', this.cancelOnEscape);
     document.removeEventListener('click', this.blurOnClickOut);
   }
-  cancelOnEscape = (e: KeyboardEvent): void => {
+  cancelOnEscape = (e: KeyboardEvent) => {
     // Handle element selection cancelation on 'esc' press
     // escape key maps to keycode `27`
     if (e.keyCode == 27) {
