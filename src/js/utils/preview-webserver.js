@@ -30,7 +30,9 @@ class Webserver {
   }
 
   init() {
-    if (!this.usingLocalWebserver) {return;}
+    if (!this.usingLocalWebserver) {
+      return;
+    }
 
     this.phpServer = new php();
 
@@ -49,7 +51,9 @@ class Webserver {
   }
 
   stop() {
-    if (!this.usingLocalWebserver) {return;}
+    if (!this.usingLocalWebserver) {
+      return;
+    }
 
     this.phpServer.closeServer();
   }

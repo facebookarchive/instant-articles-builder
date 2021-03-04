@@ -16,7 +16,7 @@ import type { BaseProps } from '../containers/AppContainer.react';
 import { Loader, Dimmer, Form, Tab } from 'semantic-ui-react';
 import debounce from '../utils/debounce';
 
-import webserver from '../utils/webserver';
+import webserver from '../utils/preview-webserver';
 import { BrowserWindow } from 'electron';
 
 type Props = BaseProps & { hidden: boolean };

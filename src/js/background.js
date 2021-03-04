@@ -12,7 +12,7 @@ const electron = require('electron');
 const { app, BrowserWindow, Menu } = require('electron');
 const path = require('path');
 const url = require('url');
-const webserver = require('./utils/webserver');
+const webserver = require('./utils/preview-webserver');
 
 require('electron-debug')({ showDevTools: false });
 
@@ -31,6 +31,7 @@ function createWindow() {
       webviewTag: true,
     },
   });
+  win.webContents.openDevTools();
 
   const {
     default: installExtension,
