@@ -30,12 +30,18 @@ class PreviewWebserver {
   }
 
   init() {
+    console.info(
+      `Using ${this.usingLocalWebserver ? 'local' : 'remote'} webserver ` +
+        `at ${this.host}:${this.port}`
+    );
+
     if (!this.usingLocalWebserver) {
       return;
     }
 
     this.phpServer = new php();
 
+    console.debug('Starting local webserver...');
     if (process.platform === 'win32') {
       this.phpServer.server({
         port: this.port,
@@ -48,6 +54,7 @@ class PreviewWebserver {
         base: path.resolve(__dirname) + '/../../../webserver',
       });
     }
+    console.info('Local webserver started.');
   }
 
   stop() {
@@ -55,7 +62,9 @@ class PreviewWebserver {
       return;
     }
 
+    console.debug('Closing local webserver...');
     this.phpServer.closeServer();
+    console.info('Local webserver closed.');
   }
 }
 
