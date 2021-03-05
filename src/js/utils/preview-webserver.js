@@ -17,13 +17,13 @@ const DEFAULT_START_LOCAL_WEBSERVER = true;
 class PreviewWebserver {
   constructor() {
     this.usingLocalWebserver = DEFAULT_START_LOCAL_WEBSERVER;
-    if (process.env.START_LOCAL_PREVIEW_WEBSERVER !== undefined) {
+    if (process.env.IA_BUILDER_START_LOCAL_PREVIEW_WEBSERVER !== undefined) {
       this.usingLocalWebserver =
-        process.env.START_LOCAL_PREVIEW_WEBSERVER === 'true';
+        process.env.IA_BUILDER_START_LOCAL_PREVIEW_WEBSERVER === 'true';
     }
 
-    this.host = process.env.PREVIEW_WEBSERVER_HOST || DEFAULT_HOST;
-    this.port = process.env.PREVIEW_WEBSERVER_PORT || DEFAULT_PORT;
+    this.host = process.env.IA_BUILDER_PREVIEW_WEBSERVER_HOST || DEFAULT_HOST;
+    this.port = process.env.IA_BUILDER_PREVIEW_WEBSERVER_PORT || DEFAULT_PORT;
 
     this.baseUrl = new URL(this.host);
     this.baseUrl.port = this.port;
