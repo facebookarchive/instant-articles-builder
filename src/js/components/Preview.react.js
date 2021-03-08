@@ -30,7 +30,7 @@ type State = {
   activeTab: number,
   warnings: string[],
   previewHtml: ?string,
-  sourceHtml: ?string,
+  //sourceHtml: ?string,
   errorHtml: ?string,
 };
 
@@ -136,7 +136,7 @@ class Preview extends React.Component<Props, State> {
           const warnings = response.warnings || [];
           this.setState({
             previewHtml: response.amp,
-            sourceHtml: response.source,
+            //sourceHtml: response.source,
             warnings: warnings,
             errorHtml: response.error,
           });
