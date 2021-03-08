@@ -19,12 +19,12 @@ try {
   $url = $_GET['url'];
   $rules = $_POST['rules'];
 
-  if (!$url || !$rules) {
-    invalidIA();
-  }
 
-  if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
-    invalidIA();
+  if ((!$url || !$rules) || (filter_var($url, FILTER_VALIDATE_URL) === FALSE)) {
+    $response->error = invalidIA();
+    header('Content-type: application/json');
+    echo json_encode($response);
+    die();
   }
 
   $context_options = stream_context_create(array(
@@ -83,14 +83,14 @@ try {
     if ($amp_article) {
       $response->amp = $amp_article;
     }
-
-    header('Content-type: application/json');
-    echo json_encode($response);
-    die();
   }
   else {
-    invalidIA();
+    $response->error = invalidIA();
   }
+
+  header('Content-type: application/json');
+  echo json_encode($response);
+  die();
 }
 catch (Exception $e) {
   echo $e->getMessage();
@@ -98,25 +98,31 @@ catch (Exception $e) {
   die();
 }
 
-function invalidIA() {
-  ?>
-  <p>
-    Open an article, then connect the required fields in the <em>Article</em>
-    element to see a preview.
-  </p>
-  <style>
-    body {
-      display: flex;
-      align-items: center;
-      font-family: sans-serif;
-      color: #ccc;
-    }
-    p {
-      max-width: 300px;
-      margin: auto;
-      text-align: center;
-    }
-  </style>
-  <?php
-  die();
+function invalidIA () {
+  return <<<HTML
+    <!doctype html>
+    <html>
+      <body>
+        <p>
+          Open an article, then connect the required fields in the <em>Article</em>
+          element to see a preview.
+        </p>
+        <style>
+          html { height: 100%; }
+          body {
+            display: flex;
+            align-items: center;
+            font-family: sans-serif;
+            color: #ccc;
+            height: 100%;
+          }
+          p {
+            max-width: 300px;
+            margin: auto;
+            text-align: center;
+          }
+        </style>
+      </body>
+    </html>
+  HTML;
 }

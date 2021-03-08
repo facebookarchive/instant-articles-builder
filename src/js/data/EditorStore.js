@@ -28,7 +28,7 @@ type Action = {
   elementCount: ?number,
   selector: ?string,
   categories: ?Set<RuleCategory>,
-  url: ?string
+  url: ?string,
 };
 
 class EditorStore extends ReduceStore<Editor> {

@@ -21,7 +21,7 @@ type State = {
   findButtonCenterX: number,
   findButtonCenterY: number,
   findLineLocationAttributes: Object,
-  findSvgStyle: Object
+  findSvgStyle: Object,
 };
 
 class SelectorPicker extends React.Component<Props, State> {

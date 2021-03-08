@@ -24,7 +24,7 @@ type Action = {
   audienceNetworkPlacementId?: string,
   fbPixelId?: string,
   styleName?: string,
-  type: SettingsActionType
+  type: SettingsActionType,
 };
 
 class SettingsStore extends ReduceStore<TransformationSettings> {

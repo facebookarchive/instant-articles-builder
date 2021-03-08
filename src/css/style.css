@@ -407,6 +407,15 @@ h1 {
   border: 1px solid #4a90e2;
 }
 
+.warning-tab {
+  display: flex;
+  flex-grow: 1;
+  background: #ffffff;
+  border: none;
+  box-sizing: border-box;
+  max-width: 300px;
+}
+
 webview {
   background: #ffffff;
   border: none;

@@ -25,7 +25,7 @@ export type Props = {
   rules: RuleStoreState,
   ruleDefinitions: RuleDefinitionStoreState,
   editor: Editor,
-  settings: TransformationSettings
+  settings: TransformationSettings,
 };
 
 function AppContainer(props: Props) {
