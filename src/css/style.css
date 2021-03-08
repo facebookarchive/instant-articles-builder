@@ -661,6 +661,7 @@ button {
 }
 .nux-modal {
   background: none !important;
+  margin-top: -185px !important;
 }
 .nux-checkbox {
   float: left;

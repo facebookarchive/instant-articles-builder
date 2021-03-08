@@ -27,6 +27,7 @@ function createWindow() {
     height: electron.screen.getPrimaryDisplay().workAreaSize.height,
     icon: path.join(__dirname, '../img/icon.png'),
     webPreferences: {
+      enableRemoteModule: true,
       nodeIntegration: true,
       webviewTag: true,
     },

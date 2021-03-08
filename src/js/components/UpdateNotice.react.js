@@ -15,7 +15,8 @@ import { version } from '../version';
 import { shell } from 'electron';
 
 const compareVersions = require('compare-versions');
-const octokit = require('@octokit/rest')();
+const { Octokit } = require('@octokit/rest');
+const octokit = new Octokit();
 
 const repository = {
   owner: 'facebook',
@@ -25,7 +26,7 @@ const repository = {
 type State = {
   releaseURL: ?string,
   releaseVersion: ?string,
-  visible: boolean
+  visible: boolean,
 };
 
 class UpdateNotice extends React.Component<Props, State> {
@@ -83,9 +84,9 @@ class UpdateNotice extends React.Component<Props, State> {
                 tabIndex="0"
                 role="button"
               >
-                <Icon name="download" />
-                A new version ({this.state.releaseVersion}) is available, click
-                here to download it.
+                <Icon name="download" />A new version (
+                {this.state.releaseVersion}) is available, click here to
+                download it.
               </a>
             </center>
           </Message>
