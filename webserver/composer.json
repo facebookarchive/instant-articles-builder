@@ -10,8 +10,8 @@
         "homepage": "https://facebook.com"
     }],
     "require": {
-        "php": "^5.4 || ^7.0",
-        "facebook/facebook-instant-articles-sdk-php": "^1.9.2",
+        "php": "^7.0 || ^8.0.1",
+        "facebook/facebook-instant-articles-sdk-php": "^1.10.1",
         "facebook/facebook-instant-articles-sdk-extensions-in-php": "^0.2.1"
     }
 }

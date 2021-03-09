@@ -1,4 +1,5 @@
 {
+  "root": true,
   "parser": "babel-eslint",
   "plugins": ["babel", "react"],
   "extends": "fbjs",
@@ -8,6 +9,7 @@
   },
   "rules": {
     "comma-dangle": [1, "always-multiline"],
+    "max-len": 0,
     "react/jsx-uses-react": 1,
     "react/jsx-uses-vars": 1
   }

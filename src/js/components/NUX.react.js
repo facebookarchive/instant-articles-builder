@@ -24,7 +24,7 @@ export class NUX extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      modalOpen: !settings.get('nux.skip'),
+      modalOpen: !!settings.get('nux.skip'),
       skip: settings.get('nux.skip'),
     };
   }
@@ -107,11 +107,10 @@ export class NUX extends React.Component<Props, State> {
         </Modal.Content>
         <Modal.Actions>
           <Checkbox
-            checked={this.state.skip}
+            checked={!!this.state.skip}
             onChange={this.handleSkipChange}
             label="Don't show this again"
-            className="nux-checkbox
-          "
+            className="nux-checkbox"
           />
           <Button onClick={this.handleClose} icon>
             <Icon name="close" /> Close
