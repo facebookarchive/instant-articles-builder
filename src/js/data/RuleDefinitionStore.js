@@ -18,7 +18,7 @@ import RuleDefinitionActionTypes from './RuleDefinitionActionTypes.js';
 
 type Action = {
   type: RuleDefinitionActionType,
-  ruleDefinition: RuleDefinition
+  ruleDefinition: RuleDefinition,
 };
 
 export type State = Immutable.Map<string, RuleDefinition>;

@@ -59,7 +59,7 @@ export type FeatureWeights = {
   leafHasTagName: number,
   endsWithNumber: number,
   numberOfComponents: number,
-  trunkScore: number
+  trunkScore: number,
 };
 export type FeatureWeightsFilter = (weights: FeatureWeights) => FeatureWeights;
 const featureWeightsFilters: Map<string, FeatureWeightsFilter> = new Map();

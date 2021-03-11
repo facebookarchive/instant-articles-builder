@@ -13,15 +13,15 @@ import type { RecordOf, RecordFactory } from 'immutable';
 
 export type AnalyticsSettingsRecord = {
   fbPixelId: string,
-  rawHtml: string
+  rawHtml: string,
 };
 
-export const AnalyticsSettingsFactory: RecordFactory<
-  AnalyticsSettingsRecord
-> = Record({
-  fbPixelId: '',
-  rawHtml: '',
-});
+export const AnalyticsSettingsFactory: RecordFactory<AnalyticsSettingsRecord> = Record(
+  {
+    fbPixelId: '',
+    rawHtml: '',
+  }
+);
 
 export type AnalyticsSettings = RecordOf<AnalyticsSettingsRecord> &
   AnalyticsSettingsFactory;

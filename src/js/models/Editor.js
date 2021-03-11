@@ -24,7 +24,7 @@ type EditorRecord = {
   finding: boolean,
   categories: Set<RuleCategory>,
   takeTour: boolean,
-  url: string
+  url: string,
 };
 
 export const EditorFactory: RecordFactory<EditorRecord> = Record({

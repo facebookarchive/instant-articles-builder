@@ -21,7 +21,7 @@ const DEFAULT_FORMAT = 'Y-m-d\\TH:i:sP';
 
 type State = {
   displayedDateTime?: ?string,
-  moment: ?Object
+  moment: ?Object,
 };
 
 class DateTimeFormatPicker extends React.Component<Props, State> {
@@ -144,12 +144,11 @@ class DateTimeFormatPicker extends React.Component<Props, State> {
     return (
       <div className={classes}>
         <label className="sub-label">
-          DateTime Format String (<a
-            href="http://php.net/manual/en/function.date.php"
-            target="_blank"
-          >
+          DateTime Format String (
+          <a href="http://php.net/manual/en/function.date.php" target="_blank">
             PHP Date Format
-          </a>)
+          </a>
+          )
         </label>
         <input
           type="text"

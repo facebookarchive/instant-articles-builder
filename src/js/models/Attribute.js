@@ -16,7 +16,7 @@ import RulePropertyTypes from './RulePropertyTypes';
 export type AttributeRecord = {
   name: string,
   value: string,
-  type: RulePropertyType
+  type: RulePropertyType,
 };
 
 export const AttributeFactory: RecordFactory<AttributeRecord> = Record({
