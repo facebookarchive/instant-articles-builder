@@ -1,24 +1,28 @@
-ARG PHP_IMAGE=7.2-alpine
-FROM php:${PHP_IMAGE}
+FROM php:7.4.16-cli
 
-# Install git
-RUN apk update
-RUN apk add git
+ARG GIT_BRANCH=feature/webserver-cache
 
-# Install composer
-RUN apk add composer
+RUN apt-get update && apt-get install -y libmemcached-dev zlib1g-dev \
+    && pecl install memcached-3.1.5 \
+    && docker-php-ext-enable memcached
+
+RUN apt-get install -y git wget
 
 EXPOSE 8000
 
-WORKDIR /ia-builder
+WORKDIR /
+
+# Install composer
+RUN wget -O composer-setup.php https://getcomposer.org/installer && \
+    php composer-setup.php --install-dir=/usr/local/bin --filename=composer && \
+    rm composer-setup.php
 
 # Clone Instant Articles Builder GitHub repo
-RUN git clone https://github.com/facebook/instant-articles-builder.git
+RUN git clone https://github.com/facebook/instant-articles-builder.git && \
+    cd instant-articles-builder && \
+    git checkout ${GIT_BRANCH}
 
-WORKDIR /app
-
-# Copy all contents from the webserver folder in the IA repo to our current dir
-RUN cp -R /ia-builder/instant-articles-builder/webserver/* ./
+WORKDIR /instant-articles-builder/webserver
 
 # Install IA Builder webserver dependencies
 RUN composer install
