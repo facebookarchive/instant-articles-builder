@@ -50,10 +50,10 @@ const formatMap = {
     const thisUTC = this.clone().utc();
     // Shamelessly stolen from http://javascript.about.com/library/blswatch.htm
     const swatch =
-      (thisUTC.hours() + 1) % 24 +
+      ((thisUTC.hours() + 1) % 24) +
       thisUTC.minutes() / 60 +
       thisUTC.seconds() / 3600;
-    return Math.floor(swatch * 1000 / 24);
+    return Math.floor((swatch * 1000) / 24);
   },
   g: 'h',
   G: 'H',

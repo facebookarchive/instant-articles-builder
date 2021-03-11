@@ -46,7 +46,6 @@ class Preview extends React.Component<Props, State> {
   previewFinishedLoading = () => {
     this.setState({ previewLoading: false });
   };
-
   sourceLoading = () => {
     this.setState({ sourceLoading: true });
   };

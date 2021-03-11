@@ -19,11 +19,11 @@ import type { Props as BaseProps } from '../containers/AppContainer.react';
 type Props = BaseProps & {
   accordionActive: boolean,
   accordionIndex: number,
-  onAccordionTitleClick: (e: Event, itemProps: AccordionItemProps) => void
+  onAccordionTitleClick: (e: Event, itemProps: AccordionItemProps) => void,
 };
 
 type AccordionItemProps = {
-  index: number
+  index: number,
 };
 
 class TransformationSettings extends React.Component<Props> {
@@ -62,7 +62,8 @@ class TransformationSettings extends React.Component<Props> {
               {this.props.settings.adsSettings.audienceNetworkPlacementId
                 ? '✔'
                 : '•'}
-            </span>&nbsp; Audience Network ID
+            </span>
+          &nbsp; Audience Network ID
           </label>
           <div className="field">
             <input
@@ -81,8 +82,8 @@ class TransformationSettings extends React.Component<Props> {
     return this.props.settings.adsSettings.type === AdsTypes.RAW_HTML ? (
       <div>
         <label className="sub-label" htmlFor="adsRawHtml">
-          <span>{this.props.settings.adsSettings.rawHtml ? '✔' : '•'}</span>&nbsp;
-          Raw HTML
+          <span>{this.props.settings.adsSettings.rawHtml ? '✔' : '•'}</span>
+          &nbsp; Raw HTML
         </label>
         <div className="field">
           <textarea
@@ -109,7 +110,8 @@ class TransformationSettings extends React.Component<Props> {
           onClick={this.props.onAccordionTitleClick}
         >
           <label>
-            <Icon name="dropdown" />Settings
+            <Icon name="dropdown" />
+            Settings
           </label>
         </Accordion.Title>
         <Accordion.Content active={this.props.accordionActive}>
@@ -117,7 +119,8 @@ class TransformationSettings extends React.Component<Props> {
             <div className="settings-fields">
               <div className="general-settings field-line">
                 <label>
-                  <Icon name="edit" />General
+                  <Icon name="edit" />
+                  General
                 </label>
                 <label className="sub-label" htmlFor="styleName">
                   <span>{this.props.settings.styleName ? '✔' : '•'}</span>&nbsp;
@@ -135,14 +138,16 @@ class TransformationSettings extends React.Component<Props> {
               </div>
               <div className="analytics-settings field-line">
                 <label>
-                  <Icon name="bar chart" />Analytics
+                  <Icon name="bar chart" />
+                  Analytics
                 </label>
                 <label className="sub-label" htmlFor="pixelId">
                   <span>
                     {this.props.settings.analyticsSettings.fbPixelId
                       ? '✔'
                       : '•'}
-                  </span>&nbsp; Pixel ID
+                  </span>
+                  &nbsp; Pixel ID
                 </label>
                 <div className="field">
                   <input
@@ -156,7 +161,8 @@ class TransformationSettings extends React.Component<Props> {
                 <label className="sub-label" htmlFor="analyticsRawHtml">
                   <span>
                     {this.props.settings.analyticsSettings.rawHtml ? '✔' : '•'}
-                  </span>&nbsp; Raw HTML
+                  </span>
+                  &nbsp; Raw HTML
                 </label>
                 <div className="field">
                   <textarea
@@ -170,7 +176,8 @@ class TransformationSettings extends React.Component<Props> {
               </div>
               <div className="ads-settigns field-line">
                 <label>
-                  <Icon name="money" />Ads
+                  <Icon name="money" />
+                  Ads
                 </label>
                 <label className="sub-label" htmlFor="adsType">
                   Type

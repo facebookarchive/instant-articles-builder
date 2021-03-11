@@ -30,7 +30,7 @@ export type BrowserMessageType = $Values<typeof BrowserMessageTypes>;
 export type FetchAttributesMessage = {
   type: 'fetch_attributes',
   selector: string,
-  contextSelector: string
+  contextSelector: string,
 };
 
 /**
@@ -41,7 +41,7 @@ export type SelectElementMessage = {
   multiple: boolean,
   selector: string,
   passThroughSelectors: string[],
-  fieldName: string
+  fieldName: string,
 };
 
 /**
@@ -51,7 +51,7 @@ export type AttributesRetrievedMessage = {
   type: 'attributes_retrieved',
   selector: string,
   attributes: AttributeRecord[],
-  count: number
+  count: number,
 };
 
 /**
@@ -59,7 +59,7 @@ export type AttributesRetrievedMessage = {
  */
 export type ElementSelectedMessage = {
   type: 'element_selected',
-  selectors: string[]
+  selectors: string[],
 };
 
 /**
@@ -68,14 +68,14 @@ export type ElementSelectedMessage = {
 export type HighlightElementMessage = {
   type: 'highlight_element',
   selector: string,
-  contextSelector: string
+  contextSelector: string,
 };
 
 /**
  * ClearHighlightsMessage
  */
 export type ClearHighlightsMessage = {
-  type: 'clear_highlights'
+  type: 'clear_highlights',
 };
 
 /**

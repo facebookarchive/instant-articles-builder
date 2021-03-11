@@ -24,20 +24,20 @@ type RuleDefinitionRecord = {
   placeholder: string,
   properties: Map<string, RulePropertyDefinition>,
   unique: boolean,
-  getSelectionContext: (field: Field, rules: RuleStoreState) => string
+  getSelectionContext: (field: Field, rules: RuleStoreState) => string,
 };
 
-export const RuleDefinitionFactory: RecordFactory<
-  RuleDefinitionRecord
-> = Record({
-  name: '',
-  category: RuleCategories.BASIC,
-  displayName: '',
-  placeholder: '',
-  properties: Map(),
-  unique: false,
-  getSelectionContext: articleBodySelectionContext,
-});
+export const RuleDefinitionFactory: RecordFactory<RuleDefinitionRecord> = Record(
+  {
+    name: '',
+    category: RuleCategories.BASIC,
+    displayName: '',
+    placeholder: '',
+    properties: Map(),
+    unique: false,
+    getSelectionContext: articleBodySelectionContext,
+  }
+);
 
 export type RuleDefinition = RecordOf<RuleDefinitionRecord> &
   RuleDefinitionFactory;

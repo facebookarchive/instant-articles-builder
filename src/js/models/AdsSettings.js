@@ -14,7 +14,7 @@ import type { RecordOf, RecordFactory } from 'immutable';
 export type AdsSettingsRecord = {
   audienceNetworkPlacementId: string,
   rawHtml: string,
-  type: string
+  type: string,
 };
 
 export const AdsSettingsFactory: RecordFactory<AdsSettingsRecord> = Record({
