@@ -407,6 +407,15 @@ h1 {
   border: 1px solid #4a90e2;
 }
 
+.warning-tab {
+  display: flex;
+  flex-grow: 1;
+  background: #ffffff;
+  border: none;
+  box-sizing: border-box;
+  max-width: 300px;
+}
+
 webview {
   background: #ffffff;
   border: none;
@@ -713,4 +722,19 @@ header > img.logo {
 
 code {
   white-space: pre;
+}
+
+.message-container {
+  display: flex;
+  align-items: center;
+  font-family: sans-serif;
+  color: #ccc;
+  height: 100%;
+}
+.message {
+  font-size: 16px;
+  line-height: 18px;
+  margin: auto;
+  margin-left: 40px;
+  text-align: center;
 }

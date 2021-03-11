@@ -19,12 +19,12 @@ try {
   $url = $_GET['url'];
   $rules = $_POST['rules'];
 
-  if (!$url || !$rules) {
-    invalidIA();
-  }
 
-  if (filter_var($url, FILTER_VALIDATE_URL) === FALSE) {
-    invalidIA();
+  if ((!$url || !$rules) || (filter_var($url, FILTER_VALIDATE_URL) === FALSE)) {
+    $response->error = invalidIA();
+    header('Content-type: application/json');
+    echo json_encode($response);
+    die();
   }
 
   $context_options = stream_context_create(array(
@@ -54,6 +54,11 @@ try {
 
   $warnings = $transformer->getWarnings();
 
+  $string_func = function($warning) {
+    return $warning->__toString();
+  };
+  $response->warnings = array_map($string_func, $warnings);
+
   $properties = array(
     'styles-folder' => __DIR__.'/styles/' // Where the styles are stored
   );
@@ -73,14 +78,19 @@ try {
 
     $amp_article = $amp_article->render();
 
+    $response->source = $instant_article->render(null, true);
+
     if ($amp_article) {
-      echo $amp_article;
-      die();
+      $response->amp = $amp_article;
     }
   }
   else {
-    invalidIA();
+    $response->error = invalidIA();
   }
+
+  header('Content-type: application/json');
+  echo json_encode($response);
+  die();
 }
 catch (Exception $e) {
   echo $e->getMessage();
@@ -88,25 +98,31 @@ catch (Exception $e) {
   die();
 }
 
-function invalidIA() {
-  ?>
-  <p>
-    Open an article, then connect the required fields in the <em>Article</em>
-    element to see a preview.
-  </p>
-  <style>
-    body {
-      display: flex;
-      align-items: center;
-      font-family: sans-serif;
-      color: #ccc;
-    }
-    p {
-      max-width: 300px;
-      margin: auto;
-      text-align: center;
-    }
-  </style>
-  <?php
-  die();
+function invalidIA () {
+  return <<<HTML
+    <!doctype html>
+    <html>
+      <body>
+        <p>
+          Open an article, then connect the required fields in the <em>Article</em>
+          element to see a preview.
+        </p>
+        <style>
+          html { height: 100%; }
+          body {
+            display: flex;
+            align-items: center;
+            font-family: sans-serif;
+            color: #ccc;
+            height: 100%;
+          }
+          p {
+            max-width: 300px;
+            margin: auto;
+            text-align: center;
+          }
+        </style>
+      </body>
+    </html>
+  HTML;
 }
