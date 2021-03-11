@@ -15,6 +15,8 @@ import RuleExporter from '../utils/RuleExporter';
 import type { BaseProps } from '../containers/AppContainer.react';
 import { Loader, Dimmer, Form, Tab } from 'semantic-ui-react';
 import debounce from '../utils/debounce';
+import pretty from 'pretty';
+import Prism from 'prismjs';
 
 import webserver from '../utils/preview-webserver';
 import { BrowserWindow } from 'electron';
@@ -115,14 +117,14 @@ class Preview extends React.Component<Props, State> {
     );
   }, 1000);
 
-  reloadSource = debounce(() => {
-    this.reloadTabBrowserWindow(
-      SOURCE_TAB_INDEX,
-      this.sourceview,
-      'source.php',
-      true
-    );
-  }, 1000);
+  // reloadSource = debounce(() => {
+  //   this.reloadTabBrowserWindow(
+  //     SOURCE_TAB_INDEX,
+  //     this.sourceview,
+  //     'source.php',
+  //     true
+  //   );
+  // }, 1000);
 
   loadArticle = debounce(() => {
     this.previewLoading();
@@ -134,14 +136,21 @@ class Preview extends React.Component<Props, State> {
         const response = xhr.response;
         if (response) {
           const warnings = response.warnings || [];
+
+          let sourceHtml = response.source;
+          if (sourceHtml) {
+            sourceHtml = Prism.highlight(pretty(sourceHtml), Prism.languages.markup, 'markup');
+            console.log(sourceHtml);
+          }
+
           this.setState({
             previewHtml: response.amp,
-            sourceHtml: response.source,
+            sourceHtml,
             warnings: warnings,
             errorHtml: response.error,
           });
           this.reloadPreview();
-          this.reloadSource();
+          // this.reloadSource();
           if (this.state.activeTab === WARNING_TAB_INDEX) {
             this.previewFinishedLoading();
           }
@@ -175,12 +184,12 @@ class Preview extends React.Component<Props, State> {
   };
 
   handleTabChange = (event: any, data: any) => {
-    this.previewLoading();
+    // this.previewLoading();
     this.setState({ activeTab: data.activeIndex });
     if (data.activeIndex == PREVIEW_TAB_INDEX) {
       this.reloadPreview();
-    } else if (data.activeIndex == SOURCE_TAB_INDEX) {
-      this.reloadSource();
+    // } else if (data.activeIndex == SOURCE_TAB_INDEX) {
+    //   this.reloadSource();
     } else if (data.activeIndex == WARNING_TAB_INDEX) {
       this.previewFinishedLoading();
     }
@@ -216,9 +225,6 @@ class Preview extends React.Component<Props, State> {
         );
         return (
           <Tab.Pane key={tabKey} className="grow">
-            <Dimmer inverted active={this.state.previewLoading}>
-              <Loader />
-            </Dimmer>
             {children}
           </Tab.Pane>
         );
@@ -235,7 +241,11 @@ class Preview extends React.Component<Props, State> {
     const sourcePane = this.getContentTabPane(
       'Source',
       'source',
-      webview => (this.sourceview = webview)
+      () => {},
+      <div className="source-tab line-numbers" dangerouslySetInnerHTML={{
+        __html: this.state.sourceHtml || '',
+      }}>
+      </div>
     );
 
     const warningsPane = this.getContentTabPane(
