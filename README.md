@@ -89,6 +89,8 @@ docker run -it --rm -p 8105:8000 --name ia-webserver ia-webserver:latest
 
 #### Docker-compose (with cache)
 
+Update .env with the port according with docker-compose file. As default, memcache it is configured: "8107:8000".
+
 You can get a webserver with cache (using [memcached](https://memcached.org/)) by running the following command from the `Docker/webserver/ folder:
 
 ```
