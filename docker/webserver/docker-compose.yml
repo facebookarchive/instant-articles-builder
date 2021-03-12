@@ -6,7 +6,10 @@ services:
       - "11211:11211"
 
   ia_webserver_memcached:
-    build: .
+    build:
+      context: .
+      args:
+        GIT_BRANCH: master
     ports:
       - "8107:8000"
     links:
