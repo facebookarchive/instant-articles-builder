@@ -83,7 +83,7 @@ function get_html_markup($url) {
   return $content;
 }
 
-function get_instant_article($html_markup, $url, $rules) {
+function get_instant_article($html_markup, $url, $rules, &$response) {
   $cache_key = $rules . $url;
 
   $possible_instant_article = try_get_cached_value($cache_key, CACHE_KEY_TYPE_IA);
@@ -109,6 +109,7 @@ function get_instant_article($html_markup, $url, $rules) {
     return $warning->__toString();
   };
   $warnings = array_map($string_func, $warnings);
+  $response->warnings = $warnings;
 
   try_set_cached_value($cache_key, $warnings, CACHE_KEY_TYPE_WARNINGS);
 
@@ -168,13 +169,15 @@ try {
   }
 
   $html_markup = get_html_markup($url);
-  $instant_article = get_instant_article($html_markup, $url, $rules);
+
+  $instant_article = get_instant_article($html_markup, $url, $rules, $response);
+  $response->source = $instant_article->render(null, true);
 
   if ($instant_article->isValid()) {
     $amp_markup = get_amp_markup($instant_article, $url, $rules);
 
     if ($amp_markup) {
-      $response->amp = $amp_article;
+      $response->amp = $amp_markup;
     }
 
   } else {
