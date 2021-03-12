@@ -73,7 +73,9 @@ IA_BUILDER_PREVIEW_WEBSERVER_PORT=8105
 
 You can use the [Docker](https://www.docker.com/) image included in this repo under `docker/webserver` to get a webserver instance running locally in Docker.
 
-Run the following command to build the image:
+#### Single container (no cache)
+
+You can get a single container with the webserver without cache by running the following command to build the image:
 
 ```
 docker build ./docker/webserver -t ia-webserver
@@ -83,6 +85,24 @@ and then the following command to run your container and make it accessible thro
 
 ```
 docker run -it --rm -p 8105:8000 --name ia-webserver ia-webserver:latest
+```
+
+#### Docker-compose (with cache)
+
+Update .env with the port according with docker-compose file. As default, memcache it is configured: "8107:8000".
+
+You can get a webserver with cache (using [memcached](https://memcached.org/)) by running the following command from the `Docker/webserver/ folder:
+
+```
+docker-compose up
+```
+
+You can take a look at the cache stats by going to http://localhost:11212.
+
+once you are done you can stop both containers with the following command:
+
+```
+docker-compose down
 ```
 
 ## License
