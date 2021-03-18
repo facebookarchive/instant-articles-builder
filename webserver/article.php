@@ -9,6 +9,7 @@ use Facebook\InstantArticles\AMP\AMPArticle;
 
 $mc;
 
+define("CACHE_KEY_TYPE_ARTICLE_RESPONSE", "article-response");
 define("CACHE_KEY_TYPE_IA", "ia");
 define("CACHE_KEY_TYPE_AMP", "amp");
 define("CACHE_KEY_TYPE_URL", "url");
@@ -177,6 +178,14 @@ try {
     die();
   }
 
+  $response_cache_key = $rules . $url;
+  $cached_response = try_get_cached_value($response_cache_key, CACHE_KEY_TYPE_ARTICLE_RESPONSE);
+  // Cache hit
+  if (!is_null($cached_response)) {
+    send_api_response($cached_response);
+    die();
+  }
+
   $html_markup = get_html_markup($url);
 
   $instant_article = get_instant_article($html_markup, $url, $rules, $response);
@@ -193,14 +202,19 @@ try {
     $response->error = invalidIA();
   }
 
-  header('Content-type: application/json');
-  echo json_encode($response);
+  try_set_cached_value($response_cache_key, $response, CACHE_KEY_TYPE_ARTICLE_RESPONSE);
+  send_api_response($response);
   die();
 }
 catch (Exception $e) {
   echo $e->getMessage();
   echo $stacktrace = $e->getTraceAsString();
   die();
+}
+
+function send_api_response($response) {
+  header('Content-type: application/json');
+  echo json_encode($response);
 }
 
 function invalidIA () {
