@@ -43,11 +43,16 @@ class EditorStore extends ReduceStore<Editor> {
   reduce(state: Editor, action: Action): Editor {
     switch (action.type) {
       case EditorActionTypes.FOCUS_FIELD:
-        return state.set('focusedField', action.field);
+        return state
+          .set('focusedField', action.field)
+          .set('warningSelector', null);
       case EditorActionTypes.BLUR:
         return state.remove('focusedField');
       case EditorActionTypes.START_FINDING:
-        return state.set('focusedField', action.field).set('finding', true);
+        return state
+          .set('focusedField', action.field)
+          .set('finding', true)
+          .set('warningSelector', null);
 
       case EditorActionTypes.STOP_FINDING:
         return state.set('finding', false);
@@ -71,6 +76,9 @@ class EditorStore extends ReduceStore<Editor> {
           );
         }
         return state.set('finding', false);
+
+      case EditorActionTypes.SET_WARNING_SELECTOR:
+        return state.set('warningSelector', action.selector);
 
       case EditorActionTypes.FILTER_RULES:
         if (action.categories != null) {

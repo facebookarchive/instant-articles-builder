@@ -416,6 +416,18 @@ h1 {
   max-width: 300px;
 }
 
+.warning {
+  cursor: pointer;
+}
+
+.warning:hover {
+  text-decoration: underline;
+}
+
+.warning.active {
+  color: #e76e63;
+}
+
 webview {
   background: #ffffff;
   border: none;

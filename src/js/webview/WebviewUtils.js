@@ -16,6 +16,7 @@ const highlightClass = 'facebook-instant-articles-builder-highlight';
 const hoverClass = 'facebook-instant-articles-builder-hover';
 const contextClass = 'facebook-instant-articles-builder-context';
 const selectingClass = 'facebook-instant-articles-builder-selecting';
+const warningClass = 'facebook-instant-articles-builder-warning';
 
 export type ElementFilter = (element: Element) => Element;
 const elementFilters: Map<string, ElementFilter> = new Map();
@@ -54,17 +55,19 @@ export class WebviewUtils {
   static clearHighlights(): void {
     // Remove class form existing highlighted elements
     let oldHighlightedElements = document.querySelectorAll(
-      `.${highlightClass}, .${hoverClass}`
+      `.${highlightClass}, .${hoverClass}, .${warningClass}`
     );
     oldHighlightedElements.forEach(function(element) {
       element.classList.remove(highlightClass);
       element.classList.remove(hoverClass);
+      element.classList.remove(warningClass);
     });
   }
 
-  static highlightElementsBySelector(
+  static highlightElements(
     selector: string,
-    contextSelector: string
+    contextSelector: string,
+    className: string
   ): void {
     WebviewUtils.clearHighlights();
     if (selector == '') {
@@ -75,11 +78,21 @@ export class WebviewUtils {
     for (let context of contextElements) {
       let elements = context.querySelectorAll(selector);
       elements.forEach(function(element) {
-        element.classList.add(highlightClass);
+        element.classList.add(className);
       });
     }
   }
 
+  static highlightElementsBySelector(
+    selector: string,
+    contextSelector: string
+  ): void {
+    this.highlightElements(selector, contextSelector, highlightClass);
+  }
+
+  static highlightWarningElementsBySelector(selector: string): void {
+    this.highlightElements(selector, 'html', warningClass);
+  }
   /**
    * Register an ElementFilter for the given fieldName being selected.
    *

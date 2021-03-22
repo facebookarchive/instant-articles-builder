@@ -70,6 +70,12 @@ class EditorActions {
       url,
     });
   }
+  static setWarningSelector(selector: ?string) {
+    RulesEditorDispatcher.dispatch({
+      type: EditorActionTypes.SET_WARNING_SELECTOR,
+      selector,
+    });
+  }
 }
 
 module.exports = EditorActions;

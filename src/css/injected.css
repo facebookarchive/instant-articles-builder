@@ -18,3 +18,7 @@
   cursor: pointer !important;
   box-shadow: 0px 0px 0px 1px #4a90e2, 0px 0px 4px 4px #ccc !important;
 }
+
+.facebook-instant-articles-builder-warning {
+  box-shadow: 0px 0px 0px 1px #e76e63, 0px 0px 4px 4px #ccc !important;
+}

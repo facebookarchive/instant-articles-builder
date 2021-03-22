@@ -25,6 +25,7 @@ type EditorRecord = {
   categories: Set<RuleCategory>,
   takeTour: boolean,
   url: string,
+  warningSelector: ?string,
 };
 
 export const EditorFactory: RecordFactory<EditorRecord> = Record({
@@ -41,6 +42,7 @@ export const EditorFactory: RecordFactory<EditorRecord> = Record({
   ]),
   takeTour: false,
   url: homeURL,
+  warningSelector: null,
 });
 
 export type Editor = RecordOf<EditorRecord> & EditorFactory;

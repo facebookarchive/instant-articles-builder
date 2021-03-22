@@ -194,7 +194,28 @@ class Browser extends React.Component<Props, State> {
           contextSelector: context,
         });
       }
-    } else {
+    }
+  };
+
+  highlightWarningElements = () => {
+    if (this.props.editor.warningSelector !== null) {
+      this.webview.send('message', {
+        type: BrowserMessageTypes.HIGHLIGHT_WARNING_ELEMENTS,
+        selector: this.props.editor.warningSelector,
+      });
+      this.webview.send('message', {
+        type: BrowserMessageTypes.FETCH_ATTRIBUTES,
+        selector: this.props.editor.warningSelector,
+        contextSelector: 'html',
+      });
+    }
+  };
+
+  clearHighlightElements = () => {
+    if (
+      this.props.editor.warningSelector === null &&
+      this.props.editor.focusedField == null
+    ) {
       this.webview.send('message', {
         type: BrowserMessageTypes.CLEAR_HIGHLIGHTS,
       });
@@ -202,11 +223,21 @@ class Browser extends React.Component<Props, State> {
   };
 
   componentDidUpdate(prevProps: Props, prevState: State) {
+    let highlighted = false;
     if (
-      prevProps.editor.focusedField != this.props.editor.focusedField ||
+      JSON.stringify(prevProps.editor.focusedField) !=
+        JSON.stringify(this.props.editor.focusedField) ||
       prevProps.editor.finding != this.props.editor.finding
     ) {
+      highlighted = true;
       this.highlightElements();
+    }
+    if (prevProps.editor.warningSelector != this.props.editor.warningSelector) {
+      highlighted = true;
+      this.highlightWarningElements();
+    }
+    if (highlighted) {
+      this.clearHighlightElements();
     }
   }
 

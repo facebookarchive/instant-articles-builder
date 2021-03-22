@@ -105,10 +105,19 @@ function get_instant_article($html_markup, $url, $rules, &$response) {
 
   $warnings = $transformer->getWarnings();
 
-  $string_func = function($warning) {
-    return $warning->__toString();
+  $warnings_func = function($warning) {
+    $warning_obj = new stdClass();
+    $warning_obj->message = $warning->__toString();
+
+    if (method_exists($warning,'getSelector')) {
+      $warning_obj->selector = $warning->getSelector() ?: null;
+    }
+    if (method_exists($warning,'getFields')) {
+      $warning_obj->field = $warning->getFields() ?: null;
+    }
+    return $warning_obj;
   };
-  $warnings = array_map($string_func, $warnings);
+  $warnings = array_map($warnings_func, $warnings);
   $response->warnings = $warnings;
 
   try_set_cached_value($cache_key, $warnings, CACHE_KEY_TYPE_WARNINGS);

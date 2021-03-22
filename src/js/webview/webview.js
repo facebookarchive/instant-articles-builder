@@ -39,6 +39,11 @@ function receiveMessage(message: BrowserMessage): void {
       );
       break;
 
+    case BrowserMessageTypes.HIGHLIGHT_WARNING_ELEMENTS:
+      WebviewStateMachine.state = WebviewStates.DEFAULT;
+      WebviewUtils.highlightWarningElementsBySelector(message.selector);
+      break;
+
     case BrowserMessageTypes.SELECT_ELEMENT:
       WebviewUtils.clearHighlights();
       WebviewStateMachine.contextSelector = message.selector;
@@ -151,10 +156,17 @@ function handleSelectElement(event: MouseEvent) {
 
   const selector = selectors[0];
   if (selector != null) {
-    WebviewUtils.highlightElementsBySelector(
-      selector,
-      WebviewStateMachine.contextSelector
-    );
+    if (
+      WebviewStateMachine.state ===
+      BrowserMessageTypes.HIGHLIGHT_WARNING_ELEMENTS
+    ) {
+      WebviewUtils.highlightWarningElementsBySelector(selector);
+    } else {
+      WebviewUtils.highlightElementsBySelector(
+        selector,
+        WebviewStateMachine.contextSelector
+      );
+    }
   }
 
   WebviewStateMachine.state = WebviewStates.DEFAULT;
