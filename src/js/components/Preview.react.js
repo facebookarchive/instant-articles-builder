@@ -13,8 +13,9 @@ import React from 'react';
 import classNames from 'classnames';
 import RuleExporter from '../utils/RuleExporter';
 import type { BaseProps } from '../containers/AppContainer.react';
+import type { WarningProps } from './Warnings.react';
 import { Loader, Dimmer, Form, Tab } from 'semantic-ui-react';
-import Warning from './Warning.react';
+import Warnings from './Warnings.react';
 import debounce from '../utils/debounce';
 import EditorActions from '../data/EditorActions';
 
@@ -30,7 +31,7 @@ type Props = BaseProps & { hidden: boolean };
 type State = {
   previewLoading: boolean,
   activeTab: number,
-  warnings: any,
+  warnings: WarningProps[],
   previewHtml: ?string,
   //sourceHtml: ?string,
   errorHtml: ?string,
@@ -245,7 +246,7 @@ class Preview extends React.Component<Props, State> {
       'Warnings',
       'warnings',
       () => {},
-      <Warning
+      <Warnings
         activeTab={this.state.activeTab}
         warningSelector={this.props.editor.warningSelector}
         warnings={this.state.warnings}

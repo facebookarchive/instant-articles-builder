@@ -154,7 +154,7 @@ class Browser extends React.Component<Props, State> {
     return selectors;
   };
 
-  highlightElements = () => {
+  highlightEditorElements = () => {
     if (this.props.editor.focusedField != null) {
       let field = this.props.editor.focusedField;
       let fieldName = null;
@@ -230,7 +230,7 @@ class Browser extends React.Component<Props, State> {
       prevProps.editor.finding != this.props.editor.finding
     ) {
       highlighted = true;
-      this.highlightElements();
+      this.highlightEditorElements();
     }
     if (prevProps.editor.warningSelector != this.props.editor.warningSelector) {
       highlighted = true;
@@ -262,7 +262,7 @@ class Browser extends React.Component<Props, State> {
         'did-get-response-details',
         this.getResponseDetails
       );
-      this.webview.addEventListener('dom-ready', this.highlightElements);
+      this.webview.addEventListener('dom-ready', this.highlightEditorElements);
       this.webview.addEventListener('dom-ready', this.resetProgress);
       // eslint-disable-next-line no-console
       this.webview.addEventListener('error', console.log.bind(console));

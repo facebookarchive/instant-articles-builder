@@ -12,17 +12,23 @@ import React from 'react';
 
 import EditorActions from '../data/EditorActions';
 
+export type WarningProps = {
+  message: ?string,
+  selector: ?string,
+  field: ?string,
+};
+
 type Props = {
   activeTab: number,
   warningSelector: ?string,
-  warnings: any,
+  warnings: WarningProps[],
 };
 
 type State = {
   activeWarning: ?number,
 };
 
-class Warning extends React.Component<Props, State> {
+class Warnings extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
@@ -41,7 +47,7 @@ class Warning extends React.Component<Props, State> {
     }
   }
 
-  warningOnClick = (selector: string, index: number) => {
+  warningOnClick = (selector: ?string, index: ?number) => {
     if (!selector) {
       return;
     }
@@ -92,4 +98,4 @@ class Warning extends React.Component<Props, State> {
   }
 }
 
-module.exports = Warning;
+module.exports = Warnings;
