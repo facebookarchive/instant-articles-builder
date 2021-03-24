@@ -18,6 +18,7 @@ const EditorActionTypes = {
   START_TOUR: 'START_TOUR',
   STOP_TOUR: 'STOP_TOUR',
   LOAD_URL: 'LOAD_URL',
+  SET_WARNING_SELECTOR: 'SET_WARNING_SELECTOR',
 };
 
 export type EditorActionType = $Values<typeof EditorActionTypes>;

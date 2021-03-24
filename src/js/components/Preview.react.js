@@ -13,8 +13,11 @@ import React from 'react';
 import classNames from 'classnames';
 import RuleExporter from '../utils/RuleExporter';
 import type { BaseProps } from '../containers/AppContainer.react';
+import type { WarningProps } from './Warnings.react';
 import { Loader, Dimmer, Form, Tab } from 'semantic-ui-react';
+import Warnings from './Warnings.react';
 import debounce from '../utils/debounce';
+import EditorActions from '../data/EditorActions';
 
 import webserver from '../utils/preview-webserver';
 import { BrowserWindow } from 'electron';
@@ -28,7 +31,7 @@ type Props = BaseProps & { hidden: boolean };
 type State = {
   previewLoading: boolean,
   activeTab: number,
-  warnings: string[],
+  warnings: WarningProps[],
   previewHtml: ?string,
   //sourceHtml: ?string,
   errorHtml: ?string,
@@ -140,6 +143,7 @@ class Preview extends React.Component<Props, State> {
             warnings: warnings,
             errorHtml: response.error,
           });
+          EditorActions.setWarningSelector(null);
           this.reloadPreview();
           if (this.state.activeTab === WARNING_TAB_INDEX) {
             this.previewFinishedLoading();
@@ -177,6 +181,7 @@ class Preview extends React.Component<Props, State> {
   handleTabChange = (event: any, data: any) => {
     this.previewLoading();
     this.setState({ activeTab: data.activeIndex });
+    EditorActions.setWarningSelector(null);
     if (data.activeIndex == PREVIEW_TAB_INDEX) {
       this.reloadPreview();
     } else if (data.activeIndex == SOURCE_TAB_INDEX) {
@@ -241,21 +246,11 @@ class Preview extends React.Component<Props, State> {
       'Warnings',
       'warnings',
       () => {},
-      <div className="warning-tab">
-        {this.state.warnings.length > 0 ? (
-          <ul>
-            {this.state.warnings.map((warning, index) => (
-              <li key={`warning-${index}`}>{warning}</li>
-            ))}
-          </ul>
-        ) : (
-          <div className="message-container">
-            <p className="message">
-              No warnings: All fields were successfully connected.
-            </p>
-          </div>
-        )}
-      </div>
+      <Warnings
+        activeTab={this.state.activeTab}
+        warningSelector={this.props.editor.warningSelector}
+        warnings={this.state.warnings}
+      />
     );
     return [previewPane, sourcePane, warningsPane];
   };

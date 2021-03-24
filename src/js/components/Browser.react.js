@@ -154,7 +154,7 @@ class Browser extends React.Component<Props, State> {
     return selectors;
   };
 
-  highlightElements = () => {
+  highlightEditorElements = () => {
     if (this.props.editor.focusedField != null) {
       let field = this.props.editor.focusedField;
       let fieldName = null;
@@ -194,7 +194,28 @@ class Browser extends React.Component<Props, State> {
           contextSelector: context,
         });
       }
-    } else {
+    }
+  };
+
+  highlightWarningElements = () => {
+    if (this.props.editor.warningSelector !== null) {
+      this.webview.send('message', {
+        type: BrowserMessageTypes.HIGHLIGHT_WARNING_ELEMENTS,
+        selector: this.props.editor.warningSelector,
+      });
+      this.webview.send('message', {
+        type: BrowserMessageTypes.FETCH_ATTRIBUTES,
+        selector: this.props.editor.warningSelector,
+        contextSelector: 'html',
+      });
+    }
+  };
+
+  clearHighlightElements = () => {
+    if (
+      this.props.editor.warningSelector === null &&
+      this.props.editor.focusedField == null
+    ) {
       this.webview.send('message', {
         type: BrowserMessageTypes.CLEAR_HIGHLIGHTS,
       });
@@ -202,11 +223,21 @@ class Browser extends React.Component<Props, State> {
   };
 
   componentDidUpdate(prevProps: Props, prevState: State) {
+    let highlighted = false;
     if (
-      prevProps.editor.focusedField != this.props.editor.focusedField ||
+      JSON.stringify(prevProps.editor.focusedField) !=
+        JSON.stringify(this.props.editor.focusedField) ||
       prevProps.editor.finding != this.props.editor.finding
     ) {
-      this.highlightElements();
+      highlighted = true;
+      this.highlightEditorElements();
+    }
+    if (prevProps.editor.warningSelector != this.props.editor.warningSelector) {
+      highlighted = true;
+      this.highlightWarningElements();
+    }
+    if (highlighted) {
+      this.clearHighlightElements();
     }
   }
 
@@ -231,7 +262,7 @@ class Browser extends React.Component<Props, State> {
         'did-get-response-details',
         this.getResponseDetails
       );
-      this.webview.addEventListener('dom-ready', this.highlightElements);
+      this.webview.addEventListener('dom-ready', this.highlightEditorElements);
       this.webview.addEventListener('dom-ready', this.resetProgress);
       // eslint-disable-next-line no-console
       this.webview.addEventListener('error', console.log.bind(console));

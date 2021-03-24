@@ -19,6 +19,7 @@ export const BrowserMessageTypes = {
   ATTRIBUTES_RETRIEVED: 'attributes_retrieved',
   ELEMENT_SELECTED: 'element_selected',
   HIGHLIGHT_ELEMENT: 'highlight_element',
+  HIGHLIGHT_WARNING_ELEMENTS: 'highlight_warning_elements',
   CLEAR_HIGHLIGHTS: 'clear_highlights',
 };
 
@@ -72,6 +73,15 @@ export type HighlightElementMessage = {
 };
 
 /**
+ * HighlightWarningElementsMessage
+ */
+export type HighlightWarningElementsMessage = {
+  type: 'highlight_warning_elements',
+  selector: string,
+  contextSelector: string,
+};
+
+/**
  * ClearHighlightsMessage
  */
 export type ClearHighlightsMessage = {
@@ -87,4 +97,5 @@ export type BrowserMessage =
   | AttributesRetrievedMessage
   | ElementSelectedMessage
   | HighlightElementMessage
+  | HighlightWarningElementsMessage
   | ClearHighlightsMessage;
