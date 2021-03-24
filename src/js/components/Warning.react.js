@@ -68,9 +68,13 @@ class Warning extends React.Component<Props, State> {
                     ? () => this.warningOnClick(warning.selector, index)
                     : () => {}
                 }
-                className={`warning ${
-                  this.state.activeWarning === index ? 'active' : ''
-                }`}
+                className={
+                  warning.selector && warning.selector !== 'html'
+                    ? `warning ${
+                      this.state.activeWarning === index ? 'active' : ''
+                    }`
+                    : ''
+                }
               >
                 {warning.message}
               </li>
