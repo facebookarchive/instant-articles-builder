@@ -232,6 +232,7 @@ class Preview extends React.Component<Props, State> {
   };
 
   getTabPanes = () => {
+    const qtWarnings = this.state.warnings.length;
     const previewPane = this.getContentTabPane(
       'Preview',
       'preview',
@@ -243,7 +244,7 @@ class Preview extends React.Component<Props, State> {
       webview => (this.sourceview = webview)
     );
     const warningsPane = this.getContentTabPane(
-      'Warnings',
+      `Warnings${qtWarnings > 0 ? ` (${qtWarnings})` : ''}`,
       'warnings',
       () => {},
       <Warnings

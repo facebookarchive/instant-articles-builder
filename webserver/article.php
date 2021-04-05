@@ -117,7 +117,7 @@ function get_instant_article($html_markup, $url, $rules, &$response) {
     }
     return $warning_obj;
   };
-  $warnings = array_map($warnings_func, $warnings);
+  $warnings = array_unique(array_map($warnings_func, $warnings), SORT_REGULAR);
   $response->warnings = $warnings;
 
   try_set_cached_value($cache_key, $warnings, CACHE_KEY_TYPE_WARNINGS);
