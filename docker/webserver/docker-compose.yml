@@ -1,27 +1,80 @@
-version: '2'
+version: '3'
 services:
   memcached:
     image: memcached:1.4
-    ports:
-      - "11211:11211"
+    expose:
+      - "11211"
 
-  ia_webserver_memcached:
+  ia-webserver-memcached:
     build:
       context: .
       args:
         GIT_BRANCH: master
-    ports:
-      - "8107:8000"
+    expose:
+      - "8000"
     links:
       - memcached
-    container_name: ia-webserver-memcached
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.ia-webserver-memcached.rule=Host(`${SUBDOMAIN}.${DOMAIN_NAME}`)
+      - traefik.http.routers.ia-webserver-memcached.tls=true
+      - traefik.http.routers.ia-webserver-memcached.entrypoints=websecure
+      - traefik.http.routers.ia-webserver-memcached.tls.certresolver=mytlschallenge
+      - traefik.http.routers.ia-webserver-memcached.middlewares=ia-webserver-memcached-auth
 
-  memcached_ui:
+  memcached-ui:
     image: alphayax/phpmemcachedadmin
-    ports:
-      - "11212:80"
+    expose:
+      - "80"
     volumes:
       - ./memcached-ui.config.php:/var/www/html/Config/Memcache.php
     links:
       - memcached
-    container_name: memcached-ui
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.memcached-ui.rule=Host(`${SUBDOMAIN}.${DOMAIN_NAME}`)
+      - traefik.http.routers.memcached-ui.tls=true
+      - traefik.http.routers.memcached-ui.entrypoints=memcachedui_secure
+      - traefik.http.routers.memcached-ui.tls.certresolver=mytlschallenge
+      - traefik.http.routers.memcached-ui.middlewares=ia-webserver-memcached-auth
+      
+
+  reverse-proxy:
+    image: traefik
+    restart: always
+    command:
+      - "--api=true"
+
+      - "--providers.docker"
+      - "--providers.docker.exposedbydefault=false"
+      
+      # Used for Traefik API and Dashboard
+      - "--entrypoints.traefik_secure.address=:8080"
+      # Used for webserver
+      - "--entrypoints.websecure.address=:443"
+      # Used for Memcached UI
+      - "--entrypoints.memcachedui_secure.address=:11212"
+
+      - "--certificatesresolvers.mytlschallenge.acme.tlschallenge=true"
+      - "--certificatesresolvers.mytlschallenge.acme.email=${SSL_EMAIL}"
+      - "--certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "8080:8080"
+      - "443:443"
+      - "11212:11212"
+    labels:
+      - traefik.enable=true
+
+      # Enable Traefik Dashboard and API
+      - traefik.http.routers.traefik_https.rule=Host(`${SUBDOMAIN}.${DOMAIN_NAME}`)
+      - traefik.http.routers.traefik_https.entrypoints=traefik_secure
+      - traefik.http.routers.traefik_https.tls=true
+      - traefik.http.routers.traefik_https.tls.certResolver=mytlschallenge
+      - traefik.http.routers.traefik_https.service=api@internal
+      - traefik.http.routers.traefik_https.middlewares=ia-webserver-memcached-auth
+
+      - traefik.http.middlewares.ia-webserver-memcached-auth.basicauth.users=${BASIC_AUTH_USER_PASS}
+    volumes:
+      - "./letsencrypt:/letsencrypt"
+      # So that Traefik can listen to the Docker events
+      - /var/run/docker.sock:/var/run/docker.sock

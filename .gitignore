@@ -63,3 +63,5 @@ typings/
 
 # MacOS
 .DS_Store
+
+docker/webserver/letsencrypt/*
