@@ -20,6 +20,7 @@ export type WarningProps = {
 
 type Props = {
   activeTab: number,
+  disabled: ?boolean,
   warningSelector: ?string,
   warnings: WarningProps[],
 };
@@ -64,7 +65,7 @@ class Warnings extends React.Component<Props, State> {
   render() {
     return (
       <div className="warning-tab">
-        {this.props.warnings.length > 0 ? (
+        {!this.props.disabled && this.props.warnings.length > 0 ? (
           <ul>
             {this.props.warnings.map((warning, index) => (
               <li
@@ -89,7 +90,9 @@ class Warnings extends React.Component<Props, State> {
         ) : (
           <div className="message-container">
             <p className="message">
-              No warnings: All fields were successfully connected.
+              {this.props.disabled
+                ? 'No warnings: Open an article, then connect the required fields in the Article element.'
+                : 'No warnings: All fields were successfully connected.'}
             </p>
           </div>
         )}
