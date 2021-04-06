@@ -232,6 +232,8 @@ class Preview extends React.Component<Props, State> {
   };
 
   getTabPanes = () => {
+    const warningsCount = this.state.warnings.length;
+    const warningsDisabled = this.state.errorHtml && !this.state.previewHtml;
     const previewPane = this.getContentTabPane(
       'Preview',
       'preview',
@@ -243,13 +245,16 @@ class Preview extends React.Component<Props, State> {
       webview => (this.sourceview = webview)
     );
     const warningsPane = this.getContentTabPane(
-      'Warnings',
+      `Warnings${
+        !warningsDisabled && warningsCount > 0 ? ` (${warningsCount})` : ''
+      }`,
       'warnings',
       () => {},
       <Warnings
         activeTab={this.state.activeTab}
         warningSelector={this.props.editor.warningSelector}
         warnings={this.state.warnings}
+        disabled={!!warningsDisabled}
       />
     );
     return [previewPane, sourcePane, warningsPane];
