@@ -138,4 +138,34 @@ app.on('activate', () => {
 // code. You can also put them in separate files and require them here.
 // php ruleZ
 
+function isUrlFromPreviewWebserver(url) {
+  // TODO: Improve this validation
+  return url.startsWith(process.env.IA_BUILDER_PREVIEW_WEBSERVER_HOST);
+}
+
+if (process.env.IA_BUILDER_PREVIEW_WEBSERVER_IGNORE_SSL_ERRORS === 'true') {
+  console.log('Certificate errors will be ignored for the preview webserver.');
+  app.on('certificate-error', (event, webContents, url, error, certificate, callback) => {
+    if (isUrlFromPreviewWebserver(url)) {
+      event.preventDefault();
+      callback(true);
+    } else {
+      callback(false);
+    }
+  });
+}
+
+if (process.env.IA_BUILDER_PREVIEW_WEBSERVER_USER) {
+  console.log('Login events of the preview webserver will be handled and resolved using provided credentials');
+  app.on('login', (event, webContents, details, authInfo, callback) => {
+    if (isUrlFromPreviewWebserver(details.url)) {
+      event.preventDefault();
+      callback(
+        process.env.IA_BUILDER_PREVIEW_WEBSERVER_USER,
+        process.env.IA_BUILDER_PREVIEW_WEBSERVER_PASSWORD
+      );
+    }
+  });
+}
+
 webserver.init();
