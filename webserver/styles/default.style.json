@@ -1104,7 +1104,7 @@
 		"accent_color": "#FFFFFF",
 		"background_color": "#3b5998",
 		"logo": {
-			"full_resolution_url": "preview-logo.png",
+			"full_resolution_url": "https://raw.githubusercontent.com/facebook/instant-articles-builder/master/webserver/preview-logo.png",
 			"full_resolution_width": 602,
 			"full_resolution_height": 128,
 			"thumbnail_url": "preview-logo.svg",
