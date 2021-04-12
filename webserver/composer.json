@@ -11,7 +11,7 @@
     }],
     "require": {
         "php": "^7.0 || ^8.0.1",
-        "facebook/facebook-instant-articles-sdk-php": "^1.10.1",
+        "facebook/facebook-instant-articles-sdk-php": "^1.10.2",
         "facebook/facebook-instant-articles-sdk-extensions-in-php": "^0.2.1"
     }
 }

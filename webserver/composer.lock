@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "a6e120076a9a24b17b81b89f8fd59af7",
+    "content-hash": "701c61581a8bb33d47db83bbfbee9e82",
     "packages": [
         {
             "name": "doctrine/instantiator",
@@ -111,20 +111,21 @@
                 "instantarticles",
                 "sdk"
             ],
+            "abandoned": true,
             "time": "2018-02-08T18:21:18+00:00"
         },
         {
             "name": "facebook/facebook-instant-articles-sdk-php",
-            "version": "v1.10.1",
+            "version": "v1.10.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/facebook/facebook-instant-articles-sdk-php.git",
-                "reference": "acefb2a5f0a0952bcfe062f45e159670bcb10c35"
+                "reference": "6f305ffc978f88461c0dc887b4f94118e05488d9"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/facebook/facebook-instant-articles-sdk-php/zipball/acefb2a5f0a0952bcfe062f45e159670bcb10c35",
-                "reference": "acefb2a5f0a0952bcfe062f45e159670bcb10c35",
+                "url": "https://api.github.com/repos/facebook/facebook-instant-articles-sdk-php/zipball/6f305ffc978f88461c0dc887b4f94118e05488d9",
+                "reference": "6f305ffc978f88461c0dc887b4f94118e05488d9",
                 "shasum": ""
             },
             "require": {
@@ -163,11 +164,7 @@
                 "instant",
                 "sdk"
             ],
-            "support": {
-                "issues": "https://github.com/facebook/facebook-instant-articles-sdk-php/issues",
-                "source": "https://github.com/facebook/facebook-instant-articles-sdk-php/tree/master"
-            },
-            "time": "2019-03-21T19:01:02+00:00"
+            "time": "2021-04-12T18:39:47+00:00"
         },
         {
             "name": "facebook/graph-sdk",
@@ -225,15 +222,11 @@
                 "facebook",
                 "sdk"
             ],
-            "support": {
-                "issues": "https://github.com/facebook/php-graph-sdk/issues",
-                "source": "https://github.com/facebook/php-graph-sdk/tree/5.7.0"
-            },
             "time": "2018-12-11T22:56:31+00:00"
         },
         {
             "name": "symfony/css-selector",
-            "version": "v4.4.19",
+            "version": "v4.4.20",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/css-selector.git",
@@ -277,23 +270,6 @@
             ],
             "description": "Converts CSS selectors to XPath expressions",
             "homepage": "https://symfony.com",
-            "support": {
-                "source": "https://github.com/symfony/css-selector/tree/v4.4.19"
-            },
-            "funding": [
-                {
-                    "url": "https://symfony.com/sponsor",
-                    "type": "custom"
-                },
-                {
-                    "url": "https://github.com/fabpot",
-                    "type": "github"
-                },
-                {
-                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
-                    "type": "tidelift"
-                }
-            ],
             "time": "2021-01-27T09:09:26+00:00"
         }
     ],
@@ -306,6 +282,5 @@
     "platform": {
         "php": "^7.0 || ^8.0.1"
     },
-    "platform-dev": [],
-    "plugin-api-version": "2.0.0"
+    "platform-dev": []
 }
