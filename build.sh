@@ -18,7 +18,7 @@ message "Downloading PHP binaries for Windows..."
 rm -Rf bin
 mkdir bin
 cd bin
-curl -o php.zip https://windows.php.net/downloads/releases/archives/php-5.6.36-Win32-VC11-x86.zip
+curl -o php.zip https://windows.php.net/downloads/releases/archives/php-7.4.9-Win32-vc15-x86.zip
 message "Extracting PHP binary..."
 unzip php.zip -d ./php
 rm php.zip
