@@ -18,15 +18,31 @@ message "Downloading PHP binaries for Windows..."
 rm -Rf bin
 mkdir bin
 cd bin
-curl -o php.zip https://windows.php.net/downloads/releases/archives/php-7.4.9-Win32-vc15-x86.zip
+mkdir php
+cd php
+curl -o php-win32.zip https://windows.php.net/downloads/releases/archives/php-7.4.9-Win32-vc15-x86.zip
 message "Extracting PHP binary..."
-unzip php.zip -d ./php
-rm php.zip
+unzip php-win32.zip -d ./win32
+rm php-win32.zip
 message "PHP binary extracted"
-cp ../php.ini ./php/php.ini
+cp ../../php.ini ./win32/php.ini
+
+message "Downloading PHP binaries for Mac..."
+curl --insecure --show-error --location --globoff https://github.com/php/php-src/archive/refs/tags/php-7.4.29.tar.gz | tar -zx
+message "PHP source code downloaded"
+cd php-src-php-7.4.29
+message "Configuring PHP source code..."
+./buildconf --force
+mkdir ../darwin
+./configure --prefix=$(pwd)/../darwin --enable-shared=no --enable-static=yes --without-iconv --without-sqlite3 -with-openssl=$(which openssl)
+message "Installing PHP binaries for Mac..."
+make -j8
+make install
+cd ..
+rm -r -f php-src-php-7.4.29
 
 message "Installing PHP dependencies..."
-cd ..
+cd ../../
 cd webserver
 composer install
 message "PHP dependencies installed"
