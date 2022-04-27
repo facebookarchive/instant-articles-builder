@@ -49,7 +49,7 @@ class PreviewWebserver {
         bin: path.resolve(__dirname) + '/../../../bin/php/win32/php.exe',
       });
     } else if (process.platform === 'darwin'){
-      var x = this.phpServer.server({
+      this.phpServer.server({
         port: this.port,
         base: path.resolve(__dirname) + '/../../../webserver',
         bin: path.resolve(__dirname) + '/../../../bin/php/darwin/bin/php',
