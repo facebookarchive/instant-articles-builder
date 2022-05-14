@@ -34,7 +34,7 @@ cd php-src-php-7.4.29
 message "Configuring PHP source code..."
 ./buildconf --force
 mkdir ../darwin
-./configure --prefix=$(pwd)/../darwin --enable-shared=no --enable-static=yes --without-iconv --without-sqlite3 -with-openssl=$(which openssl)
+./configure --prefix=$(pwd)/../darwin --enable-shared=no --enable-static=yes --without-iconv --without-pdo-sqlite --without-sqlite3 -with-openssl=$(which openssl)
 message "Installing PHP binaries for Mac..."
 make -j8
 make install
