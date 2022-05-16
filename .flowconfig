@@ -3,6 +3,7 @@
 .*/electron-packager/test/.*
 .*/webserver/*
 .*/build/*
+.*/**/malformed_package_json/package.json
 
 [include]
 node_modules/electron
