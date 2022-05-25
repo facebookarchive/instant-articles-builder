@@ -18,6 +18,7 @@ import { Loader, Dimmer, Form, Tab } from 'semantic-ui-react';
 import Warnings from './Warnings.react';
 import debounce from '../utils/debounce';
 import EditorActions from '../data/EditorActions';
+import { renderToString } from 'react-dom/server';
 
 import webserver from '../utils/preview-webserver';
 import { BrowserWindow } from 'electron';
@@ -51,6 +52,16 @@ class Preview extends React.Component<Props, State> {
       // sourceHtml: null,
       errorHtml: null,
     };
+  }
+
+  serverErrorMessage = () => {
+    return (
+      <div style={{display: 'flex', alignItems: 'center', fontFamily: 'sans-serif', color: '#ccc', height: '100%'}}>
+        <p style={{maxWidth: '300px', margin: 'auto', textAlign: 'center'}}>
+          Webserver error: Please check if the server is running.
+        </p>
+      </div>
+    );
   }
 
   previewLoading = () => {
@@ -151,6 +162,15 @@ class Preview extends React.Component<Props, State> {
         }
       }
     };
+
+    xhr.onerror = () => {
+      this.previewFinishedLoading();
+      this.setState({
+        errorHtml: renderToString(this.serverErrorMessage()),
+      });
+      this.reloadPreview();
+    };
+
     xhr.open('POST', url.href);
     xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
     xhr.send(this.getWSURLParams());
