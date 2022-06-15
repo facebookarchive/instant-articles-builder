@@ -10,4 +10,4 @@
 
 // This is the Instant Articles Builder version constant.
 // Bump this version when releasing.
-export const version = '0.2.3';
+export const version = '0.2.4';
