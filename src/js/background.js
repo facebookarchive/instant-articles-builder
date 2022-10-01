@@ -30,6 +30,7 @@ function createWindow() {
       enableRemoteModule: true,
       nodeIntegration: true,
       webviewTag: true,
+      sandbox: true,
     },
   });
 
