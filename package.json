@@ -36,8 +36,8 @@
   },
   "devDependencies": {
     "devtron": "^1.4.0",
-    "electron": "^11.5.0",
-    "electron-packager": "15.2.0",
+    "electron": "^22.1.0",
+    "electron-packager": "17.1.1",
     "enzyme": "^3.11.0",
     "enzyme-adapter-react-15": "^1.4.1",
     "eslint": "^4.19.1",
