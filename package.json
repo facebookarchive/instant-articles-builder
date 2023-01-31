@@ -26,7 +26,7 @@
     "flux": "^4.0.1",
     "gulp-connect-php": "^1.0.3",
     "immutable": "^4.0.0-rc.12",
-    "moment": "^2.29.1",
+    "moment": "^2.29.4",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-joyride": "^1.11.4",
