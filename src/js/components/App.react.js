@@ -74,6 +74,10 @@ class App extends React.Component<Props> {
             <span className="app-name">Builder</span>
           </h1>
         </header>
+        <div id="notice">
+          <h2>⚠️ Instant Articles will not be available starting April 20, 2023</h2>
+          <span>All related developer tools will be archived.</span>
+        </div>
         <div id="content-wrapper">
           <main id="content">
             <Browser {...this.props} />

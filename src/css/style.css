@@ -21,6 +21,7 @@ h1 .ia {
 }
 
 body,
+#notice,
 #root,
 #wrapper {
   margin: 0;
@@ -36,6 +37,10 @@ header {
   display: flex;
   align-items: center;
   padding-left: 10px;
+}
+
+#notice {
+  padding-left: 20px;
 }
 
 header > img {
