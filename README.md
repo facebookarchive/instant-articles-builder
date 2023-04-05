@@ -4,7 +4,7 @@
 
 ## 🚨 Important Note
 
-** ⚠️ Instant Articles will not be available starting April 20, 2023**
+**⚠️ Instant Articles will not be available starting April 20, 2023**
 
 All related developer tools will be archived.
 
