@@ -24,8 +24,8 @@ export class NUX extends React.Component<Props, State> {
   constructor(props: Props) {
     super(props);
     this.state = {
-      modalOpen: !!settings.get('nux.skip'),
-      skip: settings.get('nux.skip'),
+      modalOpen: false,
+      skip: true,
     };
   }
 

@@ -2,6 +2,14 @@
 
 [![CircleCI](https://circleci.com/gh/facebook/instant-articles-builder.svg?style=shield)](https://circleci.com/gh/facebook/instant-articles-builder)
 
+## 🚨 Important Note
+
+** ⚠️ Instant Articles will not be available starting April 20, 2023**
+
+All related developer tools will be archived.
+
+---
+
 **Instant Articles Builder** helps you to create a template to build [Facebook Instant Articles](https://instantarticles.fb.com/) from articles on your website.
 
 Try it out (Windows/Mac): https://facebook.github.io/instant-articles-builder/
