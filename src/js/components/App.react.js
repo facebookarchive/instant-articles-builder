@@ -75,8 +75,8 @@ class App extends React.Component<Props> {
           </h1>
         </header>
         <div id="notice">
-          <h2>⚠️ Instant Articles will not be available starting April 20, 2023</h2>
-          <span>All related developer tools will be archived.</span>
+          <h2>⚠️ Instant Articles is no longer available, starting April 20, 2023</h2>
+          <span>All related developer tools have been be archived.</span>
         </div>
         <div id="content-wrapper">
           <main id="content">
